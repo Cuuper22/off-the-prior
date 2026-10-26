@@ -129,7 +129,79 @@ Each family is a set of simulators with a difficulty knob (full definitions in
 
 # 4. Failure map
 
+All ratios below are the geometric mean over seeds of Timestral's MASE divided by the
+oracle's MASE on the same series, context and horizon (1.0 = as good as the true dynamics).
+"vs best classical" divides by the best of seasonal naive, ETS and ARIMA on each series
+instead. Unless stated otherwise: context 2,048 steps, horizon 128 steps, 8 seeds per setting.
+
+## 4.1 Control: series like the training data
+
+On random trend + season + AR-noise series (the kind Timestral was pretrained on), every size
+stays within {{num:inprior_short_min}}–{{num:inprior_short_max}} of the oracle at horizons up
+to 128 steps. The gap grows at long horizons:
+
+{{table:inprior}}
+
+Part of that long-horizon gap is not a prior failure: the oracle knows the exact trend slope
+and seasonal shape, while any forecaster must estimate them from the context, and estimation
+error in a slope grows linearly with the horizon. Family results are read against this control.
+
+## 4.2 Chaos and dynamics
+
+{{table:chaos_main}}
+
+Timestral beats the best classical model on most of these systems (the 209M model's median
+ratio to the best classical model across the chaos configs is
+{{num:chaos_209m_vs_classical_median}}) and is still far from the oracle on smooth, nearly
+deterministic oscillators: Mackey-Glass with long delays ({{num:chaos_mg30_5M}} at 5M,
+{{num:chaos_mg30_209M}} at 209M for τ = 30), weakly coupled Kuramoto oscillators
+({{num:chaos_kur1_5M}} and {{num:chaos_kur1_209M}} at K = 1), and the Rössler system
+({{num:chaos_ros9_5M}} and {{num:chaos_ros9_209M}} at c = 9). Size matters for some of these
+and not others: strongly coupled Kuramoto goes from {{num:chaos_kur8_5M}} at 5M to
+{{num:chaos_kur8_209M}} at 209M, while the densely sampled Lorenz system stays at
+{{num:chaos_lor_oe2_5M}} (5M) and {{num:chaos_lor_oe2_209M}} (209M). The chaotic logistic map
+(r = 3.9), whose predictability is gone after a few steps, stays near 1 at every size.
+
+**The gap lives inside the predictability horizon.** A Lyapunov time is how long it takes a
+small error in a chaotic system to grow by a factor of e (for Lorenz at ρ = 28 the exponent is
+{{num:lorenz_lyap}} per time unit). Putting four sampling intervals of the same Lorenz system
+on that common axis shows that the ratio is set by how many Lyapunov times the forecast
+reaches, not by the step count:
+
+{{table:lorenz_lyap}}
+
+Inside one to three Lyapunov times the oracle can still track the trajectory and Timestral
+cannot; past about ten, nobody can, and the ratio returns to about 1. The noise level of the
+generator sets how good the oracle can be inside that window (Section 7 reports the noise
+sweep).
+
+## 4.3 Heavy tails and fractal processes
+
+Across α-stable AR processes and random walks, fractional Brownian motion, Hawkes counts and
+multifractal cascades, all four sizes stay between {{num:tails_min}} and {{num:tails_max}} of
+the oracle:
+
+{{table:tails_main}}
+
+Heavy tails and long memory, which are absent from trend + season + Gaussian-noise
+pretraining data, do not produce failures of the size seen for deterministic dynamics.
+
+## 4.4 Regime switches
+
 RESULTS-PENDING.
+
+## 4.5 Does more history help?
+
+All four sizes with contexts up to 32,768 steps (Colab job B, 28 settings × 8 seeds):
+
+{{table:long_ctx}}
+
+More history helps on Mackey-Glass (τ = 17: {{num:long_mg17_5M_T2048}} → {{num:long_mg17_5M_T32768}}
+for 5M and {{num:long_mg17_209M_T2048}} → {{num:long_mg17_209M_T32768}} for 209M from 2,048 to
+32,768 steps) and slightly on Rössler and Lorenz; it does not help on the in-prior control,
+which gets slightly worse at 32,768 steps. {{num:long_nonfinite_oracle_samples}} samples
+(Rössler, c = 5.7) had oracle paths that left the attractor at long horizons; their oracle
+ratios are excluded.
 
 # 5. Covariates and one-way attention
 
@@ -141,7 +213,43 @@ RESULTS-PENDING.
 
 # 7. Why it fails
 
-RESULTS-PENDING.
+## 7.1 Two suspects that turned out innocent
+
+**Symmetric averaging.** The released forecaster averages its forecast of the series with the
+mirrored forecast of the negated series. That forces a symmetric treatment of asymmetric
+processes (bursty counts, one-sided maps), so it was a natural suspect. Turning it off changes
+the sCRPS ratio to the oracle by a factor between {{num:symavg_min}} and {{num:symavg_max}}
+across 14 settings and both small sizes: it is not where the failures come from.
+
+**Cumulative normalization.** Timestral normalizes every patch with the mean and spread of
+everything since the start of the context, so old history keeps weighing on the scale after a
+regime switch. After a variance drop 64 steps back, intervals are indeed far too wide (80%
+intervals cover at least {{num:norm_vdrop_cov80_min}} of points; sCRPS ratio
+{{num:norm_vdrop_scrps_min}}–{{num:norm_vdrop_scrps_max}}). But cutting the context down to
+the post-switch part, which removes the old history from the statistics entirely, lowered the
+sCRPS ratio in only {{num:norm_post_better}} of {{num:norm_cells}} cells (those with at least
+256 post-switch steps) and raised it in the rest. The anchoring is not the main cause.
+
+## 7.2 Template or retrieval?
+
+For a deterministic system, the context itself is a library of past trajectories: find the
+moments whose recent history looks most like the present and see what happened next (the
+"method of analogues", a few lines of nearest-neighbour code with no training). A second
+context-only forecaster continues the series as a periodic pattern (the average of its last
+cycles at the dominant period). On the chaos family (MASE, lower is better):
+
+{{table:analog}}
+
+The method of analogues beats Timestral on Mackey-Glass and Rössler and loses to it on weakly
+coupled Kuramoto and on Lorenz. Timestral's forecasts correlate more with the analogue forecast
+than with the periodic template, but lean toward the template more than the oracle does
+(`results/mechanism/analog/summary.csv`). Our reading: Timestral uses the context partly as a
+trajectory library and partly as a pattern to repeat, and on smooth nonlinear oscillators,
+which its trend + season + noise prior represents as near-periodic, the second pull wins.
+
+## 7.3 Inside the model
+
+RESULTS-PENDING (attention on forecast tokens and linear readouts, all sizes: Colab job D).
 
 # 8. Benchmarks
 

@@ -1,0 +1,194 @@
+{
+ "inprior_short_min": {
+  "value": 0.9884388509671491,
+  "text": "0.99",
+  "src": "results/map/in_prior/summary.csv",
+  "how": "min over sizes, T, H<=128 of the geometric mean over configs of the per-config geometric-mean MASE ratio to oracle"
+ },
+ "inprior_short_max": {
+  "value": 1.1493778406213206,
+  "text": "1.15",
+  "src": "results/map/in_prior/summary.csv",
+  "how": "max of the same"
+ },
+ "chaos_209m_vs_classical_median": {
+  "value": 0.3603612444657963,
+  "text": "0.36",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "median over chaos configs of the 209M geometric-mean MASE ratio to the best classical model, T=2048, H=128"
+ },
+ "chaos_mg30_5M": {
+  "value": 21.871201192984085,
+  "text": "21.87",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "mackey_glass/tau30, timestral-5M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_mg30_209M": {
+  "value": 13.6765649909826,
+  "text": "13.68",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "mackey_glass/tau30, timestral-209M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_kur1_5M": {
+  "value": 12.741505597719032,
+  "text": "12.74",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "kuramoto/K1, timestral-5M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_kur1_209M": {
+  "value": 9.447246129302728,
+  "text": "9.45",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "kuramoto/K1, timestral-209M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_kur8_5M": {
+  "value": 5.18376361842739,
+  "text": "5.18",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "kuramoto/K8, timestral-5M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_kur8_209M": {
+  "value": 1.429288843863609,
+  "text": "1.43",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "kuramoto/K8, timestral-209M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_ros9_5M": {
+  "value": 7.734253426987983,
+  "text": "7.73",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "rossler/c9, timestral-5M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_ros9_209M": {
+  "value": 4.304958762349598,
+  "text": "4.30",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "rossler/c9, timestral-209M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_lor_oe2_5M": {
+  "value": 29.89068175043135,
+  "text": "29.89",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "lorenz63/rho28_oe2, timestral-5M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_lor_oe2_209M": {
+  "value": 27.90559301698256,
+  "text": "27.91",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "lorenz63/rho28_oe2, timestral-209M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "lorenz_lyap": {
+  "value": 0.9070340667452834,
+  "text": "0.907",
+  "src": "results/map/chaos/lyapunov.csv",
+  "how": "largest Lyapunov exponent per time unit, Lorenz rho=28, mean over seeds"
+ },
+ "tails_min": {
+  "value": 0.9375305757316744,
+  "text": "0.94",
+  "src": "results/map/tails/summary_all_sizes.csv",
+  "how": "min over all tails configs and sizes, T=2048, H=128"
+ },
+ "tails_max": {
+  "value": 1.338925435044641,
+  "text": "1.34",
+  "src": "results/map/tails/summary_all_sizes.csv",
+  "how": "max of the same"
+ },
+ "long_mg17_5M_T2048": {
+  "value": 9.094047700455086,
+  "text": "9.09",
+  "src": "results/map/long_ctx/scores.csv",
+  "how": "mackey_glass/tau17, timestral-5M, T=2048, H=128"
+ },
+ "long_mg17_5M_T32768": {
+  "value": 6.47139575092667,
+  "text": "6.47",
+  "src": "results/map/long_ctx/scores.csv",
+  "how": "mackey_glass/tau17, timestral-5M, T=32768, H=128"
+ },
+ "long_mg17_209M_T2048": {
+  "value": 4.91357984497152,
+  "text": "4.91",
+  "src": "results/map/long_ctx/scores.csv",
+  "how": "mackey_glass/tau17, timestral-209M, T=2048, H=128"
+ },
+ "long_mg17_209M_T32768": {
+  "value": 3.8433963462687157,
+  "text": "3.84",
+  "src": "results/map/long_ctx/scores.csv",
+  "how": "mackey_glass/tau17, timestral-209M, T=32768, H=128"
+ },
+ "long_nonfinite_oracle_samples": {
+  "value": 2.0,
+  "text": "2",
+  "src": "results/map/long_ctx/scores.csv",
+  "how": "samples with a non-finite oracle (diverged Monte Carlo paths)"
+ },
+ "symavg_min": {
+  "value": 0.9913624949289817,
+  "text": "0.991",
+  "src": "results/mechanism/symavg/off_over_on.csv",
+  "how": "min over configs and sizes of sCRPS ratio (averaging off / on), H=128"
+ },
+ "symavg_max": {
+  "value": 1.0691778764581796,
+  "text": "1.069",
+  "src": "results/mechanism/symavg/off_over_on.csv",
+  "how": "max of the same"
+ },
+ "norm_cells": {
+  "value": 44.0,
+  "text": "44",
+  "src": "results/mechanism/normalization/summary.csv",
+  "how": "case x context x size cells with both conditions"
+ },
+ "norm_post_better": {
+  "value": 12.0,
+  "text": "12",
+  "src": "results/mechanism/normalization/summary.csv",
+  "how": "cells where cutting to the post-switch part lowered the sCRPS ratio"
+ },
+ "norm_vdrop_cov80_min": {
+  "value": 0.9967447916666666,
+  "text": "0.997",
+  "src": "results/mechanism/normalization/summary.csv",
+  "how": "variance drop x0.25, 64 steps back, full context: min cov80 over sizes and contexts"
+ },
+ "norm_vdrop_scrps_min": {
+  "value": 1.5947699343354989,
+  "text": "1.59",
+  "src": "results/mechanism/normalization/summary.csv",
+  "how": "same cells: min sCRPS ratio to oracle"
+ },
+ "norm_vdrop_scrps_max": {
+  "value": 1.753124649340608,
+  "text": "1.75",
+  "src": "results/mechanism/normalization/summary.csv",
+  "how": "same cells: max sCRPS ratio to oracle"
+ },
+ "table:inprior": {
+  "src": "results/map/in_prior/summary.csv",
+  "how": "geometric mean over the 4 in-prior configs of the per-config geometric-mean MASE ratio to oracle, context 2048"
+ },
+ "table:chaos_main": {
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "per-config geometric mean over seeds of MASE ratio to oracle (and to the best classical model), context 2048, horizon 128"
+ },
+ "table:lorenz_lyap": {
+  "src": "results/map/chaos/summary_all_sizes.csv + results/map/chaos/lyapunov.csv",
+  "how": "209M, context 2048; Lyapunov times = sampling step x horizon x exponent"
+ },
+ "table:tails_main": {
+  "src": "results/map/tails/summary_all_sizes.csv",
+  "how": "per-config geometric mean over seeds of MASE ratio to oracle (and to the best classical model), context 2048, horizon 128"
+ },
+ "table:long_ctx": {
+  "src": "results/map/long_ctx/scores.csv",
+  "how": "geometric mean over 8 seeds of MASE ratio to oracle at H=128 (oracle rows matched per context length)"
+ },
+ "table:analog": {
+  "src": "results/mechanism/analog/summary.csv",
+  "how": "geometric mean over 8 seeds of MASE (context 2048, horizon 128) for the oracle, the method of analogues, the seasonal template, and Timestral"
+ }
+}

@@ -47,6 +47,8 @@ def num(key, value, src, how, fmt="{:.2f}"):
 
 def table(key, df: pd.DataFrame, src, how, floatfmt="{:.2f}"):
     def f(v):
+        if isinstance(v, (int, np.integer)):
+            return str(int(v))
         return floatfmt.format(v) if isinstance(v, (float, np.floating)) and np.isfinite(v) else ("–" if isinstance(v, float) else str(v))
     lines = ["| " + " | ".join(map(str, df.columns)) + " |", "|" + "---|" * len(df.columns)]
     for _, r in df.iterrows():
@@ -116,7 +118,7 @@ def chaos():
     r = s[(s["T"] == 2048) & (s.forecaster == "timestral-209M") & s.config_id.isin(dt)].copy()
     r["lyapunov_times"] = r.config_id.map(dt) * r.H.astype(float) * lam
     r = r.sort_values("lyapunov_times")
-    out = pd.DataFrame({"sampling step (time units)": r.config_id.map(dt).values, "horizon (steps)": r.H.values,
+    out = pd.DataFrame({"sampling step (time units)": r.config_id.map(dt).values, "horizon (steps)": r.H.astype(int).values,
                         "horizon (Lyapunov times)": r.lyapunov_times.values, "209M MASE / oracle": r.mase_ratio_oracle_gmean.values})
     table("lorenz_lyap", out, src + " + results/map/chaos/lyapunov.csv", "209M, context 2048; Lyapunov times = sampling step x horizon x exponent")
 
