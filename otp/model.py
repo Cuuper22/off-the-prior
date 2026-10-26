@@ -46,11 +46,16 @@ def repo_id(size: str) -> str:
     return f"mistralai/Timestral-{size}"
 
 
+def default_device() -> str:
+    """Env OTP_DEVICE (e.g. "cuda" on Colab), else "cpu"."""
+    return os.environ.get("OTP_DEVICE", "cpu")
+
+
 @lru_cache(maxsize=4)
-def load(size: str, device: str = "cpu"):
+def load(size: str, device: str | None = None):
     from timestral import TimestralForecaster
 
-    fc = TimestralForecaster.from_pretrained(repo_id(size), device=device)
+    fc = TimestralForecaster.from_pretrained(repo_id(size), device=device or default_device())
     for p in fc.model.parameters():
         p.requires_grad_(False)
     return fc
@@ -66,7 +71,7 @@ def forecast(
     batch_size: int = 32,
     symmetric_averaging: bool = True,
     clip_nonnegative: bool = True,
-    device: str = "cpu",
+    device: str | None = None,
 ) -> np.ndarray:
     """Quantile forecast `(B, V, H, 21)` for `context` `(B, V, T)` or `(B, T)`.
 
@@ -108,6 +113,7 @@ def forecast_torch(size: str, x: torch.Tensor, horizon: int, symmetric_averaging
     """
     assert horizon <= BLOCK_STEPS, "forecast_torch covers one decode block (<= 1024 steps)"
     fc = load(size)
+    x = x.to(fc.device)
 
     def one_pass(xx: torch.Tensor) -> torch.Tensor:
         b, t = xx.shape

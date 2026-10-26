@@ -1,0 +1,30 @@
+\documentclass[10pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{TeX Gyre Termes}[Scale=1.0]
+\setmonofont{DejaVu Sans Mono}[Scale=0.85]
+\usepackage{microtype,booktabs,longtable,array,graphicx,xcolor,amsmath}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,citecolor=blue!50!black]{hyperref}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setlength{\parskip}{4pt}\setlength{\parindent}{0pt}
+\setcounter{secnumdepth}{-1}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\makeatother
+\setkeys{Gin}{width=\maxwidth,keepaspectratio}
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+\title{$title$}
+\author{$author$}
+\date{$date$}
+\begin{document}
+\maketitle
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+$body$
+\end{document}
