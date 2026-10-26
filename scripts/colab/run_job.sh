@@ -43,15 +43,20 @@ for f in "$@"; do  # extra files: LOCAL=REMOTE (REMOTE relative to the repo root
   fi
 done
 colab exec -s "$S" -f "$ROOT/scripts/colab/remote_start.py"
+# poll through file listing (the kernel exec channel can hang on an idle runtime)
 while true; do
-  st=$(colab exec -s "$S" -f "$ROOT/scripts/colab/remote_status.py" 2>&1 || true)
-  echo "$(date -u +%T) $(echo "$st" | tail -1)"
-  echo "$st" | grep -q "STATE done" && break
+  if timeout 90 colab ls -s "$S" /content 2>/dev/null | grep -q "job.exit"; then break; fi
+  echo "$(date -u +%T) running"
   python3 -c "import time; time.sleep(120)"
 done
-echo "$st" > "$OUT/final_status.txt"
-echo 'import subprocess; subprocess.run(["bash","-c","cd /content/otp && mkdir -p results/colab_out && tar -czf /content/results.tar.gz results/colab_out && cp /content/job.log /content/otp_job.log"])' | colab exec -s "$S"
-colab download -s "$S" /content/results.tar.gz "$OUT/results.tar.gz"
-colab download -s "$S" /content/otp_job.log "$OUT/job.log"
-tar -xzf "$OUT/results.tar.gz" -C "$OUT" && rm "$OUT/results.tar.gz"
+mkdir -p "$OUT/results/colab_out"
+timeout 120 colab download -s "$S" /content/job.exit "$OUT/job.exit" || true
+timeout 300 colab download -s "$S" /content/job.log "$OUT/job.log" || true
+# fetch results/colab_out/<dir>/<file> by listing (two levels), no kernel exec needed
+for d in $(timeout 90 colab ls -s "$S" /content/otp/results/colab_out 2>/dev/null | grep '/$'); do
+  mkdir -p "$OUT/results/colab_out/$d"
+  for f in $(timeout 90 colab ls -s "$S" "/content/otp/results/colab_out/$d" 2>/dev/null | grep -v '/$'); do
+    timeout 1800 colab download -s "$S" "/content/otp/results/colab_out/$d$f" "$OUT/results/colab_out/$d$f"
+  done
+done
 echo "results in $OUT"
