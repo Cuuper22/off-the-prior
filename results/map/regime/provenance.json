@@ -4,7 +4,7 @@
   "runs": {
     "references": {
       "script": "scripts/sweep.py",
-      "git": "",
+      "git": "e2fc9e6",
       "time_utc": "2026-10-26T22:35:43Z",
       "host": "6b1ba969c9d4",
       "torch": "2.11.0+cu130",
@@ -32,11 +32,12 @@
       ],
       "n_samples": 880,
       "n_rows": 31680,
-      "wall_sec": 223.9
+      "wall_sec": 223.9,
+      "git_stamped_after_run": "HEAD of lead/integration at launch 2026-10-26T22:30:31Z"
     },
     "timestral": {
       "script": "scripts/sweep.py",
-      "git": "",
+      "git": "8805d99",
       "time_utc": "2026-10-26T21:18:04Z",
       "host": "1e289eba4146",
       "torch": "2.11.0+cu130",
@@ -69,7 +70,9 @@
       ],
       "n_samples": 880,
       "n_rows": 31680,
-      "wall_sec": 92.4
+      "wall_sec": 92.4,
+      "git_stamped_after_run": "HEAD of lead/integration at launch 2026-10-26T21:11:16Z"
     }
-  }
+  },
+  "git": "e2fc9e6"
 }

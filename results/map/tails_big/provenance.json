@@ -1,6 +1,6 @@
 {
   "script": "scripts/sweep.py",
-  "git": "",
+  "git": "c863d8c",
   "time_utc": "2026-10-26T21:03:02Z",
   "host": "d3ba0b49f974",
   "torch": "2.11.0+cu130",
@@ -31,5 +31,6 @@
   ],
   "n_samples": 280,
   "n_rows": 5040,
-  "wall_sec": 32.0
+  "wall_sec": 32.0,
+  "git_stamped_after_run": "HEAD of lead/integration at launch time 2026-10-26T21:01:21Z"
 }

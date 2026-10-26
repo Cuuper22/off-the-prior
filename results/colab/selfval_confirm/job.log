@@ -1,0 +1,33 @@
+generated 32 samples (0s)
+references done (0s)
+wrote 0 rows to results/colab_out/fresh_in_prior/scores.csv in 0s
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  3.27it/s]Fetching 2 files: 100%|██████████| 2/2 [00:02<00:00,  1.17s/it]Fetching 2 files: 100%|██████████| 2/2 [00:02<00:00,  1.04s/it]
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  4.10it/s]Fetching 2 files: 100%|██████████| 2/2 [00:02<00:00,  1.39s/it]Fetching 2 files: 100%|██████████| 2/2 [00:02<00:00,  1.22s/it]
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  3.95it/s]Fetching 2 files: 100%|██████████| 2/2 [00:04<00:00,  2.37s/it]Fetching 2 files: 100%|██████████| 2/2 [00:04<00:00,  2.06s/it]
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  4.00it/s]Fetching 2 files: 100%|██████████| 2/2 [00:05<00:00,  3.03s/it]Fetching 2 files: 100%|██████████| 2/2 [00:05<00:00,  2.61s/it]
+wrote 128 rows to results/colab_out/confirm_in_prior/per_sample.csv (23s)
+generated 344 samples (81s)
+references done (82s)
+wrote 0 rows to results/colab_out/fresh_chaos/scores.csv in 82s
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1088.86it/s]
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1223.90it/s]
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1262.77it/s]
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1003.66it/s]
+wrote 1376 rows to results/colab_out/confirm_chaos/per_sample.csv (23s)
+generated 280 samples (4s)
+references done (4s)
+wrote 0 rows to results/colab_out/fresh_tails/scores.csv in 4s
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1232.71it/s]
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1206.65it/s]
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1203.88it/s]
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1342.39it/s]
+wrote 1120 rows to results/colab_out/confirm_tails/per_sample.csv (20s)
+generated 880 samples (2s)
+references done (4s)
+wrote 0 rows to results/colab_out/fresh_regime/scores.csv in 4s
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1173.89it/s]
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1337.26it/s]
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1203.36it/s]
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1210.13it/s]
+wrote 3520 rows to results/colab_out/confirm_regime/per_sample.csv (50s)

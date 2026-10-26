@@ -1,0 +1,29 @@
+{
+  "script": "scripts/selfval_fix.py",
+  "git": "",
+  "time_utc": "2026-10-26T23:25:17Z",
+  "host": "5255d57cdc19",
+  "torch": "2.11.0+cu130",
+  "threads": 4,
+  "cuda": true,
+  "argv": [
+    "scripts/selfval_fix.py",
+    "--samples",
+    "results/colab_out/fresh_in_prior/samples.npz",
+    "--sizes",
+    "5M",
+    "28M",
+    "123M",
+    "209M",
+    "--T",
+    "2048",
+    "--H",
+    "128",
+    "--windows",
+    "2",
+    "--out",
+    "results/colab_out/confirm_in_prior"
+  ],
+  "n_samples": 32,
+  "wall_sec": 23.3
+}

@@ -1,6 +1,6 @@
 {
   "script": "scripts/analog_test.py",
-  "git": "",
+  "git": "77c2d43",
   "time_utc": "2026-10-26T22:44:48Z",
   "host": "LAPTOP-TTI9OLBG",
   "torch": "2.6.0+cu124",
@@ -19,5 +19,6 @@
     "results\\analog_all"
   ],
   "n_samples": 344,
-  "wall_sec": 935.1
+  "wall_sec": 935.1,
+  "git_stamped_after_run": "laptop run from a master code bundle plus scripts/analog_test.py identical to the file committed in 77c2d43"
 }

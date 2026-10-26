@@ -1,6 +1,6 @@
 {
   "script": "scripts/selfval_fix.py",
-  "git": "",
+  "git": "a5d1f2d",
   "time_utc": "2026-10-26T23:28:36Z",
   "host": "5255d57cdc19",
   "torch": "2.11.0+cu130",
@@ -25,5 +25,6 @@
     "results/colab_out/confirm_regime"
   ],
   "n_samples": 880,
-  "wall_sec": 49.8
+  "wall_sec": 49.8,
+  "git_stamped_after_run": "HEAD of master at launch time 2026-10-26T23:23:52Z"
 }
