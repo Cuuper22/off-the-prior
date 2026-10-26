@@ -99,6 +99,15 @@ def measure(size: str, samples, horizon: int = 128, change_step: int | None = No
 
     readout = {li: ridge_readout(h.astype(np.float64), oracle_delta)["r2"] for li, h in sorted(hidden.items())}
     out_r2 = _cv_r2_1d(model_delta, oracle_delta)
+    # single-step labels: the oracle median at steps 1, 4, 16 (as change from the last value)
+    step_labels = {}
+    for h in (1, 4, 16):
+        if h <= horizon:
+            lab = (orc[:, h - 1, MEDIAN_INDEX] - last) / scale
+            mod = (q[:, h - 1, MEDIAN_INDEX] - last) / scale
+            best = max(ridge_readout(hh.astype(np.float64), lab)["r2"] for hh in hidden.values())
+            step_labels[f"step{h}"] = {"best_readout_r2": best, "output_r2": _cv_r2_1d(mod, lab),
+                                       "label_sd": float(lab.std())}
 
     sc_m = score(ctx, fut, q, period)
     sc_o = score(ctx, fut, orc, period)
@@ -113,6 +122,7 @@ def measure(size: str, samples, horizon: int = 128, change_step: int | None = No
         "mase_ratio_oracle_gmean": float(np.exp(np.mean(np.log(sc_m["mase"] / np.maximum(sc_o["mase"], 1e-9))))),
         "readout_r2": readout,
         "output_r2": out_r2,
+        "step_labels": step_labels,
         "oracle_delta_sd": float(oracle_delta.std()),
         "realized_vs_oracle_r2": _cv_r2_1d(oracle_delta, real_delta),
         "attn": {k: np.nanmean(v, axis=0).tolist() for k, v in prof.items()},

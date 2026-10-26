@@ -79,6 +79,8 @@ def main(argv=None):
     ap.add_argument("--regen", action="store_true")
     ap.add_argument("--threads", type=int, default=None)
     ap.add_argument("--batch-size", type=int, default=16)
+    ap.add_argument("--no-symmetric", action="store_true",
+                    help="ablation: turn off Timestral's symmetric averaging (forecaster name gets '-nosym')")
     ap.add_argument("--samples-from", default=None, help="load samples.npz from this folder instead of generating")
     ap.add_argument("--no-references", action="store_true", help="skip oracle/classical rows (merge them from the "
                     "folder the samples came from when summarizing)")
@@ -125,7 +127,7 @@ def main(argv=None):
 
     specs = [(size, False) for size in a.sizes] + ([(size, True) for size in a.sizes] if a.covariates else [])
     for size, use_cov in specs:
-        name = f"timestral-{size}" + ("+cov" if use_cov else "")
+        name = f"timestral-{size}" + ("+cov" if use_cov else "") + ("-nosym" if a.no_symmetric else "")
         for t in a.contexts:
             t0 = time.time()
             groups: dict = {}
@@ -138,7 +140,8 @@ def main(argv=None):
                     pc = np.stack([samples[i].past_cov[..., -t:] for i in idx])
                 if use_cov and samples[idx[0]].known_cov is not None:
                     kc = np.stack([samples[i].known_cov[..., samples[i].T - t: samples[i].T + hmax] for i in idx])
-                q = forecast(size, ctx, hmax, past_covariates=pc, known_covariates=kc, batch_size=a.batch_size)
+                q = forecast(size, ctx, hmax, past_covariates=pc, known_covariates=kc, batch_size=a.batch_size,
+                             symmetric_averaging=not a.no_symmetric)
                 for j, i in enumerate(idx):
                     rows += rows_for(samples[i], q[j], name, t, a.horizons,
                                      {"sec_per_sample": (time.time() - t0) / len(samples)})
