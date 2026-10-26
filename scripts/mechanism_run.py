@@ -40,6 +40,8 @@ def studies():
                        lambda v, s: chaos.LogisticMap(r=v), None),
         "mackey_tau": ("tau", [10.0, 17.0, 30.0],
                        lambda v, s: chaos.MackeyGlass(tau=v), None),
+        "rossler_c": ("c", [3.0, 4.5, 5.7, 9.0],
+                      lambda v, s: chaos.Rossler(c=v), None),
         "mean_jump_d": ("d", [16, 64, 256, 1024],
                         lambda v, s: regime.MeanJump(delta=4.0, placement="context", d=v, **base(s)), lambda v: v),
         "freq_jump_d": ("d", [64, 256, 1024],
@@ -51,6 +53,22 @@ def studies():
         "fbm_hurst": ("H_hurst", [0.2, 0.5, 0.8],
                       lambda v, s: tails.FractionalBM(H_hurst=v), None),
     }
+
+
+def _gen(job):
+    name, v, s, T, H, n_paths = job
+    _, _, factory, _ = studies()[name]
+    seed = zlib.crc32(f"mech/{name}/{v}/{s}".encode()) % (2**31)
+    return make_sample(factory(v, s), T, H, seed=seed, n_paths=n_paths)
+
+
+def _pool_map(fn, jobs, workers):
+    if workers <= 1:
+        return [fn(j) for j in jobs]
+    from concurrent.futures import ProcessPoolExecutor
+
+    with ProcessPoolExecutor(max_workers=workers) as ex:
+        return list(ex.map(fn, jobs, chunksize=4))
 
 
 def to_jsonable(rec: dict) -> dict:
@@ -75,6 +93,7 @@ def main(argv=None):
     ap.add_argument("--n-paths", type=int, default=300)
     ap.add_argument("--out", default="results/mechanism")
     ap.add_argument("--threads", type=int, default=None)
+    ap.add_argument("--workers", type=int, default=1, help="processes for sample generation")
     a = ap.parse_args(argv)
     set_threads(a.threads)
     os.makedirs(a.out, exist_ok=True)
@@ -85,10 +104,7 @@ def main(argv=None):
         knob, values, factory, change = allst[name]
         records = []
         for v in values:
-            samples = []
-            for s in range(a.n):
-                seed = zlib.crc32(f"mech/{name}/{v}/{s}".encode()) % (2**31)
-                samples.append(make_sample(factory(v, s), a.T, a.H, seed=seed, n_paths=a.n_paths))
+            samples = _pool_map(_gen, [(name, v, s, a.T, a.H, a.n_paths) for s in range(a.n)], a.workers)
             for size in a.sizes:
                 t1 = time.time()
                 r = measure(size, samples, horizon=a.H, change_step=change(v) if change else None)
