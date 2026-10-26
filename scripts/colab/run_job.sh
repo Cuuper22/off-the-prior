@@ -46,6 +46,7 @@ colab exec -s "$S" -f "$ROOT/scripts/colab/remote_start.py"
 # poll through file listing (the kernel exec channel can hang on an idle runtime)
 while true; do
   if timeout 90 colab ls -s "$S" /content 2>/dev/null | grep -q "job.exit"; then break; fi
+  if ! timeout 90 colab sessions 2>/dev/null | grep -q "\[$S\]"; then echo "session $S is gone"; exit 3; fi
   echo "$(date -u +%T) running"
   python3 -c "import time; time.sleep(120)"
 done
