@@ -94,15 +94,15 @@ COMPONENTS: list[Component] = [
                                                            harmonics=_pick(b, [1, 2, 3, 4]), phase_seed=int(c * 1e6))),
     Component("ar_noise", "primitive", lambda a, b, c: ARNoise(rho=_lin(a, 0.0, 0.99), sigma=1.0)),
     Component("lorenz63", "chaos", _chaos("Lorenz63", lambda a, b, c: {
-        "rho": _lin(a, 10.0, 50.0), "obs_every": _pick(b, [2, 5, 10, 20]), "dyn_rel": _log(c, 1e-3, 0.05)})),
+        "rho": _lin(a, 10.0, 50.0), "obs_every": _pick(b, [2, 5, 10, 20]), "dyn_rel": _log(c, 1e-3, 0.02)})),
     Component("rossler", "chaos", _chaos("Rossler", lambda a, b, c: {
-        "c": _lin(a, 2.0, 9.0), "obs_every": _pick(b, [5, 10, 20, 40]), "dyn_rel": _log(c, 1e-3, 0.05)})),
+        "c": _lin(a, 2.0, 9.0), "obs_every": _pick(b, [5, 10, 20, 40]), "dyn_rel": _log(c, 1e-3, 0.01)})),
     Component("mackey_glass", "chaos", _chaos("MackeyGlass", lambda a, b, c: {
-        "tau": _lin(a, 6.0, 30.0), "obs_every": _pick(b, [2, 5, 10]), "dyn_rel": _log(c, 1e-3, 0.05)})),
+        "tau": round(_lin(a, 6.0, 30.0) / 0.2) * 0.2, "obs_every": _pick(b, [2, 5, 10]), "dyn_rel": _log(c, 1e-3, 0.02)})),
     Component("logistic_map", "chaos", _chaos("LogisticMap", lambda a, b, c: {
-        "r": _lin(a, 2.8, 4.0), "dyn_rel": _log(b, 1e-3, 0.05)})),
+        "r": _lin(a, 2.8, 4.0), "dyn_rel": _log(b, 1e-3, 0.02)})),
     Component("kuramoto", "chaos", _chaos("Kuramoto", lambda a, b, c: {
-        "K": _lin(a, 0.0, 4.0), "freq_seed": int(b * 1e6), "dyn_rel": _log(c, 1e-3, 0.05)})),
+        "K": _lin(a, 0.0, 4.0), "freq_seed": int(b * 1e6), "dyn_rel": _log(c, 1e-3, 0.02)})),
     Component("mean_jump", "regime", _regime("MeanJump", lambda a, b, c: {
         "delta": _lin(a, -8.0, 8.0), **_placement(b), "period": _pick(c, [12, 24, 48, 96])})),
     Component("variance_jump", "regime", _regime("VarianceJump", lambda a, b, c: {
@@ -138,8 +138,10 @@ def _pilot_stats(name: str, genes: tuple[float, float, float]) -> tuple[float, f
         _, st = proc.step(st, w, rng)
     y, _ = proc.step(st, PILOT_STEPS, rng)
     y = y[0, list(proc.main_rows)[0]]
-    sd = float(np.std(y))
-    return float(np.mean(y)), sd if np.isfinite(sd) and sd > 1e-9 else 1.0
+    mu, sd = float(np.mean(y)), float(np.std(y))
+    if not (np.isfinite(mu) and np.isfinite(sd)):
+        return 0.0, 1.0  # the component diverged in the pilot; samples will be non-finite and fail feasibility
+    return mu, sd if sd > 1e-9 else 1.0
 
 
 @dataclass

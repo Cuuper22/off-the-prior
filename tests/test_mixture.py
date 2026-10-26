@@ -36,7 +36,7 @@ def test_regime_component_keeps_origin_inside_mixture():
     assert proc.procs[0].params["placement"] in ("context", "horizon")
 
 
-@pytest.mark.parametrize("seed", range(6))
+@pytest.mark.parametrize("seed", range(16))
 def test_random_genomes_build(seed):
     rng = np.random.default_rng(seed)
     g = M.random_genome(rng)
