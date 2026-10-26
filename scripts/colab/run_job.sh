@@ -43,8 +43,21 @@ for f in "$@"; do  # extra files: LOCAL=REMOTE (REMOTE relative to the repo root
   fi
 done
 colab exec -s "$S" -f "$ROOT/scripts/colab/remote_start.py"
-# poll through file listing (the kernel exec channel can hang on an idle runtime)
+# poll through file listing (the kernel exec channel can hang on an idle runtime); every third
+# poll, pull any results/colab_out/*/scores_partial.csv (sweep.py checkpoints) into $OUT/partial/,
+# so a lost runtime costs at most one chunk: relaunch with the partial file as an extra upload
+# (LOCAL=results/colab_out/<dir>/scores_partial.csv) and --resume in the job script.
+n=0
 while true; do
+  n=$((n+1))
+  if [ $((n % 3)) -eq 0 ]; then
+    for d in $(timeout 90 colab ls -s "$S" /content/otp/results/colab_out 2>/dev/null | grep '/$'); do
+      if timeout 90 colab ls -s "$S" "/content/otp/results/colab_out/$d" 2>/dev/null | grep -q scores_partial.csv; then
+        mkdir -p "$OUT/partial/$d"
+        timeout 600 colab download -s "$S" "/content/otp/results/colab_out/${d}scores_partial.csv" "$OUT/partial/${d}scores_partial.csv" >/dev/null 2>&1 || true
+      fi
+    done
+  fi
   if timeout 90 colab ls -s "$S" /content 2>/dev/null | grep -q "job.exit"; then break; fi
   echo "$(date -u +%T) running"
   python3 -c "import time; time.sleep(120)"
