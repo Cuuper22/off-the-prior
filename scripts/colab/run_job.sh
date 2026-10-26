@@ -13,9 +13,18 @@ mkdir -p "$OUT"
 S=otp-$JOB
 BUNDLE=$(mktemp -d)/otp_bundle.tar.gz
 git -C "$ROOT" archive --format=tar.gz -o "$BUNDLE" HEAD
-colab usage > "$OUT/usage_before.txt" 2>&1 || true
+# compute-unit balances are logged outside the repo (SPEND_DIR), one JSON line per job
+SPEND_DIR=${OTP_SPEND_DIR:-/home/claude/off-the-prior-tasks/colab_spend}
+mkdir -p "$SPEND_DIR"
+bal() { colab usage 2>/dev/null | sed -n 's/.*balance: \([0-9.]*\).*/\1/p'; }
+B0=$(bal || true)
 date -u +%FT%TZ > "$OUT/started_utc.txt"
-cleanup() { colab stop -s "$S" >/dev/null 2>&1 || true; colab usage > "$OUT/usage_after.txt" 2>&1 || true; date -u +%FT%TZ > "$OUT/ended_utc.txt"; }
+cleanup() {
+  colab stop -s "$S" >/dev/null 2>&1 || true
+  date -u +%FT%TZ > "$OUT/ended_utc.txt"
+  B1=$(bal || true)
+  echo "{\"job\": \"$JOB\", \"gpu\": \"$GPU\", \"start\": \"$(cat "$OUT/started_utc.txt")\", \"end\": \"$(cat "$OUT/ended_utc.txt")\", \"balance_before\": \"$B0\", \"balance_after\": \"$B1\"}" >> "$SPEND_DIR/colab_spend.jsonl"
+}
 trap cleanup EXIT
 colab new -s "$S" --gpu "$GPU"
 colab upload -s "$S" "$BUNDLE" /content/otp_bundle.tar.gz
