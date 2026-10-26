@@ -22,6 +22,8 @@ colab upload -s "$S" "$BUNDLE" /content/otp_bundle.tar.gz
 colab exec -s "$S" -f "$ROOT/scripts/colab/remote_setup.py" | tee "$OUT/setup.txt"
 colab upload -s "$S" "$JOBSH" /content/otp/job.sh
 for f in "$@"; do  # extra files: LOCAL=REMOTE (REMOTE relative to the repo root on Colab)
+  rdir=$(dirname "/content/otp/${f#*=}")
+  echo "import os; os.makedirs('$rdir', exist_ok=True)" | colab exec -s "$S"
   colab upload -s "$S" "${f%%=*}" "/content/otp/${f#*=}"
 done
 colab exec -s "$S" -f "$ROOT/scripts/colab/remote_start.py"
