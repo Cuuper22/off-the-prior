@@ -26,8 +26,11 @@ KEYS = ["config_id", "generator", "knob_value", "forecaster", "T", "H"]
 METRICS = ["mase_ratio_oracle", "scrps_ratio_oracle", "mase_ratio_classical", "scrps_ratio_classical"]
 
 
-def summarize(folder: str, control: str | None = None, variate: int | None = 0) -> pd.DataFrame:
-    df = pd.read_csv(os.path.join(folder, "scores.csv"))
+def summarize(folder: str, control: str | None = None, variate: int | None = 0,
+              extra: list[str] | None = None) -> pd.DataFrame:
+    """`extra`: more scores.csv files to concatenate (e.g. big-model runs that reused this folder's samples)."""
+    df = pd.concat([pd.read_csv(os.path.join(folder, "scores.csv"))] + [pd.read_csv(e) for e in (extra or [])],
+                   ignore_index=True)
     if "config_id" not in df:
         df["config_id"] = df["generator"]
     if variate is not None and "variate" in df:
@@ -61,8 +64,9 @@ def main():
     ap.add_argument("folder")
     ap.add_argument("--control", default=None)
     ap.add_argument("--out", default=None)
+    ap.add_argument("--extra", nargs="*", default=None, help="additional scores.csv files to merge in")
     a = ap.parse_args()
-    s = summarize(a.folder, a.control)
+    s = summarize(a.folder, a.control, extra=a.extra)
     path = a.out or os.path.join(a.folder, "summary_lead.csv")
     s.to_csv(path, index=False)
     print(f"wrote {len(s)} rows to {path}")

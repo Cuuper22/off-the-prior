@@ -79,6 +79,9 @@ def main(argv=None):
     ap.add_argument("--regen", action="store_true")
     ap.add_argument("--threads", type=int, default=None)
     ap.add_argument("--batch-size", type=int, default=16)
+    ap.add_argument("--samples-from", default=None, help="load samples.npz from this folder instead of generating")
+    ap.add_argument("--no-references", action="store_true", help="skip oracle/classical rows (merge them from the "
+                    "folder the samples came from when summarizing)")
     a = ap.parse_args(argv)
     set_threads(a.threads)
     os.makedirs(a.out, exist_ok=True)
@@ -89,7 +92,7 @@ def main(argv=None):
     if a.only:
         cfgs = [c for c in cfgs if c[0] in set(a.only)]
     tmax, hmax = max(a.contexts), max(a.horizons)
-    spath = os.path.join(a.out, "samples.npz")
+    spath = os.path.join(a.samples_from or a.out, "samples.npz")
     if os.path.exists(spath) and not a.regen:
         samples = load_samples(spath)
         print(f"loaded {len(samples)} samples from {spath}")
@@ -104,13 +107,15 @@ def main(argv=None):
                 s.meta["config_id"] = cid
                 samples.append(s)
             print(f"generated {cid}", flush=True)
+        if a.only:
+            print("note: --only given; samples are saved for this subset")
         try:
             save_samples(spath, samples)
         except ValueError:
             print("samples have mixed shapes; not saved as one npz")
 
     rows = []
-    for s in samples:  # oracle + classical once per sample (classical uses the last 1024 steps)
+    for s in ([] if a.no_references else samples):  # oracle + classical once per sample (last 1024 steps)
         rows += rows_for(s, s.oracle_q, "oracle", tmax, a.horizons, {})
         for name in a.classical:
             q = classical_forecast(name, s.context[None], hmax, s.period)[0]
