@@ -1,0 +1,59 @@
+{
+  "run_id": "run1_tiny",
+  "gpu": "Tesla T4",
+  "device": "cuda",
+  "torch": "2.11.0+cu130",
+  "tiny": true,
+  "train_cell_wall_sec": 72.7,
+  "eval_cell_wall_sec": 5.9,
+  "finished_utc": "2026-10-26T23:26:44Z",
+  "sizes": [
+    "5M"
+  ],
+  "protocols": [
+    "lofo"
+  ],
+  "holdouts": [
+    "regime",
+    "tails"
+  ],
+  "methods": [
+    "full",
+    "lora"
+  ],
+  "replay_fracs": [
+    0.0,
+    0.3
+  ],
+  "steps": {
+    "5M": 2
+  },
+  "batch": {
+    "5M": 4
+  },
+  "lr_full": {
+    "5M": 5e-05,
+    "28M": 3e-05,
+    "123M": 2e-05,
+    "209M": 1e-05
+  },
+  "lr_lora": {
+    "5M": 0.001,
+    "28M": 0.001,
+    "123M": 0.0005,
+    "209M": 0.0005
+  },
+  "rank": 8,
+  "alpha": 16.0,
+  "pool_batches": 2,
+  "contexts": [
+    256
+  ],
+  "horizons": [
+    32
+  ],
+  "n_eval": 3,
+  "n_regression": 3,
+  "n_paths": 20,
+  "real_regression_set": false
+}
