@@ -408,6 +408,40 @@ RESULTS-PENDING.
 
 # 9. Fixing it
 
+## 9.1 Without training: let the context decide
+
+Section 7.2 showed that a nearest-neighbour forecaster built from the context beats Timestral
+on some deterministic systems and loses badly on others. A forecaster can find out which case
+it is in from the context alone: forecast the last stretch of the context from what comes
+before it, with both methods, and compare. The rule we test switches to the analogue forecast
+(keeping Timestral's quantile spread around the new median) only when the analogues' backtest
+error is below 0.7 times Timestral's on each of the last two 128-step windows.
+
+How the rule was chosen matters. A first pre-set procedure (tune on even seeds, report on odd
+seeds) picked a one-window rule that helped chaos but cost the tails family
+1.031–1.043 on the held-out seeds. We then
+picked the two-window rule from that held-out table, which is a choice made after seeing
+it, so we froze it and evaluated it once more on fresh samples generated for that purpose
+(`results/fix/README.md` lists all three stages). On the fresh samples (MASE of the fix divided
+by Timestral's MASE; below 1 is better):
+
+| family | 5M | 28M | 123M | 209M | share switched (range over sizes) |
+|---|---|---|---|---|---|
+| chaos | 0.824 | 0.877 | 0.970 | 0.982 | 0.067-0.238 |
+| regime | 1.000 | 1.000 | 1.000 | 1.000 | 0.000-0.000 |
+| tails | 1.003 | 1.000 | 1.001 | 1.000 | 0.004-0.011 |
+| in_prior | 1.000 | 1.000 | 1.000 | 1.000 | 0.000-0.000 |
+
+The fix improves chaos by a factor of 0.824 at 5M and 0.982 at
+209M, leaves in-prior and regime series untouched (the rule never switches there), and costs at
+most a factor of 1.003 on tails. Its benefit shrinks with model size, in line with
+larger models closing more of the chaos gap on their own.
+
+The other zero-training idea, cutting the context to the part after a detected change
+(Section 7.1), helps only when at least 256 post-switch steps are available.
+
+## 9.2 Fine-tuning: full, LoRA, and data mixing
+
 RESULTS-PENDING.
 
 # 10. Limitations

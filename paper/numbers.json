@@ -599,6 +599,36 @@
   "src": "results/mechanism/readouts/summary.csv",
   "how": "Mackey-Glass tau=17, 209M: correlation of Timestral's median with the periodic template"
  },
+ "sv_chaos_5M": {
+  "value": 0.8239778852990144,
+  "text": "0.824",
+  "src": "results/fix/selfval_confirm/frozen_rule_confirmation.csv",
+  "how": "chaos, 5M: MASE(fix)/MASE(Timestral) on fresh seeds"
+ },
+ "sv_chaos_209M": {
+  "value": 0.9819391101374784,
+  "text": "0.982",
+  "src": "results/fix/selfval_confirm/frozen_rule_confirmation.csv",
+  "how": "chaos, 209M: MASE(fix)/MASE(Timestral) on fresh seeds"
+ },
+ "sv_tails_max": {
+  "value": 1.0029233891273954,
+  "text": "1.003",
+  "src": "results/fix/selfval_confirm/frozen_rule_confirmation.csv",
+  "how": "tails: max over sizes of MASE(fix)/MASE(Timestral)"
+ },
+ "sv_firstrule_tails_min": {
+  "value": 1.0314281727933554,
+  "text": "1.031",
+  "src": "results/fix/selfval/chosen_rule_test_half.csv",
+  "how": "first pre-set rule, odd seeds: min over sizes, tails"
+ },
+ "sv_firstrule_tails_max": {
+  "value": 1.043336721830241,
+  "text": "1.043",
+  "src": "results/fix/selfval/chosen_rule_test_half.csv",
+  "how": "first pre-set rule, odd seeds: max over sizes, tails"
+ },
  "table:inprior": {
   "src": "results/map/in_prior/summary.csv",
   "how": "geometric mean over the 4 in-prior configs of the per-config geometric-mean MASE ratio to oracle, context 2048"
@@ -630,5 +660,9 @@
  "table:readouts": {
   "src": "results/mechanism/readouts/summary.csv",
   "how": "300 samples per setting; cross-validated R2 of predicting the oracle's expected change (first patch, or step 1) from Timestral's output vs. from the best per-layer linear readout of the first forecast token"
+ },
+ "table:selfval": {
+  "src": "results/fix/selfval_confirm/frozen_rule_confirmation.csv",
+  "how": "geometric mean over fresh samples of MASE(fix) / MASE(Timestral); frozen rule K=2, m=0.7"
  }
 }

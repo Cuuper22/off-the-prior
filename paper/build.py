@@ -247,8 +247,32 @@ def readouts():
     table("readouts", pd.DataFrame(rows), src, "300 samples per setting; cross-validated R2 of predicting the oracle's expected change (first patch, or step 1) from Timestral's output vs. from the best per-layer linear readout of the first forecast token", "{:.3f}")
 
 
+def selfval():
+    src = "results/fix/selfval_confirm/frozen_rule_confirmation.csv"
+    r = pd.read_csv(p(src))
+    rows = []
+    for fam in ("chaos", "regime", "tails", "in_prior"):
+        row = {"family": fam}
+        for fc in SIZES:
+            v = r[(r.family == fam) & (r["size"] == SIZE_LABEL[fc])].mase_fix_over_timestral
+            row[SIZE_LABEL[fc]] = float(v.iloc[0]) if len(v) else float("nan")
+        v = r[r.family == fam].switched_share
+        row["share switched (range over sizes)"] = f"{v.min():.3f}-{v.max():.3f}"
+        rows.append(row)
+    table("selfval", pd.DataFrame(rows), src, "geometric mean over fresh samples of MASE(fix) / MASE(Timestral); frozen rule K=2, m=0.7", "{:.3f}")
+    c = r[r.family == "chaos"].set_index("size").mase_fix_over_timestral
+    for size in ("5M", "209M"):
+        num(f"sv_chaos_{size}", float(c[size]), src, f"chaos, {size}: MASE(fix)/MASE(Timestral) on fresh seeds", "{:.3f}")
+    t = r[r.family == "tails"].mase_fix_over_timestral
+    num("sv_tails_max", float(t.max()), src, "tails: max over sizes of MASE(fix)/MASE(Timestral)", "{:.3f}")
+    s2 = pd.read_csv(p("results/fix/selfval/chosen_rule_test_half.csv"))
+    tt = s2[s2.family == "tails"].mase_fix_over_timestral
+    num("sv_firstrule_tails_min", float(tt.min()), "results/fix/selfval/chosen_rule_test_half.csv", "first pre-set rule, odd seeds: min over sizes, tails", "{:.3f}")
+    num("sv_firstrule_tails_max", float(tt.max()), "results/fix/selfval/chosen_rule_test_half.csv", "first pre-set rule, odd seeds: max over sizes, tails", "{:.3f}")
+
+
 def main():
-    for fn in (in_prior, chaos, tails, long_ctx, symavg, normalization, analog, chaos_noise, readouts):
+    for fn in (in_prior, chaos, tails, long_ctx, symavg, normalization, analog, chaos_noise, readouts, selfval):
         try:
             fn()
         except FileNotFoundError as e:
