@@ -1,0 +1,9 @@
+STATE done 0
+timestral-123M T=2048 done (10s)
+timestral-123M T=8192 done (8s)
+timestral-123M T=32768 done (23s)
+
+timestral-209M T=2048 done (13s)
+timestral-209M T=8192 done (11s)
+timestral-209M T=32768 done (34s)
+wrote 14336 rows to results/colab_out/long_ctx/scores.csv in 343s

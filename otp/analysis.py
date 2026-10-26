@@ -15,19 +15,36 @@ KEYS = ["sample_id", "T", "H", "variate"]
 
 
 def ratios(df: pd.DataFrame) -> pd.DataFrame:
+    """Per-sample ratios and gaps to the oracle and to the best classical model, matched on the
+    same context length T (MASE and sCRPS are scaled by the naive error of the context used, so
+    the oracle row must be scored on that same context). Raises if a (sample, T) has no oracle row.
+    """
     out = df.copy()
     for m in ("mase", "scrps"):
-        orc = df[df.forecaster == "oracle"]
-        # the oracle row is stored at the longest context only; it does not depend on T
-        orc = orc[["sample_id", "H", "variate", m]].drop_duplicates(["sample_id", "H", "variate"])
-        orc = orc.rename(columns={m: f"{m}_oracle"})
+        orc = df[df.forecaster == "oracle"][KEYS + [m]].drop_duplicates(KEYS).rename(columns={m: f"{m}_oracle"})
         cl = df[df.forecaster.isin(CLASSICAL_NAMES)].groupby(KEYS, as_index=False)[m].min()
         cl = cl.rename(columns={m: f"{m}_best_classical"})
-        out = out.merge(orc, on=["sample_id", "H", "variate"], how="left").merge(cl, on=KEYS, how="left")
+        if m == "mase":
+            has = orc[KEYS].assign(_has_oracle=True)
+            out = out.merge(has, on=KEYS, how="left")
+        out = out.merge(orc, on=KEYS, how="left").merge(cl, on=KEYS, how="left")
         out[f"{m}_ratio_oracle"] = out[m] / out[f"{m}_oracle"].clip(lower=1e-9)
         out[f"{m}_gap_oracle"] = out[m] - out[f"{m}_oracle"]
         out[f"{m}_ratio_classical"] = out[m] / out[f"{m}_best_classical"].clip(lower=1e-9)
+    missing = out[(out.forecaster != "oracle") & out["_has_oracle"].isna()]
+    out = out.drop(columns=["_has_oracle"])
+    # a present oracle row with a non-finite value (e.g. a simulator path that diverged) gives a NaN
+    # ratio; aggregation (`curve`) ignores non-finite ratios, and `nonfinite_oracle(df)` lists them
+    if len(orc) and len(missing):
+        bad = sorted(set(missing["T"]))
+        raise ValueError(f"no oracle rows for context lengths {bad}; run scripts/repair_oracle_rows.py on this folder")
     return out
+
+
+def nonfinite_oracle(df: pd.DataFrame) -> pd.DataFrame:
+    """Oracle rows whose metrics are not finite (the Monte Carlo oracle had a diverged path)."""
+    o = df[df.forecaster == "oracle"]
+    return o[~(np.isfinite(o["mase"]) & np.isfinite(o["scrps"]))]
 
 
 def _gm(x):
