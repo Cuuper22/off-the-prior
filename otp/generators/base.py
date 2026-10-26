@@ -170,12 +170,13 @@ def save_samples(path: str, samples: list[Sample]) -> None:
 def load_samples(path: str) -> list[Sample]:
     import json
 
-    z = np.load(path, allow_pickle=False)
-    n = z["context"].shape[0]
-    pc = z["past_cov"] if "past_cov" in z else None
-    kc = z["known_cov"] if "known_cov" in z else None
+    with np.load(path, allow_pickle=False) as z:
+        # read every array once (indexing z[...] repeatedly would decompress a fresh copy each time)
+        arr = {k: z[k] for k in z.files}
+    n = arr["context"].shape[0]
+    pc, kc = arr.get("past_cov"), arr.get("known_cov")
     return [
-        Sample(z["context"][i], z["future"][i], z["oracle_q"][i], int(z["period"][i]), json.loads(str(z["meta"][i])),
-               None if pc is None else pc[i], None if kc is None else kc[i])
+        Sample(arr["context"][i].copy(), arr["future"][i].copy(), arr["oracle_q"][i].copy(), int(arr["period"][i]),
+               json.loads(str(arr["meta"][i])), None if pc is None else pc[i].copy(), None if kc is None else kc[i].copy())
         for i in range(n)
     ]
