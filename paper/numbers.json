@@ -167,6 +167,414 @@
   "src": "results/mechanism/normalization/summary.csv",
   "how": "same cells: max sCRPS ratio to oracle"
  },
+ "noise_mg_lo_min": {
+  "value": 43.929593665606106,
+  "text": "43.93",
+  "src": "results/mechanism/chaos_noise/summary.csv",
+  "how": "Mackey-Glass tau=17, noise 0.001, min over sizes"
+ },
+ "noise_mg_lo_max": {
+  "value": 75.47215294164776,
+  "text": "75.47",
+  "src": "results/mechanism/chaos_noise/summary.csv",
+  "how": "Mackey-Glass tau=17, noise 0.001, max over sizes"
+ },
+ "noise_mg_hi_min": {
+  "value": 1.4613626385292553,
+  "text": "1.46",
+  "src": "results/mechanism/chaos_noise/summary.csv",
+  "how": "Mackey-Glass tau=17, noise 0.1, min over sizes"
+ },
+ "noise_mg_hi_max": {
+  "value": 1.811502970114483,
+  "text": "1.81",
+  "src": "results/mechanism/chaos_noise/summary.csv",
+  "how": "Mackey-Glass tau=17, noise 0.1, max over sizes"
+ },
+ "ro_mj16_out_min": {
+  "value": 0.5704591642815328,
+  "text": "0.570",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: min over the four sizes of output_r2"
+ },
+ "ro_mj16_out_max": {
+  "value": 0.7264275490801299,
+  "text": "0.726",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: max over the four sizes of output_r2"
+ },
+ "ro_mj16_ro_min": {
+  "value": 0.9557986391870656,
+  "text": "0.956",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: min over the four sizes of best_readout_r2"
+ },
+ "ro_mj16_ro_max": {
+  "value": 0.9800608827274075,
+  "text": "0.980",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: max over the four sizes of best_readout_r2"
+ },
+ "ro_mj16_ratio_min": {
+  "value": 2.0176528125259265,
+  "text": "2.02",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: min over the four sizes of mase_ratio_oracle_gmean"
+ },
+ "ro_mj16_ratio_max": {
+  "value": 3.6242816593950655,
+  "text": "3.62",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: max over the four sizes of mase_ratio_oracle_gmean"
+ },
+ "ro_mj16_s1out_min": {
+  "value": 0.5398793941276586,
+  "text": "0.540",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: min over the four sizes of step1_output_r2"
+ },
+ "ro_mj16_s1out_max": {
+  "value": 0.6174553263028484,
+  "text": "0.617",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: max over the four sizes of step1_output_r2"
+ },
+ "ro_mj16_s1ro_min": {
+  "value": 0.7957392776364307,
+  "text": "0.796",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: min over the four sizes of step1_readout_r2"
+ },
+ "ro_mj16_s1ro_max": {
+  "value": 0.8739499461036134,
+  "text": "0.874",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: max over the four sizes of step1_readout_r2"
+ },
+ "ro_mj16_post_min": {
+  "value": 15.697754669139783,
+  "text": "15.70",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: min over the four sizes of attn_post_change_mean"
+ },
+ "ro_mj16_post_max": {
+  "value": 17.69242769763701,
+  "text": "17.69",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: max over the four sizes of attn_post_change_mean"
+ },
+ "ro_mj16_tm_min": {
+  "value": 0.7568769946992726,
+  "text": "0.757",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: min over the four sizes of template_corr_model"
+ },
+ "ro_mj16_tm_max": {
+  "value": 0.8745622251253325,
+  "text": "0.875",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: max over the four sizes of template_corr_model"
+ },
+ "ro_mj16_to_min": {
+  "value": 0.9114319303317612,
+  "text": "0.911",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: min over the four sizes of template_corr_oracle"
+ },
+ "ro_mj16_to_max": {
+  "value": 0.9114319303317612,
+  "text": "0.911",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: max over the four sizes of template_corr_oracle"
+ },
+ "ro_mj256_out_min": {
+  "value": 0.977112889308454,
+  "text": "0.977",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: min over the four sizes of output_r2"
+ },
+ "ro_mj256_out_max": {
+  "value": 0.9927174531272992,
+  "text": "0.993",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: max over the four sizes of output_r2"
+ },
+ "ro_mj256_ro_min": {
+  "value": 0.964671122078032,
+  "text": "0.965",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: min over the four sizes of best_readout_r2"
+ },
+ "ro_mj256_ro_max": {
+  "value": 0.9852684392385926,
+  "text": "0.985",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: max over the four sizes of best_readout_r2"
+ },
+ "ro_mj256_ratio_min": {
+  "value": 1.0257984645878335,
+  "text": "1.03",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: min over the four sizes of mase_ratio_oracle_gmean"
+ },
+ "ro_mj256_ratio_max": {
+  "value": 1.0874449817448262,
+  "text": "1.09",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: max over the four sizes of mase_ratio_oracle_gmean"
+ },
+ "ro_mj256_s1out_min": {
+  "value": 0.8989571621760403,
+  "text": "0.899",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: min over the four sizes of step1_output_r2"
+ },
+ "ro_mj256_s1out_max": {
+  "value": 0.9509680086892428,
+  "text": "0.951",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: max over the four sizes of step1_output_r2"
+ },
+ "ro_mj256_s1ro_min": {
+  "value": 0.8495607574862198,
+  "text": "0.850",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: min over the four sizes of step1_readout_r2"
+ },
+ "ro_mj256_s1ro_max": {
+  "value": 0.9278902364830636,
+  "text": "0.928",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: max over the four sizes of step1_readout_r2"
+ },
+ "ro_mj256_post_min": {
+  "value": 4.103851145969497,
+  "text": "4.10",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: min over the four sizes of attn_post_change_mean"
+ },
+ "ro_mj256_post_max": {
+  "value": 4.652054856949383,
+  "text": "4.65",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: max over the four sizes of attn_post_change_mean"
+ },
+ "ro_mj256_tm_min": {
+  "value": 0.9238248957224444,
+  "text": "0.924",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: min over the four sizes of template_corr_model"
+ },
+ "ro_mj256_tm_max": {
+  "value": 0.934926857693235,
+  "text": "0.935",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: max over the four sizes of template_corr_model"
+ },
+ "ro_mj256_to_min": {
+  "value": 0.9300140374983198,
+  "text": "0.930",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: min over the four sizes of template_corr_oracle"
+ },
+ "ro_mj256_to_max": {
+  "value": 0.9300140374983198,
+  "text": "0.930",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: max over the four sizes of template_corr_oracle"
+ },
+ "ro_fj64_out_min": {
+  "value": 0.8941520744262395,
+  "text": "0.894",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: min over the four sizes of output_r2"
+ },
+ "ro_fj64_out_max": {
+  "value": 0.9655547850360104,
+  "text": "0.966",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: max over the four sizes of output_r2"
+ },
+ "ro_fj64_ro_min": {
+  "value": 0.9602867457947036,
+  "text": "0.960",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: min over the four sizes of best_readout_r2"
+ },
+ "ro_fj64_ro_max": {
+  "value": 0.9782111611495063,
+  "text": "0.978",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: max over the four sizes of best_readout_r2"
+ },
+ "ro_fj64_ratio_min": {
+  "value": 1.8561940381825623,
+  "text": "1.86",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: min over the four sizes of mase_ratio_oracle_gmean"
+ },
+ "ro_fj64_ratio_max": {
+  "value": 2.269417548841886,
+  "text": "2.27",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: max over the four sizes of mase_ratio_oracle_gmean"
+ },
+ "ro_fj64_s1out_min": {
+  "value": 0.0838977834729749,
+  "text": "0.084",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: min over the four sizes of step1_output_r2"
+ },
+ "ro_fj64_s1out_max": {
+  "value": 0.2272729923728155,
+  "text": "0.227",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: max over the four sizes of step1_output_r2"
+ },
+ "ro_fj64_s1ro_min": {
+  "value": 0.6838950129619585,
+  "text": "0.684",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: min over the four sizes of step1_readout_r2"
+ },
+ "ro_fj64_s1ro_max": {
+  "value": 0.7750219263788887,
+  "text": "0.775",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: max over the four sizes of step1_readout_r2"
+ },
+ "ro_fj64_post_min": {
+  "value": 9.2371936169068,
+  "text": "9.24",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: min over the four sizes of attn_post_change_mean"
+ },
+ "ro_fj64_post_max": {
+  "value": 11.691397613336642,
+  "text": "11.69",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: max over the four sizes of attn_post_change_mean"
+ },
+ "ro_fj64_tm_min": {
+  "value": 0.5971413248924978,
+  "text": "0.597",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: min over the four sizes of template_corr_model"
+ },
+ "ro_fj64_tm_max": {
+  "value": 0.7714643868897777,
+  "text": "0.771",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: max over the four sizes of template_corr_model"
+ },
+ "ro_fj64_to_min": {
+  "value": 0.2311931231562242,
+  "text": "0.231",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: min over the four sizes of template_corr_oracle"
+ },
+ "ro_fj64_to_max": {
+  "value": 0.2311931231562242,
+  "text": "0.231",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: max over the four sizes of template_corr_oracle"
+ },
+ "ro_mg17_out_min": {
+  "value": 0.9915286358458888,
+  "text": "0.992",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: min over the four sizes of output_r2"
+ },
+ "ro_mg17_out_max": {
+  "value": 0.9976804391891784,
+  "text": "0.998",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: max over the four sizes of output_r2"
+ },
+ "ro_mg17_ro_min": {
+  "value": 0.9988271399841324,
+  "text": "0.999",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: min over the four sizes of best_readout_r2"
+ },
+ "ro_mg17_ro_max": {
+  "value": 0.9996080814775152,
+  "text": "1.000",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: max over the four sizes of best_readout_r2"
+ },
+ "ro_mg17_ratio_min": {
+  "value": 4.854971299259443,
+  "text": "4.85",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: min over the four sizes of mase_ratio_oracle_gmean"
+ },
+ "ro_mg17_ratio_max": {
+  "value": 7.258027445806638,
+  "text": "7.26",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: max over the four sizes of mase_ratio_oracle_gmean"
+ },
+ "ro_mg17_s1out_min": {
+  "value": 0.956145470260924,
+  "text": "0.956",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: min over the four sizes of step1_output_r2"
+ },
+ "ro_mg17_s1out_max": {
+  "value": 0.984410986906932,
+  "text": "0.984",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: max over the four sizes of step1_output_r2"
+ },
+ "ro_mg17_s1ro_min": {
+  "value": 0.971403200615707,
+  "text": "0.971",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: min over the four sizes of step1_readout_r2"
+ },
+ "ro_mg17_s1ro_max": {
+  "value": 0.98573732513816,
+  "text": "0.986",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: max over the four sizes of step1_readout_r2"
+ },
+ "ro_mg17_tm_min": {
+  "value": 0.806406867227388,
+  "text": "0.806",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: min over the four sizes of template_corr_model"
+ },
+ "ro_mg17_tm_max": {
+  "value": 0.8701321310748555,
+  "text": "0.870",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: max over the four sizes of template_corr_model"
+ },
+ "ro_mg17_to_min": {
+  "value": 0.750858786805685,
+  "text": "0.751",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: min over the four sizes of template_corr_oracle"
+ },
+ "ro_mg17_to_max": {
+  "value": 0.750858786805685,
+  "text": "0.751",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: max over the four sizes of template_corr_oracle"
+ },
+ "ro_mg17_tm_5M": {
+  "value": 0.8701321310748555,
+  "text": "0.87",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "Mackey-Glass tau=17, 5M: correlation of Timestral's median with the periodic template"
+ },
+ "ro_mg17_tm_209M": {
+  "value": 0.806406867227388,
+  "text": "0.81",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "Mackey-Glass tau=17, 209M: correlation of Timestral's median with the periodic template"
+ },
  "table:inprior": {
   "src": "results/map/in_prior/summary.csv",
   "how": "geometric mean over the 4 in-prior configs of the per-config geometric-mean MASE ratio to oracle, context 2048"
@@ -190,5 +598,13 @@
  "table:analog": {
   "src": "results/mechanism/analog/summary.csv",
   "how": "geometric mean over 8 seeds of MASE (context 2048, horizon 128) for the oracle, the method of analogues, the seasonal template, and Timestral"
+ },
+ "table:chaos_noise": {
+  "src": "results/mechanism/chaos_noise/summary.csv",
+  "how": "geometric mean over 16 seeds of MASE ratio to oracle, context 2048, horizon 128"
+ },
+ "table:readouts": {
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "300 samples per setting; cross-validated R2 of predicting the oracle's expected change (first patch, or step 1) from Timestral's output vs. from the best per-layer linear readout of the first forecast token"
  }
 }

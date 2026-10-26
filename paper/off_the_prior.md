@@ -208,8 +208,30 @@ reaches, not by the step count:
 
 Inside one to three Lyapunov times the oracle can still track the trajectory and Timestral
 cannot; past about ten, nobody can, and the ratio returns to about 1. The noise level of the
-generator sets how good the oracle can be inside that window (Section 7 reports the noise
-sweep).
+generator sets how good the oracle can be inside that window. Sweeping the noise level
+(dynamic and observation noise together) shows how much of each ratio that choice sets:
+
+| system | noise (% of scale) | 5M | 28M | 123M | 209M |
+|---|---|---|---|---|---|
+| lorenz63_rho28 | 0.10 | 1.96 | 1.89 | 1.87 | 1.83 |
+| lorenz63_rho28 | 0.30 | 1.65 | 1.60 | 1.57 | 1.55 |
+| lorenz63_rho28 | 1.00 | 1.48 | 1.47 | 1.44 | 1.44 |
+| lorenz63_rho28 | 3.00 | 1.24 | 1.21 | 1.19 | 1.18 |
+| lorenz63_rho28 | 10.00 | 1.11 | 1.09 | 1.07 | 1.07 |
+| mackey_glass_tau17 | 0.10 | 75.47 | 64.81 | 56.19 | 43.93 |
+| mackey_glass_tau17 | 0.30 | 22.32 | 18.29 | 12.69 | 12.68 |
+| mackey_glass_tau17 | 1.00 | 6.32 | 5.75 | 4.84 | 4.32 |
+| mackey_glass_tau17 | 3.00 | 2.71 | 2.60 | 2.25 | 2.14 |
+| mackey_glass_tau17 | 10.00 | 1.76 | 1.81 | 1.48 | 1.46 |
+| rossler_c5.7 | 0.10 | 17.33 | 15.70 | 12.84 | 11.77 |
+| rossler_c5.7 | 0.30 | 10.57 | 9.80 | 7.90 | 6.78 |
+| rossler_c5.7 | 1.00 | 2.51 | 2.32 | 2.12 | 1.97 |
+
+At 0.1% noise the oracle is nearly exact and Mackey-Glass sits at
+43.93–75.47 times its error; at 10% the gap is
+1.46–1.81. The ratio is therefore a measure of how much
+predictable structure Timestral leaves unused, and its size depends on how much predictable
+structure the generator provides. The ordering of model sizes holds at every noise level.
 
 ## 4.3 Heavy tails and fractal processes
 
@@ -317,9 +339,54 @@ than with the periodic template, but lean toward the template more than the orac
 trajectory library and partly as a pattern to repeat, and on smooth nonlinear oscillators,
 which its trend + season + noise prior represents as near-periodic, the second pull wins.
 
-## 7.3 Inside the model
+## 7.3 Inside the model: represented but not used
 
-RESULTS-PENDING (attention on forecast tokens and linear readouts, all sizes: Colab job D).
+For each setting we ran one plain forward pass on 300 samples and asked two questions about
+the oracle's expected change over the first forecast patch (and at single steps 1 and 16):
+how well does Timestral's own forecast predict it, and how well does a linear readout (a
+ridge regression, cross-validated) of the hidden state of the first forecast token predict
+it, at the best layer? If the readout does much better than the output, the information the
+oracle uses is inside the model but does not reach the forecast.
+
+| setting | size | MASE / oracle | output R2 | best readout R2 | step-1 output R2 | step-1 readout R2 |
+|---|---|---|---|---|---|---|
+| mean_jump_d 16 | 5M | 3.624 | 0.670 | 0.956 | 0.540 | 0.796 |
+| mean_jump_d 16 | 209M | 2.476 | 0.726 | 0.980 | 0.584 | 0.865 |
+| mean_jump_d 64 | 5M | 1.536 | 0.919 | 0.962 | 0.803 | 0.841 |
+| mean_jump_d 64 | 209M | 1.121 | 0.966 | 0.985 | 0.905 | 0.872 |
+| mean_jump_d 256 | 5M | 1.087 | 0.977 | 0.965 | 0.899 | 0.850 |
+| mean_jump_d 256 | 209M | 1.026 | 0.993 | 0.985 | 0.951 | 0.924 |
+| freq_jump_d 64 | 5M | 2.269 | 0.894 | 0.960 | 0.084 | 0.684 |
+| freq_jump_d 64 | 209M | 1.856 | 0.966 | 0.978 | 0.227 | 0.756 |
+| freq_jump_d 1024 | 5M | 1.044 | 0.997 | 0.961 | 0.894 | 0.787 |
+| freq_jump_d 1024 | 209M | 1.024 | 0.997 | 0.978 | 0.931 | 0.890 |
+| mackey_tau 17 | 5M | 7.258 | 0.992 | 0.999 | 0.956 | 0.971 |
+| mackey_tau 17 | 209M | 4.855 | 0.998 | 1.000 | 0.984 | 0.983 |
+| lorenz_rho 28 | 5M | 1.415 | 0.772 | 0.781 | 0.724 | 0.721 |
+| lorenz_rho 28 | 209M | 1.346 | 0.869 | 0.881 | 0.972 | 0.962 |
+| in_prior 24 | 5M | 1.070 | 0.996 | 0.784 | 0.958 | 0.666 |
+| in_prior 24 | 209M | 1.027 | 0.997 | 0.828 | 0.989 | 0.769 |
+
+**Recent regime switches: represented, attended to, not used.** Sixteen steps after a mean
+jump, the readout reaches R² 0.956–0.980 at every size while
+the forecast itself reaches 0.570–0.726, and the forecast
+error is 2.02–3.62 times the oracle's. The forecast
+tokens are not looking elsewhere: they put 15.70–17.69
+times their proportional share of attention on the post-switch patches. Sixty-four steps
+after a frequency jump, one step ahead, the readout reaches 0.684–0.775
+against 0.084–0.227 for the output. By 256 steps after
+a mean jump the two agree (0.977–0.993 vs.
+0.965–0.985). The model sees and encodes a recent change and
+then forecasts as if it may not last. A prior built from trend + season + noise contains no
+lasting breaks, and a very recent departure from the pattern looks like noise under that prior.
+
+**Deterministic oscillators: the gap builds later.** On Mackey-Glass (τ = 17) output and readout
+agree for the first patch (0.992–0.998 vs.
+0.999–1.000): the near-term forecast uses what is there, and the
+error accumulates over the following cycles. There the forecast correlates with a periodic
+continuation of the context more than the oracle's forecast does
+(0.87 at 5M, 0.81 at 209M, against
+0.751 for the oracle), and the excess shrinks with size together with the error.
 
 # 8. Benchmarks
 

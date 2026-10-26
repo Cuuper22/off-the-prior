@@ -172,8 +172,16 @@ reaches, not by the step count:
 
 Inside one to three Lyapunov times the oracle can still track the trajectory and Timestral
 cannot; past about ten, nobody can, and the ratio returns to about 1. The noise level of the
-generator sets how good the oracle can be inside that window (Section 7 reports the noise
-sweep).
+generator sets how good the oracle can be inside that window. Sweeping the noise level
+(dynamic and observation noise together) shows how much of each ratio that choice sets:
+
+{{table:chaos_noise}}
+
+At 0.1% noise the oracle is nearly exact and Mackey-Glass sits at
+{{num:noise_mg_lo_min}}–{{num:noise_mg_lo_max}} times its error; at 10% the gap is
+{{num:noise_mg_hi_min}}–{{num:noise_mg_hi_max}}. The ratio is therefore a measure of how much
+predictable structure Timestral leaves unused, and its size depends on how much predictable
+structure the generator provides. The ordering of model sizes holds at every noise level.
 
 ## 4.3 Heavy tails and fractal processes
 
@@ -247,9 +255,37 @@ than with the periodic template, but lean toward the template more than the orac
 trajectory library and partly as a pattern to repeat, and on smooth nonlinear oscillators,
 which its trend + season + noise prior represents as near-periodic, the second pull wins.
 
-## 7.3 Inside the model
+## 7.3 Inside the model: represented but not used
 
-RESULTS-PENDING (attention on forecast tokens and linear readouts, all sizes: Colab job D).
+For each setting we ran one plain forward pass on 300 samples and asked two questions about
+the oracle's expected change over the first forecast patch (and at single steps 1 and 16):
+how well does Timestral's own forecast predict it, and how well does a linear readout (a
+ridge regression, cross-validated) of the hidden state of the first forecast token predict
+it, at the best layer? If the readout does much better than the output, the information the
+oracle uses is inside the model but does not reach the forecast.
+
+{{table:readouts}}
+
+**Recent regime switches: represented, attended to, not used.** Sixteen steps after a mean
+jump, the readout reaches R² {{num:ro_mj16_ro_min}}–{{num:ro_mj16_ro_max}} at every size while
+the forecast itself reaches {{num:ro_mj16_out_min}}–{{num:ro_mj16_out_max}}, and the forecast
+error is {{num:ro_mj16_ratio_min}}–{{num:ro_mj16_ratio_max}} times the oracle's. The forecast
+tokens are not looking elsewhere: they put {{num:ro_mj16_post_min}}–{{num:ro_mj16_post_max}}
+times their proportional share of attention on the post-switch patches. Sixty-four steps
+after a frequency jump, one step ahead, the readout reaches {{num:ro_fj64_s1ro_min}}–{{num:ro_fj64_s1ro_max}}
+against {{num:ro_fj64_s1out_min}}–{{num:ro_fj64_s1out_max}} for the output. By 256 steps after
+a mean jump the two agree ({{num:ro_mj256_out_min}}–{{num:ro_mj256_out_max}} vs.
+{{num:ro_mj256_ro_min}}–{{num:ro_mj256_ro_max}}). The model sees and encodes a recent change and
+then forecasts as if it may not last. A prior built from trend + season + noise contains no
+lasting breaks, and a very recent departure from the pattern looks like noise under that prior.
+
+**Deterministic oscillators: the gap builds later.** On Mackey-Glass (τ = 17) output and readout
+agree for the first patch ({{num:ro_mg17_out_min}}–{{num:ro_mg17_out_max}} vs.
+{{num:ro_mg17_ro_min}}–{{num:ro_mg17_ro_max}}): the near-term forecast uses what is there, and the
+error accumulates over the following cycles. There the forecast correlates with a periodic
+continuation of the context more than the oracle's forecast does
+({{num:ro_mg17_tm_5M}} at 5M, {{num:ro_mg17_tm_209M}} at 209M, against
+{{num:ro_mg17_to_min}} for the oracle), and the excess shrinks with size together with the error.
 
 # 8. Benchmarks
 

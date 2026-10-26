@@ -192,8 +192,59 @@ def analog():
     table("analog", out, src, "geometric mean over 8 seeds of MASE (context 2048, horizon 128) for the oracle, the method of analogues, the seasonal template, and Timestral")
 
 
+def chaos_noise():
+    src = "results/mechanism/chaos_noise/summary.csv"
+    s = load_summary(src)
+    s["system"] = s.config_id.str.split("/").str[1]
+    s["noise"] = s.config_id.str.extract(r"/n([\d.]+)$")[0].astype(float)
+    q = s[s.H == 128]
+    rows = []
+    for (sysname, nz), g in q.groupby(["system", "noise"]):
+        r = {"system": sysname, "noise (% of scale)": nz * 100}
+        for fc in SIZES:
+            v = g[g.forecaster == fc].mase_ratio_oracle_gmean
+            r[SIZE_LABEL[fc]] = float(v.iloc[0]) if len(v) else float("nan")
+        rows.append(r)
+    table("chaos_noise", pd.DataFrame(rows), src, "geometric mean over 16 seeds of MASE ratio to oracle, context 2048, horizon 128")
+    mg = q[q.system == "mackey_glass_tau17"]
+    for nz, k in [(0.001, "lo"), (0.1, "hi")]:
+        v = mg[mg.noise == nz].mase_ratio_oracle_gmean
+        num(f"noise_mg_{k}_min", float(v.min()), src, f"Mackey-Glass tau=17, noise {nz}, min over sizes")
+        num(f"noise_mg_{k}_max", float(v.max()), src, f"Mackey-Glass tau=17, noise {nz}, max over sizes")
+
+
+def readouts():
+    src = "results/mechanism/readouts/summary.csv"
+    s = pd.read_csv(p(src))
+    s = s[s.valid]
+    for study, kv, k in [("mean_jump_d", 16.0, "mj16"), ("mean_jump_d", 256.0, "mj256"), ("freq_jump_d", 64.0, "fj64"),
+                         ("mackey_tau", 17.0, "mg17")]:
+        g = s[(s.study == study) & (s.knob_value == kv)]
+        for col, name in [("output_r2", "out"), ("best_readout_r2", "ro"), ("mase_ratio_oracle_gmean", "ratio"),
+                          ("step1_output_r2", "s1out"), ("step1_readout_r2", "s1ro"), ("attn_post_change_mean", "post"),
+                          ("template_corr_model", "tm"), ("template_corr_oracle", "to")]:
+            if col in g and g[col].notna().any():
+                num(f"ro_{k}_{name}_min", float(g[col].min()), src, f"{study} {kv}: min over the four sizes of {col}", "{:.3f}" if "r2" in col or "corr" in col else "{:.2f}")
+                num(f"ro_{k}_{name}_max", float(g[col].max()), src, f"{study} {kv}: max over the four sizes of {col}", "{:.3f}" if "r2" in col or "corr" in col else "{:.2f}")
+    for size in ("5M", "209M"):
+        g = s[(s.study == "mackey_tau") & (s.knob_value == 17.0) & (s["size"] == size)]
+        num(f"ro_mg17_tm_{size}", float(g.template_corr_model.iloc[0]), src, f"Mackey-Glass tau=17, {size}: correlation of Timestral's median with the periodic template", "{:.2f}")
+    rows = []
+    for study, kv in [("mean_jump_d", 16.0), ("mean_jump_d", 64.0), ("mean_jump_d", 256.0), ("freq_jump_d", 64.0),
+                      ("freq_jump_d", 1024.0), ("mackey_tau", 17.0), ("lorenz_rho", 28.0), ("in_prior", 24.0)]:
+        for size in ("5M", "209M"):
+            g = s[(s.study == study) & (s.knob_value == kv) & (s["size"] == size)]
+            if not len(g):
+                continue
+            r = g.iloc[0]
+            rows.append({"setting": f"{study} {kv:g}", "size": size, "MASE / oracle": r.mase_ratio_oracle_gmean,
+                         "output R2": r.output_r2, "best readout R2": r.best_readout_r2,
+                         "step-1 output R2": r.get("step1_output_r2", np.nan), "step-1 readout R2": r.get("step1_readout_r2", np.nan)})
+    table("readouts", pd.DataFrame(rows), src, "300 samples per setting; cross-validated R2 of predicting the oracle's expected change (first patch, or step 1) from Timestral's output vs. from the best per-layer linear readout of the first forecast token", "{:.3f}")
+
+
 def main():
-    for fn in (in_prior, chaos, tails, long_ctx, symavg, normalization, analog):
+    for fn in (in_prior, chaos, tails, long_ctx, symavg, normalization, analog, chaos_noise, readouts):
         try:
             fn()
         except FileNotFoundError as e:
