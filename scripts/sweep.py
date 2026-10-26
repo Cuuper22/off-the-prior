@@ -90,7 +90,7 @@ def _pool_map(fn, jobs, workers):
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--grid", required=True)
-    ap.add_argument("--sizes", nargs="+", default=["5M"])
+    ap.add_argument("--sizes", nargs="*", default=["5M"], help="Timestral sizes; give none to compute references only")
     ap.add_argument("--contexts", nargs="+", type=int, default=[2048])
     ap.add_argument("--horizons", nargs="+", type=int, default=[16, 128, 1024])
     ap.add_argument("--seeds", type=int, default=8)

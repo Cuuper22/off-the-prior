@@ -40,3 +40,10 @@ def test_forecast_torch_matches_forecast():
     q_t[..., 10].sum().backward()
     assert xt.grad is not None and torch.isfinite(xt.grad).all()
     assert np.allclose(q_t[0].detach().numpy(), q_np, atol=1e-3 * (1 + np.abs(q_np).max()))
+
+
+def test_nonfinite_quantiles_score_as_nan():
+    q = np.zeros((1, 8, 21)) + np.linspace(-1, 1, 21)
+    q[0, 3, 20] = np.inf
+    sc = metrics.score(np.random.default_rng(0).standard_normal((1, 64)), np.zeros((1, 8)), q)
+    assert np.isnan(sc["mase"][0]) and np.isnan(sc["cov80"][0]) and np.isnan(sc["coverage"][0]).all()

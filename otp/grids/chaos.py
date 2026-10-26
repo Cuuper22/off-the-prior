@@ -13,7 +13,8 @@ Also holds the post-processing used for every chaos results folder:
 `summarize` builds `summary.csv` from `scores.csv` with `otp.analysis.ratios` and
 `otp.analysis.curve` grouped by `[config_id, generator, knob_value, forecaster, T, H]`
 (`mase_ratio_oracle`, `scrps_ratio_oracle`, `mase_ratio_classical`, merged on the group
-keys, plus the mean of `cov80` and the mean `mase`).
+keys, plus the mean of `cov80`, the mean `mase` and `n_finite_ratio`, the number of
+samples whose oracle ratio is finite).
 """
 
 from __future__ import annotations
@@ -85,13 +86,19 @@ def summarize(folder: str):
     from otp.analysis import curve, ratios
 
     df = ratios(pd.read_csv(os.path.join(folder, "scores.csv")))
+    # Oracle rows with non-finite quantiles (a noisy path left the attractor and diverged) have
+    # mase = NaN; their coverage numbers compare against NaN and would read as 0, so blank them.
+    bad = (df.forecaster == "oracle") & df.mase.isna()
+    df.loc[bad, ["cov80", "cov98", "calib"]] = float("nan")
     out = None
     for m in METRICS:
         c = curve(df, BY, m)
         if out is not None:
             c = c.drop(columns=["n"])
         out = c if out is None else out.merge(c, on=BY, how="outer")
-    extra = df.groupby(BY, dropna=False).agg(cov80_mean=("cov80", "mean"), mase_mean_raw=("mase", "mean")).reset_index()
+    extra = df.groupby(BY, dropna=False).agg(
+        cov80_mean=("cov80", "mean"), mase_mean_raw=("mase", "mean"),
+        n_finite_ratio=("mase_ratio_oracle", lambda x: int(x.notna().sum()))).reset_index()
     out = out.merge(extra, on=BY, how="left")
     out.to_csv(os.path.join(folder, "summary.csv"), index=False)
     return out
@@ -126,12 +133,29 @@ def readme(folder: str, grid_name: str, commands: list[str], notes: list[str]):
               "- `summary.csv`: per `[config_id, generator, knob_value, forecaster, T, H]`: `n` samples; for "
               "`mase_ratio_oracle`, `scrps_ratio_oracle` and `mase_ratio_classical` the geometric mean over seeds "
               "(`_gmean`), mean, std and 95% bootstrap interval; `cov80_mean` (share of horizon points inside the "
-              "10%-90% interval, 0.8 is calibrated) and `mase_mean_raw`.",
+              "10%-90% interval, 0.8 is calibrated), `mase_mean_raw` and `n_finite_ratio` (samples with a finite "
+              "oracle ratio).",
               "- `samples.npz`: the generated samples (see the regeneration note below).", ""]
     lines += [f"Sweep: {prov.get('n_samples')} samples, {prov.get('n_rows')} score rows, wall time "
               f"{prov.get('wall_sec')} s (from `provenance.json`; threads {prov.get('threads')}, "
-              f"git `{prov.get('git')}`).", ""]
-    lines += ["## Regenerate", ""] + ["```", *commands, "```", ""]
+              f"cuda {prov.get('cuda')}, git field `{prov.get('git') or 'empty'}`).", ""]
+    lines += ["## Regenerate", ""] + ["```", *commands, "```", "",
+              "This README is written by `python -m otp.grids.chaos readme` from `summary.csv`, `scores.csv` and "
+              "`provenance.json` (the Notes section is passed in with `--note`).", ""]
+    sc = pd.read_csv(os.path.join(folder, "scores.csv"))
+    nf = sc[(sc.forecaster == "oracle") & sc.mase.isna()]
+    if len(nf):
+        lines += ["## Samples with non-finite oracle quantiles", "",
+                  "In these samples at least one of the oracle's 500 noisy continuations diverged (the dynamic noise "
+                  "pushed the state off the attractor), so the oracle quantiles are NaN from some horizon step on. "
+                  "Their oracle `mase`/`scrps` are NaN; the ratios for them are dropped from the geometric means "
+                  "(`n_finite_ratio` in `summary.csv` counts the samples kept) and the oracle `cov80` is blanked. "
+                  "Timestral and classical rows on these samples are finite.", "",
+                  "| sample_id | T | H | oracle rows with NaN mase |", "|---|---|---|---|"]
+        g = nf.groupby(["sample_id", "T", "H"]).size().reset_index(name="n")
+        for _, r in g.iterrows():
+            lines.append(f"| {r.sample_id} | {r['T']} | {r.H} | {r.n} |")
+        lines.append("")
     if notes:
         lines += ["## Notes", ""] + [f"- {n}" for n in notes] + [""]
 

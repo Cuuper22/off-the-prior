@@ -59,6 +59,12 @@ def score(context: np.ndarray, future: np.ndarray, q: np.ndarray, m: int = 1) ->
     cov = (future[..., None] <= q).mean(axis=-2)
     inside80 = ((future >= q[..., I10]) & (future <= q[..., I90])).mean(axis=-1)
     inside98 = ((future >= q[..., I01]) & (future <= q[..., I99])).mean(axis=-1)
+    # a quantile array with non-finite entries (e.g. an oracle whose Monte Carlo paths diverged)
+    # cannot be scored: every metric of that row becomes NaN instead of a misleading value
+    bad = ~np.isfinite(q).all(axis=(-1, -2))
+    if bad.any():
+        cov = np.where(bad[..., None], np.nan, cov)
+        mae, crps, wql, inside80, inside98 = (np.where(bad, np.nan, v) for v in (mae, crps, wql, inside80, inside98))
     return {
         "mase": mae / scale,
         "scrps": crps / scale,
