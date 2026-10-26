@@ -153,6 +153,8 @@ error in a slope grows linearly with the horizon. Family results are read agains
 
 ## 4.2 Chaos and dynamics
 
+![MASE ratio to the oracle along each chaos knob (context 2,048, horizon 128; shaded: 95% bootstrap interval over 8 seeds; dashed: as good as the oracle).](figures/chaos_curves.png)
+
 | series | 5M | 28M | 123M | 209M | 209M vs best classical |
 |---|---|---|---|---|---|
 | lorenz63/rho20 | 1.07 | 1.04 | 1.02 | 1.00 | 0.93 |
@@ -186,6 +188,8 @@ small error in a chaotic system to grow by a factor of e (for Lorenz at ρ = 28 
 0.907 per time unit). Putting four sampling intervals of the same Lorenz system
 on that common axis shows that the ratio is set by how many Lyapunov times the forecast
 reaches, not by the step count:
+
+![Lorenz at four sampling intervals on one axis: forecast reach in Lyapunov times.](figures/lorenz_lyapunov.png)
 
 | sampling step (time units) | horizon (steps) | horizon (Lyapunov times) | 209M MASE / oracle |
 |---|---|---|---|
@@ -351,6 +355,8 @@ on what is linearly present: with 300 samples and 192–768 features per token, 
 loses some signal, which shows on the in-prior control, where it scores
 0.784–0.832 against 0.996–0.997
 for the output. Gaps in the readout's favour are therefore conservative.
+
+![How well the oracle's expected change can be predicted from Timestral's forecast (solid) and from a linear readout of its first forecast token (dashed), against the time since a mean jump.](figures/readout_vs_output.png)
 
 | setting | size | MASE / oracle | output R2 | best readout R2 | step-1 output R2 | step-1 readout R2 |
 |---|---|---|---|---|---|---|

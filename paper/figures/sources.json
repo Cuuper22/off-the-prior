@@ -1,0 +1,15 @@
+{
+ "lorenz_lyapunov.png": [
+  "results/map/chaos/summary_all_sizes.csv",
+  "results/map/chaos/lyapunov.csv"
+ ],
+ "chaos_curves.png": [
+  "results/map/chaos/summary_all_sizes.csv"
+ ],
+ "noise_sweep.png": [
+  "results/mechanism/chaos_noise/summary.csv"
+ ],
+ "readout_vs_output.png": [
+  "results/mechanism/readouts/summary.csv"
+ ]
+}
