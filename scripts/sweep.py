@@ -138,7 +138,8 @@ def main(argv=None):
     ref_samples = [] if a.no_references else samples
     ref_q = _pool_map(_refs_one, [(s, list(a.classical), hmax) for s in ref_samples], a.workers)
     for s, qs in zip(ref_samples, ref_q):  # oracle + classical once per sample (classical uses the last 1024 steps)
-        rows += rows_for(s, s.oracle_q, "oracle", tmax, a.horizons, {})
+        for t in a.contexts:  # the oracle's quantiles do not depend on T, but MASE/sCRPS scaling does
+            rows += rows_for(s, s.oracle_q, "oracle", t, a.horizons, {})
         for name, q in zip(a.classical, qs):
             for t in a.contexts:
                 rows += rows_for(s, q, name, t, a.horizons, {})
