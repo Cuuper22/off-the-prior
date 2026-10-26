@@ -197,8 +197,8 @@ the oracle:
 
 {{table:tails_main}}
 
-Heavy tails and long memory, which are absent from trend + season + Gaussian-noise
-pretraining data, do not produce failures of the size seen for deterministic dynamics.
+Heavy tails and long memory, which a trend + season + Gaussian-noise description of series
+does not cover, do not produce failures of the size seen for deterministic dynamics.
 
 ## 4.4 Regime switches
 
