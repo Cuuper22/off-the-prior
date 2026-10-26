@@ -51,8 +51,9 @@ def table(key, df: pd.DataFrame, src, how, floatfmt="{:.2f}"):
             return str(int(v))
         return floatfmt.format(v) if isinstance(v, (float, np.floating)) and np.isfinite(v) else ("–" if isinstance(v, float) else str(v))
     lines = ["| " + " | ".join(map(str, df.columns)) + " |", "|" + "---|" * len(df.columns)]
-    for _, r in df.iterrows():
-        lines.append("| " + " | ".join(f(v) for v in r.values) + " |")
+    int_cols = {c for c in df.columns if pd.api.types.is_integer_dtype(df[c])}
+    for row in df.itertuples(index=False):
+        lines.append("| " + " | ".join(str(int(v)) if c in int_cols else f(v) for c, v in zip(df.columns, row)) + " |")
     TABLES[key] = {"text": "\n".join(lines), "src": src, "how": how}
 
 
