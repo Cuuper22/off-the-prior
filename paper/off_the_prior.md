@@ -321,19 +321,19 @@ moments whose recent history looks most like the present and see what happened n
 context-only forecaster continues the series as a periodic pattern (the average of its last
 cycles at the dominant period). On the chaos family (MASE, lower is better):
 
-| series | oracle | analog | template | 5M | 28M |
-|---|---|---|---|---|---|
-| mackey_glass/tau17 | 0.29 | 0.93 | 3.85 | 2.79 | 1.84 |
-| mackey_glass/tau30 | 0.28 | 2.20 | 9.93 | 6.10 | 5.96 |
-| rossler/c5.7 | 0.48 | 0.81 | 2.02 | 1.59 | 1.25 |
-| rossler/c9 | 0.43 | 1.25 | 3.98 | 3.33 | 2.71 |
-| kuramoto/K1 | 0.20 | 3.54 | 3.96 | 2.61 | 2.17 |
-| kuramoto/K8 | 0.06 | 0.08 | 0.87 | 0.32 | 0.14 |
-| lorenz63/rho28 | 1.44 | 1.97 | 2.20 | 1.89 | 1.84 |
-| logistic_map/r3.9 | 0.54 | 0.56 | 0.58 | 0.56 | 0.56 |
+| series | oracle | analog | template | 5M | 28M | 123M | 209M |
+|---|---|---|---|---|---|---|---|
+| mackey_glass/tau17 | 0.29 | 0.93 | 3.85 | 2.79 | 1.84 | 1.98 | 1.95 |
+| mackey_glass/tau30 | 0.28 | 2.20 | 9.93 | 6.10 | 5.96 | 3.59 | 3.81 |
+| rossler/c5.7 | 0.48 | 0.81 | 2.02 | 1.59 | 1.25 | 1.16 | 0.98 |
+| rossler/c9 | 0.43 | 1.25 | 3.98 | 3.33 | 2.71 | 2.34 | 1.85 |
+| kuramoto/K1 | 0.20 | 3.54 | 3.96 | 2.61 | 2.17 | 2.03 | 1.94 |
+| kuramoto/K8 | 0.06 | 0.08 | 0.87 | 0.32 | 0.14 | 0.12 | 0.09 |
+| lorenz63/rho28 | 1.44 | 1.97 | 2.20 | 1.89 | 1.84 | 1.83 | 1.79 |
+| logistic_map/r3.9 | 0.54 | 0.56 | 0.58 | 0.56 | 0.56 | 0.56 | 0.56 |
 
-The method of analogues beats Timestral on Mackey-Glass and Rössler and loses to it on weakly
-coupled Kuramoto and on Lorenz. Timestral's forecasts correlate more with the analogue forecast
+The method of analogues beats every Timestral size on Mackey-Glass and Rössler and loses to
+Timestral on weakly coupled Kuramoto and on Lorenz. Timestral's forecasts correlate more with the analogue forecast
 than with the periodic template, but lean toward the template more than the oracle does
 (`results/mechanism/analog/summary.csv`). Our reading: Timestral uses the context partly as a
 trajectory library and partly as a pattern to repeat, and on smooth nonlinear oscillators,

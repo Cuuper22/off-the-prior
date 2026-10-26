@@ -248,8 +248,8 @@ cycles at the dominant period). On the chaos family (MASE, lower is better):
 
 {{table:analog}}
 
-The method of analogues beats Timestral on Mackey-Glass and Rössler and loses to it on weakly
-coupled Kuramoto and on Lorenz. Timestral's forecasts correlate more with the analogue forecast
+The method of analogues beats every Timestral size on Mackey-Glass and Rössler and loses to
+Timestral on weakly coupled Kuramoto and on Lorenz. Timestral's forecasts correlate more with the analogue forecast
 than with the periodic template, but lean toward the template more than the oracle does
 (`results/mechanism/analog/summary.csv`). Our reading: Timestral uses the context partly as a
 trajectory library and partly as a pattern to repeat, and on smooth nonlinear oscillators,
