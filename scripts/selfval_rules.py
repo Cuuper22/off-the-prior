@@ -59,6 +59,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default="results/fix/selfval")
     ap.add_argument("--out", default="results/fix/selfval")
+    ap.add_argument("--frozen", nargs=2, type=float, default=None, metavar=("K", "M"),
+                    help="evaluate one fixed rule on all seeds (confirmation run) instead of tuning")
     a = ap.parse_args()
     frames = []
     for f in sorted(glob.glob(os.path.join(a.root, "*", "per_sample.csv"))):
@@ -68,6 +70,14 @@ def main():
     d = pd.concat(frames, ignore_index=True)
     d = d[np.isfinite(d.mase_oracle) & np.isfinite(d.scrps_oracle) & np.isfinite(d.mase_switch)]
     d["seed_index"] = d.sample_id.str.extract(r"/s(\d+)$")[0].astype(int)
+    if a.frozen:
+        K, m = int(a.frozen[0]), float(a.frozen[1])
+        r = pd.concat([evaluate(d[d["size"] == sz], K, m) for sz in sorted(d["size"].unique())], ignore_index=True)
+        r.to_csv(os.path.join(a.out, "frozen_rule_confirmation.csv"), index=False)
+        write_json(os.path.join(a.out, "frozen_rule.json"), {"K": K, "margin": m, "note": "fixed before this run"})
+        pd.set_option("display.width", 220)
+        print(r.round(3).to_string())
+        return
     tune, test = d[d.seed_index % 2 == 0], d[d.seed_index % 2 == 1]
     Ks = sorted({int(c[2]) for c in d.columns if c.startswith("bt") and c.endswith("_mae_analog")})
     chosen, all_test = [], []
