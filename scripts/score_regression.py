@@ -285,6 +285,7 @@ def main():
                     help="score this forecaster on a seeded stratified subset of about N windows per set")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--summarize-only", action="store_true")
+    ap.add_argument("--parts-only", action="store_true", help="run the forecasters and cache the chunks, skip assembling tables")
     a = ap.parse_args()
     set_threads(1)
     os.makedirs(a.out, exist_ok=True)
@@ -302,6 +303,8 @@ def main():
                 print(f"[{set_name}] {f}: {len(ids)}/{len(samples)} windows", flush=True)
                 dt = run_scores(set_name, f, samples, ids, a.out)
                 print(f"    {f} done in {dt:.0f}s this call", flush=True)
+    if a.parts_only:
+        return
     pdir = os.path.join(a.out, "parts")
     parts = sorted(os.listdir(pdir)) if os.path.isdir(pdir) else []
     scores = pd.concat([pd.read_csv(os.path.join(pdir, p)) for p in parts if p.endswith(".csv")], ignore_index=True)

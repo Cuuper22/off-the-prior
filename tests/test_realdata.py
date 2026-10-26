@@ -160,18 +160,125 @@ def test_subset_indices_keep_every_group():
 @pytest.mark.skipif(not os.path.exists(os.path.join(BENCH, "real.npz")), reason="regression sets not built")
 def test_built_sets_match_manifest():
     man = pd.read_csv(os.path.join(BENCH, "manifest.csv"))
-    real = R.load_real(os.path.join(BENCH, "real.npz"))
+    real = R.load_union(BENCH, "real")
     prior = load_samples(os.path.join(BENCH, "in_prior.npz"))
     mr, mp = man[man.set == "real"], man[man.set == "in_prior"]
-    assert len(real) == len(mr) and len(prior) == len(mp) == 500
-    assert 300 <= len(real) <= 600
-    assert list(mr.sample_id) == [s.meta["sample_id"] for s in real]
-    for s, (_, r) in zip(real, mr.iterrows()):
+    assert len(prior) == len(mp) == 500
+    assert 300 <= len(mr) <= 600
+    # on a machine without the restricted file, only redistributable windows load
+    n_ok = int(mr.redistributable.sum())
+    assert len(real) >= n_ok
+    byid = {s.meta["sample_id"]: s for s in real}
+    for _, r in mr.iterrows():
+        if r["sample_id"] not in byid:
+            continue
+        s = byid[r["sample_id"]]
         assert s.T == r["T"] and s.H == r["H"] and s.period == r["m"] and 256 <= s.T <= 2048 and s.H <= 720
         assert np.isfinite(s.context).all() and np.isfinite(s.future).all() and not R.has_oracle(s)
     assert mr["source_sha256"].notna().all() and mr["revision"].notna().all()
     assert all(s.T == 2048 and s.H == 128 and R.has_oracle(s) for s in prior)
     assert [s.meta["seed"] for s in prior] == list(range(500))
     assert len(set(mr.sample_id)) == len(mr)
-    for f in ("real.npz", "in_prior.npz"):
-        assert os.path.getsize(os.path.join(BENCH, f)) < 50e6
+    for f in os.listdir(BENCH):
+        if f.endswith(".npz") and not f.endswith("_restricted.npz"):
+            assert os.path.getsize(os.path.join(BENCH, f)) < 50e6
+
+
+# ----------------------------------------------------------------------------- sources, license split, analogues
+
+from otp import realdata_sources as RS  # noqa: E402
+
+
+def test_read_tsf():
+    text = ("# comment\n@relation x\n@attribute series_name string\n@attribute start_timestamp date\n@frequency hourly\n"
+            "@horizon 24\n@data\nT1:2009-05-01 00-00-00:1,2,?,4\nT2:2010-01-01 05-00-00:5,6\n")
+    hdr, ser = RS.read_tsf(text)
+    assert hdr["frequency"] == "hourly" and len(ser) == 2
+    name, start, vals = ser[0]
+    assert name == "T1" and start == pd.Timestamp("2009-05-01 00:00:00")
+    assert np.isnan(vals[2]) and vals[3] == 4
+    assert ser[1][1] == pd.Timestamp("2010-01-01 05:00:00")
+
+
+def test_read_ghcn_dly(tmp_path):
+    def line(element, year, month, vals):
+        s = f"USW00094728{year:04d}{month:02d}{element}"
+        for d in range(31):
+            v = vals.get(d, -9999)
+            s += f"{v:5d}" + "   "
+        return s + "\n"
+
+    p = tmp_path / "x.dly"
+    p.write_text(line("TMAX", 2020, 1, {0: 100, 1: 250}) + line("PRCP", 2020, 1, {0: 5}))
+    s = R_ghcn = RS.read_ghcn_dly(str(p), "TMAX")
+    assert s.loc["2020-01-01"] == 10.0 and s.loc["2020-01-02"] == 25.0 and np.isnan(s.loc["2020-01-03"])
+    assert RS.read_ghcn_dly(str(p), "PRCP").loc["2020-01-01"] == 0.5
+
+
+def test_item_window_origin_and_business_days():
+    idx = pd.bdate_range("2015-01-01", periods=3000)
+    v = np.cumsum(np.random.default_rng(0).standard_normal(3000)) + 1000
+    v[500] = np.nan  # a holiday: dropped for business-day series
+    it = RS.Item("fred", "d", "x", v, "B", "finance", idx, horizon=30, origin=str(idx[2000].date()), m=5, family="regime_switches")
+    ctx, fut, info = RS.item_window(it)
+    assert len(fut) == 30 and len(ctx) == 2000 - 1  # one holiday dropped before the origin
+    assert info["origin_time"].startswith(str(idx[2000].date()))
+    it2 = RS.Item("fred", "d", "x", v, "B", "finance", idx, horizon=30, transform="log_return")
+    ctx2, fut2, info2 = RS.item_window(it2)
+    assert len(fut2) == 30 and np.isfinite(ctx2).all() and np.abs(ctx2).max() < 1
+    late = RS.Item("fred", "d", "x", v, "B", "finance", idx, horizon=30, origin="2100-01-01")
+    assert RS.item_window(late)[2] == "origin_outside_record"
+
+
+def test_cutoff_applies_to_live_series():
+    idx = pd.date_range("2025-01-01", periods=700, freq="D")
+    v = np.random.default_rng(1).standard_normal(700).cumsum()
+    it = RS.Item("fred", "d", "x", v, "D", "finance", idx, horizon=30, t_min=100)
+    ctx, fut, info = RS.item_window(it)
+    assert pd.Timestamp(info["origin_time"]) + pd.Timedelta(days=29) <= RS.CUTOFF
+
+
+def test_business_day_conventions():
+    assert R.gift_eval_horizon("B") == 30 and R.seasonal_period("B") == 5
+
+
+def test_save_split_and_load_union(tmp_path):
+    spec = R.Spec("gifteval", "fake", "H", "energy", n_series=6)
+    s, rows = R.load_pair(spec, src=FakeSource())
+    flags = [i % 2 == 0 for i in range(len(s))]
+    counts = R.save_split(str(tmp_path), "demo", s, flags)
+    assert counts == {"redistributable": 3, "restricted": 3}
+    man = pd.DataFrame(rows)
+    man["set"] = "demo"
+    man.to_csv(tmp_path / "manifest.csv", index=False)
+    full = R.load_union(str(tmp_path), "demo")
+    assert [x.meta["sample_id"] for x in full] == [x.meta["sample_id"] for x in s]
+    os.remove(tmp_path / "demo_restricted.npz")
+    part = R.load_union(str(tmp_path), "demo")
+    assert [x.meta["manifest_row"] for x in part] == [0, 2, 4]
+
+
+def test_licence_records_complete():
+    for sid, s in RS.SOURCES.items():
+        lic = s["license"]
+        assert lic.name and lic.url.startswith("http") and lic.evidence
+    assert RS.SOURCES["silso"]["license"].redistributable is False
+    assert RS.SOURCES["fev"]["license"].redistributable is False
+    assert RS.SOURCES["fred"]["license"].redistributable is True
+
+
+@pytest.mark.skipif(not os.path.exists(os.path.join(BENCH, "analogues.npz")), reason="regression sets not built")
+def test_built_analogues_and_license_split():
+    man = pd.read_csv(os.path.join(BENCH, "manifest.csv"))
+    ana = man[man.set == "analogues"]
+    assert set(ana.family_analogue) == {"delay_feedback", "coupled_oscillators", "heavy_tails", "regime_switches"}
+    assert ana.reason.notna().all() and (ana.reason.str.len() > 10).all()
+    src = pd.read_csv(os.path.join(BENCH, "sources.csv"))
+    assert src.license.notna().all() and src.sha256.notna().all() and src.date_fetched_utc.notna().all()
+    for name in ("real", "real_extra", "analogues"):
+        committed = {s.meta["sample_id"] for s in R.load_real(os.path.join(BENCH, f"{name}.npz"))}
+        sub = man[(man.set == name) & man.sample_id.isin(committed)]
+        assert sub.redistributable.all() and len(sub) == len(committed)
+    # restricted sources never appear in committed files
+    assert not (man[(man.set != "in_prior") & ~man.redistributable].sample_id.isin(
+        {s.meta["sample_id"] for n in ("real", "real_extra", "analogues") for s in R.load_real(os.path.join(BENCH, f"{n}.npz"))})).any()
