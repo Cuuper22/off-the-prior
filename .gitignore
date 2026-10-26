@@ -13,3 +13,4 @@ paper/*.fdb_latexmk
 
 # internal worker specs live outside the repo (/home/claude/off-the-prior-tasks)
 /tasks/
+paper/build/
