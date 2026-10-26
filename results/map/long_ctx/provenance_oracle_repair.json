@@ -1,0 +1,20 @@
+{
+  "script": "scripts/repair_oracle_rows.py",
+  "git": "0e27086",
+  "time_utc": "2026-10-26T21:14:08Z",
+  "host": "vm",
+  "torch": "2.14.1+cpu",
+  "threads": 2,
+  "cuda": false,
+  "argv": [
+    "scripts/repair_oracle_rows.py",
+    "results/map/long_ctx"
+  ],
+  "oracle_rows_before": 896,
+  "oracle_rows_after": 2688,
+  "context_lengths": [
+    2048,
+    8192,
+    32768
+  ]
+}

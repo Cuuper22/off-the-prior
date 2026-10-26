@@ -1,0 +1,33 @@
+{
+  "script": "scripts/sweep.py",
+  "git": "b2e5f57",
+  "time_utc": "2026-10-26T19:56:21Z",
+  "host": "vm",
+  "torch": "2.14.1+cpu",
+  "threads": 1,
+  "cuda": false,
+  "argv": [
+    "scripts/sweep.py",
+    "--grid",
+    "otp.grids.in_prior",
+    "--sizes",
+    "5M",
+    "28M",
+    "--contexts",
+    "512",
+    "2048",
+    "8192",
+    "--horizons",
+    "16",
+    "128",
+    "1024",
+    "2048",
+    "--seeds",
+    "8",
+    "--out",
+    "results/map/in_prior"
+  ],
+  "n_samples": 32,
+  "n_rows": 2048,
+  "wall_sec": 647.9
+}
