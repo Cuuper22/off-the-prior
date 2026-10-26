@@ -1,0 +1,21 @@
+NVIDIA A100-SXM4-40GB
+loaded 880 samples from samples/regime/samples.npz
+references done (1s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  3.22it/s]Fetching 2 files: 100%|██████████| 2/2 [00:02<00:00,  1.24s/it]Fetching 2 files: 100%|██████████| 2/2 [00:02<00:00,  1.10s/it]
+timestral-5M T=512 done (8s)
+timestral-5M T=2048 done (3s)
+timestral-5M T=8192 done (3s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  4.09it/s]Fetching 2 files: 100%|██████████| 2/2 [00:02<00:00,  1.40s/it]Fetching 2 files: 100%|██████████| 2/2 [00:02<00:00,  1.23s/it]
+timestral-28M T=512 done (6s)
+timestral-28M T=2048 done (3s)
+timestral-28M T=8192 done (5s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  4.09it/s]Fetching 2 files: 100%|██████████| 2/2 [00:04<00:00,  2.53s/it]Fetching 2 files: 100%|██████████| 2/2 [00:04<00:00,  2.19s/it]
+timestral-123M T=512 done (10s)
+timestral-123M T=2048 done (5s)
+timestral-123M T=8192 done (11s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  4.17it/s]Fetching 2 files: 100%|██████████| 2/2 [00:05<00:00,  3.17s/it]Fetching 2 files: 100%|██████████| 2/2 [00:05<00:00,  2.73s/it]
+timestral-209M T=512 done (13s)
+timestral-209M T=2048 done (7s)
+timestral-209M T=8192 done (17s)
+wrote 31680 rows to results/colab_out/regime_big/scores.csv in 92s

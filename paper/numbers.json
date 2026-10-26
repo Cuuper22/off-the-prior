@@ -1,0 +1,768 @@
+{
+ "inprior_short_min": {
+  "value": 0.9884388509671491,
+  "text": "0.99",
+  "src": "results/map/in_prior/summary.csv",
+  "how": "min over sizes, T, H<=128 of the geometric mean over configs of the per-config geometric-mean MASE ratio to oracle"
+ },
+ "inprior_short_max": {
+  "value": 1.1493778406213206,
+  "text": "1.15",
+  "src": "results/map/in_prior/summary.csv",
+  "how": "max of the same"
+ },
+ "chaos_209m_vs_classical_median": {
+  "value": 0.3603612444657963,
+  "text": "0.36",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "median over chaos configs of the 209M geometric-mean MASE ratio to the best classical model, T=2048, H=128"
+ },
+ "chaos_mg30_5M": {
+  "value": 21.871201192984085,
+  "text": "21.87",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "mackey_glass/tau30, timestral-5M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_mg30_209M": {
+  "value": 13.6765649909826,
+  "text": "13.68",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "mackey_glass/tau30, timestral-209M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_kur1_5M": {
+  "value": 12.741505597719032,
+  "text": "12.74",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "kuramoto/K1, timestral-5M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_kur1_209M": {
+  "value": 9.447246129302728,
+  "text": "9.45",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "kuramoto/K1, timestral-209M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_kur8_5M": {
+  "value": 5.18376361842739,
+  "text": "5.18",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "kuramoto/K8, timestral-5M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_kur8_209M": {
+  "value": 1.429288843863609,
+  "text": "1.43",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "kuramoto/K8, timestral-209M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_ros9_5M": {
+  "value": 7.734253426987983,
+  "text": "7.73",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "rossler/c9, timestral-5M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_ros9_209M": {
+  "value": 4.304958762349598,
+  "text": "4.30",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "rossler/c9, timestral-209M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_lor_oe2_5M": {
+  "value": 29.89068175043135,
+  "text": "29.89",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "lorenz63/rho28_oe2, timestral-5M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "chaos_lor_oe2_209M": {
+  "value": 27.90559301698256,
+  "text": "27.91",
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "lorenz63/rho28_oe2, timestral-209M, T=2048, H=128, geometric-mean MASE ratio to oracle"
+ },
+ "lorenz_lyap": {
+  "value": 0.9070340667452834,
+  "text": "0.907",
+  "src": "results/map/chaos/lyapunov.csv",
+  "how": "largest Lyapunov exponent per time unit, Lorenz rho=28, mean over seeds"
+ },
+ "tails_min": {
+  "value": 0.9375305757316744,
+  "text": "0.94",
+  "src": "results/map/tails/summary_all_sizes.csv",
+  "how": "min over all tails configs and sizes, T=2048, H=128"
+ },
+ "tails_max": {
+  "value": 1.338925435044641,
+  "text": "1.34",
+  "src": "results/map/tails/summary_all_sizes.csv",
+  "how": "max of the same"
+ },
+ "long_mg17_5M_T2048": {
+  "value": 9.094047700455086,
+  "text": "9.09",
+  "src": "results/map/long_ctx/scores.csv",
+  "how": "mackey_glass/tau17, timestral-5M, T=2048, H=128"
+ },
+ "long_mg17_5M_T32768": {
+  "value": 6.47139575092667,
+  "text": "6.47",
+  "src": "results/map/long_ctx/scores.csv",
+  "how": "mackey_glass/tau17, timestral-5M, T=32768, H=128"
+ },
+ "long_mg17_209M_T2048": {
+  "value": 4.91357984497152,
+  "text": "4.91",
+  "src": "results/map/long_ctx/scores.csv",
+  "how": "mackey_glass/tau17, timestral-209M, T=2048, H=128"
+ },
+ "long_mg17_209M_T32768": {
+  "value": 3.8433963462687157,
+  "text": "3.84",
+  "src": "results/map/long_ctx/scores.csv",
+  "how": "mackey_glass/tau17, timestral-209M, T=32768, H=128"
+ },
+ "long_nonfinite_oracle_samples": {
+  "value": 2.0,
+  "text": "2",
+  "src": "results/map/long_ctx/scores.csv",
+  "how": "samples with a non-finite oracle (diverged Monte Carlo paths)"
+ },
+ "symavg_min": {
+  "value": 0.9913624949289817,
+  "text": "0.991",
+  "src": "results/mechanism/symavg/off_over_on.csv",
+  "how": "min over configs and sizes of sCRPS ratio (averaging off / on), H=128"
+ },
+ "symavg_max": {
+  "value": 1.0691778764581796,
+  "text": "1.069",
+  "src": "results/mechanism/symavg/off_over_on.csv",
+  "how": "max of the same"
+ },
+ "norm_cells": {
+  "value": 44.0,
+  "text": "44",
+  "src": "results/mechanism/normalization/summary.csv",
+  "how": "case x context x size cells with both conditions"
+ },
+ "norm_post_better": {
+  "value": 12.0,
+  "text": "12",
+  "src": "results/mechanism/normalization/summary.csv",
+  "how": "cells where cutting to the post-switch part lowered the sCRPS ratio"
+ },
+ "norm_vdrop_cov80_min": {
+  "value": 0.9967447916666666,
+  "text": "0.997",
+  "src": "results/mechanism/normalization/summary.csv",
+  "how": "variance drop x0.25, 64 steps back, full context: min cov80 over sizes and contexts"
+ },
+ "norm_vdrop_scrps_min": {
+  "value": 1.5947699343354989,
+  "text": "1.59",
+  "src": "results/mechanism/normalization/summary.csv",
+  "how": "same cells: min sCRPS ratio to oracle"
+ },
+ "norm_vdrop_scrps_max": {
+  "value": 1.753124649340608,
+  "text": "1.75",
+  "src": "results/mechanism/normalization/summary.csv",
+  "how": "same cells: max sCRPS ratio to oracle"
+ },
+ "noise_mg_lo_min": {
+  "value": 43.929593665606106,
+  "text": "43.93",
+  "src": "results/mechanism/chaos_noise/summary.csv",
+  "how": "Mackey-Glass tau=17, noise 0.001, min over sizes"
+ },
+ "noise_mg_lo_max": {
+  "value": 75.47215294164776,
+  "text": "75.47",
+  "src": "results/mechanism/chaos_noise/summary.csv",
+  "how": "Mackey-Glass tau=17, noise 0.001, max over sizes"
+ },
+ "noise_mg_hi_min": {
+  "value": 1.4613626385292553,
+  "text": "1.46",
+  "src": "results/mechanism/chaos_noise/summary.csv",
+  "how": "Mackey-Glass tau=17, noise 0.1, min over sizes"
+ },
+ "noise_mg_hi_max": {
+  "value": 1.811502970114483,
+  "text": "1.81",
+  "src": "results/mechanism/chaos_noise/summary.csv",
+  "how": "Mackey-Glass tau=17, noise 0.1, max over sizes"
+ },
+ "ro_mj16_out_min": {
+  "value": 0.5704591642815328,
+  "text": "0.570",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: min over the four sizes of output_r2"
+ },
+ "ro_mj16_out_max": {
+  "value": 0.7264275490801299,
+  "text": "0.726",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: max over the four sizes of output_r2"
+ },
+ "ro_mj16_ro_min": {
+  "value": 0.9557986391870656,
+  "text": "0.956",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: min over the four sizes of best_readout_r2"
+ },
+ "ro_mj16_ro_max": {
+  "value": 0.9800608827274075,
+  "text": "0.980",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: max over the four sizes of best_readout_r2"
+ },
+ "ro_mj16_ratio_min": {
+  "value": 2.0176528125259265,
+  "text": "2.02",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: min over the four sizes of mase_ratio_oracle_gmean"
+ },
+ "ro_mj16_ratio_max": {
+  "value": 3.6242816593950655,
+  "text": "3.62",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: max over the four sizes of mase_ratio_oracle_gmean"
+ },
+ "ro_mj16_s1out_min": {
+  "value": 0.5398793941276586,
+  "text": "0.540",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: min over the four sizes of step1_output_r2"
+ },
+ "ro_mj16_s1out_max": {
+  "value": 0.6174553263028484,
+  "text": "0.617",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: max over the four sizes of step1_output_r2"
+ },
+ "ro_mj16_s1ro_min": {
+  "value": 0.7957392776364307,
+  "text": "0.796",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: min over the four sizes of step1_readout_r2"
+ },
+ "ro_mj16_s1ro_max": {
+  "value": 0.8739499461036134,
+  "text": "0.874",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: max over the four sizes of step1_readout_r2"
+ },
+ "ro_mj16_post_min": {
+  "value": 15.697754669139783,
+  "text": "15.70",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: min over the four sizes of attn_post_change_mean"
+ },
+ "ro_mj16_post_max": {
+  "value": 17.69242769763701,
+  "text": "17.69",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: max over the four sizes of attn_post_change_mean"
+ },
+ "ro_mj16_tm_min": {
+  "value": 0.7568769946992726,
+  "text": "0.757",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: min over the four sizes of template_corr_model"
+ },
+ "ro_mj16_tm_max": {
+  "value": 0.8745622251253325,
+  "text": "0.875",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: max over the four sizes of template_corr_model"
+ },
+ "ro_mj16_to_min": {
+  "value": 0.9114319303317612,
+  "text": "0.911",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: min over the four sizes of template_corr_oracle"
+ },
+ "ro_mj16_to_max": {
+  "value": 0.9114319303317612,
+  "text": "0.911",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 16.0: max over the four sizes of template_corr_oracle"
+ },
+ "ro_mj256_out_min": {
+  "value": 0.977112889308454,
+  "text": "0.977",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: min over the four sizes of output_r2"
+ },
+ "ro_mj256_out_max": {
+  "value": 0.9927174531272992,
+  "text": "0.993",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: max over the four sizes of output_r2"
+ },
+ "ro_mj256_ro_min": {
+  "value": 0.964671122078032,
+  "text": "0.965",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: min over the four sizes of best_readout_r2"
+ },
+ "ro_mj256_ro_max": {
+  "value": 0.9852684392385926,
+  "text": "0.985",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: max over the four sizes of best_readout_r2"
+ },
+ "ro_mj256_ratio_min": {
+  "value": 1.0257984645878335,
+  "text": "1.03",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: min over the four sizes of mase_ratio_oracle_gmean"
+ },
+ "ro_mj256_ratio_max": {
+  "value": 1.0874449817448262,
+  "text": "1.09",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: max over the four sizes of mase_ratio_oracle_gmean"
+ },
+ "ro_mj256_s1out_min": {
+  "value": 0.8989571621760403,
+  "text": "0.899",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: min over the four sizes of step1_output_r2"
+ },
+ "ro_mj256_s1out_max": {
+  "value": 0.9509680086892428,
+  "text": "0.951",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: max over the four sizes of step1_output_r2"
+ },
+ "ro_mj256_s1ro_min": {
+  "value": 0.8495607574862198,
+  "text": "0.850",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: min over the four sizes of step1_readout_r2"
+ },
+ "ro_mj256_s1ro_max": {
+  "value": 0.9278902364830636,
+  "text": "0.928",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: max over the four sizes of step1_readout_r2"
+ },
+ "ro_mj256_post_min": {
+  "value": 4.103851145969497,
+  "text": "4.10",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: min over the four sizes of attn_post_change_mean"
+ },
+ "ro_mj256_post_max": {
+  "value": 4.652054856949383,
+  "text": "4.65",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: max over the four sizes of attn_post_change_mean"
+ },
+ "ro_mj256_tm_min": {
+  "value": 0.9238248957224444,
+  "text": "0.924",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: min over the four sizes of template_corr_model"
+ },
+ "ro_mj256_tm_max": {
+  "value": 0.934926857693235,
+  "text": "0.935",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: max over the four sizes of template_corr_model"
+ },
+ "ro_mj256_to_min": {
+  "value": 0.9300140374983198,
+  "text": "0.930",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: min over the four sizes of template_corr_oracle"
+ },
+ "ro_mj256_to_max": {
+  "value": 0.9300140374983198,
+  "text": "0.930",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mean_jump_d 256.0: max over the four sizes of template_corr_oracle"
+ },
+ "ro_fj64_out_min": {
+  "value": 0.8941520744262395,
+  "text": "0.894",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: min over the four sizes of output_r2"
+ },
+ "ro_fj64_out_max": {
+  "value": 0.9655547850360104,
+  "text": "0.966",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: max over the four sizes of output_r2"
+ },
+ "ro_fj64_ro_min": {
+  "value": 0.9602867457947036,
+  "text": "0.960",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: min over the four sizes of best_readout_r2"
+ },
+ "ro_fj64_ro_max": {
+  "value": 0.9782111611495063,
+  "text": "0.978",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: max over the four sizes of best_readout_r2"
+ },
+ "ro_fj64_ratio_min": {
+  "value": 1.8561940381825623,
+  "text": "1.86",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: min over the four sizes of mase_ratio_oracle_gmean"
+ },
+ "ro_fj64_ratio_max": {
+  "value": 2.269417548841886,
+  "text": "2.27",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: max over the four sizes of mase_ratio_oracle_gmean"
+ },
+ "ro_fj64_s1out_min": {
+  "value": 0.0838977834729749,
+  "text": "0.084",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: min over the four sizes of step1_output_r2"
+ },
+ "ro_fj64_s1out_max": {
+  "value": 0.2272729923728155,
+  "text": "0.227",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: max over the four sizes of step1_output_r2"
+ },
+ "ro_fj64_s1ro_min": {
+  "value": 0.6838950129619585,
+  "text": "0.684",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: min over the four sizes of step1_readout_r2"
+ },
+ "ro_fj64_s1ro_max": {
+  "value": 0.7750219263788887,
+  "text": "0.775",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: max over the four sizes of step1_readout_r2"
+ },
+ "ro_fj64_post_min": {
+  "value": 9.2371936169068,
+  "text": "9.24",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: min over the four sizes of attn_post_change_mean"
+ },
+ "ro_fj64_post_max": {
+  "value": 11.691397613336642,
+  "text": "11.69",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: max over the four sizes of attn_post_change_mean"
+ },
+ "ro_fj64_tm_min": {
+  "value": 0.5971413248924978,
+  "text": "0.597",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: min over the four sizes of template_corr_model"
+ },
+ "ro_fj64_tm_max": {
+  "value": 0.7714643868897777,
+  "text": "0.771",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: max over the four sizes of template_corr_model"
+ },
+ "ro_fj64_to_min": {
+  "value": 0.2311931231562242,
+  "text": "0.231",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: min over the four sizes of template_corr_oracle"
+ },
+ "ro_fj64_to_max": {
+  "value": 0.2311931231562242,
+  "text": "0.231",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "freq_jump_d 64.0: max over the four sizes of template_corr_oracle"
+ },
+ "ro_mg17_out_min": {
+  "value": 0.9915286358458888,
+  "text": "0.992",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: min over the four sizes of output_r2"
+ },
+ "ro_mg17_out_max": {
+  "value": 0.9976804391891784,
+  "text": "0.998",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: max over the four sizes of output_r2"
+ },
+ "ro_mg17_ro_min": {
+  "value": 0.9988271399841324,
+  "text": "0.999",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: min over the four sizes of best_readout_r2"
+ },
+ "ro_mg17_ro_max": {
+  "value": 0.9996080814775152,
+  "text": "1.000",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: max over the four sizes of best_readout_r2"
+ },
+ "ro_mg17_ratio_min": {
+  "value": 4.854971299259443,
+  "text": "4.85",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: min over the four sizes of mase_ratio_oracle_gmean"
+ },
+ "ro_mg17_ratio_max": {
+  "value": 7.258027445806638,
+  "text": "7.26",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: max over the four sizes of mase_ratio_oracle_gmean"
+ },
+ "ro_mg17_s1out_min": {
+  "value": 0.956145470260924,
+  "text": "0.956",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: min over the four sizes of step1_output_r2"
+ },
+ "ro_mg17_s1out_max": {
+  "value": 0.984410986906932,
+  "text": "0.984",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: max over the four sizes of step1_output_r2"
+ },
+ "ro_mg17_s1ro_min": {
+  "value": 0.971403200615707,
+  "text": "0.971",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: min over the four sizes of step1_readout_r2"
+ },
+ "ro_mg17_s1ro_max": {
+  "value": 0.98573732513816,
+  "text": "0.986",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: max over the four sizes of step1_readout_r2"
+ },
+ "ro_mg17_tm_min": {
+  "value": 0.806406867227388,
+  "text": "0.806",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: min over the four sizes of template_corr_model"
+ },
+ "ro_mg17_tm_max": {
+  "value": 0.8701321310748555,
+  "text": "0.870",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: max over the four sizes of template_corr_model"
+ },
+ "ro_mg17_to_min": {
+  "value": 0.750858786805685,
+  "text": "0.751",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: min over the four sizes of template_corr_oracle"
+ },
+ "ro_mg17_to_max": {
+  "value": 0.750858786805685,
+  "text": "0.751",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "mackey_tau 17.0: max over the four sizes of template_corr_oracle"
+ },
+ "ro_ip_out_min": {
+  "value": 0.9958900022009888,
+  "text": "0.996",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "in_prior period 24: min over sizes of output_r2"
+ },
+ "ro_ip_out_max": {
+  "value": 0.9974847696939556,
+  "text": "0.997",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "in_prior period 24: max over sizes of output_r2"
+ },
+ "ro_ip_ro_min": {
+  "value": 0.7842274513054461,
+  "text": "0.784",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "in_prior period 24: min over sizes of best_readout_r2"
+ },
+ "ro_ip_ro_max": {
+  "value": 0.8317913842996962,
+  "text": "0.832",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "in_prior period 24: max over sizes of best_readout_r2"
+ },
+ "ro_mg17_tm_5M": {
+  "value": 0.8701321310748555,
+  "text": "0.87",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "Mackey-Glass tau=17, 5M: correlation of Timestral's median with the periodic template"
+ },
+ "ro_mg17_tm_209M": {
+  "value": 0.806406867227388,
+  "text": "0.81",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "Mackey-Glass tau=17, 209M: correlation of Timestral's median with the periodic template"
+ },
+ "sv_chaos_5M": {
+  "value": 0.8239778852990144,
+  "text": "0.824",
+  "src": "results/fix/selfval_confirm/frozen_rule_confirmation.csv",
+  "how": "chaos, 5M: MASE(fix)/MASE(Timestral) on fresh seeds"
+ },
+ "sv_chaos_209M": {
+  "value": 0.9819391101374784,
+  "text": "0.982",
+  "src": "results/fix/selfval_confirm/frozen_rule_confirmation.csv",
+  "how": "chaos, 209M: MASE(fix)/MASE(Timestral) on fresh seeds"
+ },
+ "sv_tails_max": {
+  "value": 1.0029233891273954,
+  "text": "1.003",
+  "src": "results/fix/selfval_confirm/frozen_rule_confirmation.csv",
+  "how": "tails: max over sizes of MASE(fix)/MASE(Timestral)"
+ },
+ "sv_firstrule_tails_min": {
+  "value": 1.0314281727933554,
+  "text": "1.031",
+  "src": "results/fix/selfval/chosen_rule_test_half.csv",
+  "how": "first pre-set rule, odd seeds: min over sizes, tails"
+ },
+ "sv_firstrule_tails_max": {
+  "value": 1.043336721830241,
+  "text": "1.043",
+  "src": "results/fix/selfval/chosen_rule_test_half.csv",
+  "how": "first pre-set rule, odd seeds: max over sizes, tails"
+ },
+ "reg_mj4_16_5M": {
+  "value": 3.7690096706936713,
+  "text": "3.77",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "mean_jump delta4 switch 16 steps back, timestral-5M, T=2048, H=128"
+ },
+ "reg_mj4_16_209M": {
+  "value": 2.4254256437949744,
+  "text": "2.43",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "mean_jump delta4 switch 16 steps back, timestral-209M, T=2048, H=128"
+ },
+ "reg_mj4_1024_5M": {
+  "value": 1.0614596258809643,
+  "text": "1.06",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "mean_jump delta4 switch 1024 steps back, timestral-5M, T=2048, H=128"
+ },
+ "reg_mj4_1024_209M": {
+  "value": 1.0182253992878534,
+  "text": "1.02",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "mean_jump delta4 switch 1024 steps back, timestral-209M, T=2048, H=128"
+ },
+ "reg_fj3_64_5M": {
+  "value": 2.2442740364914138,
+  "text": "2.24",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "frequency_jump ratio3 switch 64 steps back, timestral-5M, T=2048, H=128"
+ },
+ "reg_fj3_64_209M": {
+  "value": 2.119459284784333,
+  "text": "2.12",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "frequency_jump ratio3 switch 64 steps back, timestral-209M, T=2048, H=128"
+ },
+ "reg_horizon_min": {
+  "value": 0.9294112738090444,
+  "text": "0.93",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "switches during the horizon (all generators, knob values, sizes): min"
+ },
+ "reg_horizon_max": {
+  "value": 1.0630237893363546,
+  "text": "1.06",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "same: max"
+ },
+ "reg_markov_min": {
+  "value": 1.008601131447835,
+  "text": "1.01",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "Markov-switching AR (all switching rates, sizes): min"
+ },
+ "reg_markov_max": {
+  "value": 1.130861273884684,
+  "text": "1.13",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "same: max"
+ },
+ "adopt_5M_16": {
+  "value": 0.4322927672941473,
+  "text": "0.43",
+  "src": "results/map/regime/adoption.csv",
+  "how": "level adoption at H<=16, all deltas pooled, 5M, switch 16 steps back, T=2048"
+ },
+ "adopt_5M_64": {
+  "value": 0.6552931937654817,
+  "text": "0.66",
+  "src": "results/map/regime/adoption.csv",
+  "how": "level adoption at H<=16, all deltas pooled, 5M, switch 64 steps back, T=2048"
+ },
+ "adopt_5M_256": {
+  "value": 0.9643145927917568,
+  "text": "0.96",
+  "src": "results/map/regime/adoption.csv",
+  "how": "level adoption at H<=16, all deltas pooled, 5M, switch 256 steps back, T=2048"
+ },
+ "adopt_209M_16": {
+  "value": 0.4900540433474568,
+  "text": "0.49",
+  "src": "results/map/regime/adoption.csv",
+  "how": "level adoption at H<=16, all deltas pooled, 209M, switch 16 steps back, T=2048"
+ },
+ "adopt_209M_64": {
+  "value": 0.7011280772900312,
+  "text": "0.70",
+  "src": "results/map/regime/adoption.csv",
+  "how": "level adoption at H<=16, all deltas pooled, 209M, switch 64 steps back, T=2048"
+ },
+ "adopt_209M_256": {
+  "value": 0.9295880597653066,
+  "text": "0.93",
+  "src": "results/map/regime/adoption.csv",
+  "how": "level adoption at H<=16, all deltas pooled, 209M, switch 256 steps back, T=2048"
+ },
+ "table:inprior": {
+  "src": "results/map/in_prior/summary.csv",
+  "how": "geometric mean over the 4 in-prior configs of the per-config geometric-mean MASE ratio to oracle, context 2048"
+ },
+ "table:chaos_main": {
+  "src": "results/map/chaos/summary_all_sizes.csv",
+  "how": "per-config geometric mean over seeds of MASE ratio to oracle (and to the best classical model), context 2048, horizon 128"
+ },
+ "table:lorenz_lyap": {
+  "src": "results/map/chaos/summary_all_sizes.csv + results/map/chaos/lyapunov.csv",
+  "how": "209M, context 2048; Lyapunov times = sampling step x horizon x exponent"
+ },
+ "table:tails_main": {
+  "src": "results/map/tails/summary_all_sizes.csv",
+  "how": "per-config geometric mean over seeds of MASE ratio to oracle (and to the best classical model), context 2048, horizon 128"
+ },
+ "table:long_ctx": {
+  "src": "results/map/long_ctx/scores.csv",
+  "how": "geometric mean over 8 seeds of MASE ratio to oracle at H=128 (oracle rows matched per context length)"
+ },
+ "table:analog": {
+  "src": "results/mechanism/analog/summary.csv",
+  "how": "geometric mean over 8 seeds of MASE (context 2048, horizon 128) for the oracle, the method of analogues, the seasonal template, and Timestral"
+ },
+ "table:chaos_noise": {
+  "src": "results/mechanism/chaos_noise/summary.csv",
+  "how": "geometric mean over 16 seeds of MASE ratio to oracle, context 2048, horizon 128"
+ },
+ "table:readouts": {
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "300 samples per setting; cross-validated R2 of predicting the oracle's expected change (first patch, or step 1) from Timestral's output vs. from the best per-layer linear readout of the first forecast token"
+ },
+ "table:selfval": {
+  "src": "results/fix/selfval_confirm/frozen_rule_confirmation.csv",
+  "how": "geometric mean over fresh samples of MASE(fix) / MASE(Timestral); frozen rule K=2, m=0.7"
+ },
+ "table:regime": {
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "geometric mean over 8 seeds of MASE ratio to oracle, context 2048, horizon 128"
+ }
+}

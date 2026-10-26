@@ -1,0 +1,28 @@
+{
+  "script": "scripts/regime_adoption.py",
+  "git": "eb8f30b",
+  "time_utc": "2026-10-26T23:43:15Z",
+  "host": "vm",
+  "torch": "2.14.1+cpu",
+  "threads": 1,
+  "cuda": false,
+  "argv": [
+    "scripts/regime_adoption.py",
+    "--dir",
+    "results/map/regime",
+    "--sizes",
+    "5M",
+    "28M",
+    "123M",
+    "209M",
+    "--contexts",
+    "512",
+    "2048",
+    "8192",
+    "--batch-size",
+    "8"
+  ],
+  "n_samples": 240,
+  "n_rows": 2880,
+  "wall_sec": 3478.1
+}

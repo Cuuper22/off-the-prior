@@ -1,0 +1,176 @@
+NVIDIA A100-SXM4-40GB
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  7.06it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00,  1.85it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00,  2.08it/s]
+/content/otp/otp/mechanism.py:128: RuntimeWarning: Mean of empty slice
+  "attn": {k: np.nanmean(v, axis=0).tolist() for k, v in prof.items()},
+in_prior period=24 5M: ratio 1.070 output_r2 0.996 best_readout 0.784 tmpl model/oracle 0.72/0.72
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.24it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.24it/s]
+in_prior period=24 28M: ratio 1.038 output_r2 0.997 best_readout 0.832 tmpl model/oracle 0.72/0.72
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  1.98s/it]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  1.98s/it]
+in_prior period=24 123M: ratio 1.030 output_r2 0.997 best_readout 0.814 tmpl model/oracle 0.72/0.72
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:04<00:00,  2.20s/it]Fetching 2 files: 100%|██████████| 2/2 [00:04<00:00,  2.20s/it]
+in_prior period=24 209M: ratio 1.027 output_r2 0.997 best_readout 0.828 tmpl model/oracle 0.72/0.72
+in_prior period=96 5M: ratio 1.077 output_r2 0.993 best_readout 0.871 tmpl model/oracle 0.49/0.49
+in_prior period=96 28M: ratio 1.043 output_r2 0.994 best_readout 0.883 tmpl model/oracle 0.49/0.49
+in_prior period=96 123M: ratio 1.031 output_r2 0.995 best_readout 0.878 tmpl model/oracle 0.49/0.49
+in_prior period=96 209M: ratio 1.029 output_r2 0.995 best_readout 0.879 tmpl model/oracle 0.49/0.49
+lorenz_rho rho=15.0 5M: ratio 1.013 output_r2 0.998 best_readout 0.985 tmpl model/oracle 0.22/0.11
+lorenz_rho rho=15.0 28M: ratio 1.012 output_r2 0.998 best_readout 0.986 tmpl model/oracle 0.19/0.11
+lorenz_rho rho=15.0 123M: ratio 1.010 output_r2 0.999 best_readout 0.995 tmpl model/oracle 0.15/0.11
+lorenz_rho rho=15.0 209M: ratio 1.010 output_r2 0.999 best_readout 0.995 tmpl model/oracle 0.18/0.11
+lorenz_rho rho=24.0 5M: ratio 1.521 output_r2 0.779 best_readout 0.807 tmpl model/oracle 0.02/0.00
+lorenz_rho rho=24.0 28M: ratio 1.456 output_r2 0.866 best_readout 0.886 tmpl model/oracle 0.00/0.00
+lorenz_rho rho=24.0 123M: ratio 1.428 output_r2 0.900 best_readout 0.923 tmpl model/oracle -0.00/0.00
+lorenz_rho rho=24.0 209M: ratio 1.399 output_r2 0.918 best_readout 0.929 tmpl model/oracle -0.00/0.00
+lorenz_rho rho=28.0 5M: ratio 1.415 output_r2 0.772 best_readout 0.781 tmpl model/oracle 0.03/0.00
+lorenz_rho rho=28.0 28M: ratio 1.376 output_r2 0.843 best_readout 0.851 tmpl model/oracle 0.02/0.00
+lorenz_rho rho=28.0 123M: ratio 1.362 output_r2 0.856 best_readout 0.858 tmpl model/oracle 0.03/0.00
+lorenz_rho rho=28.0 209M: ratio 1.346 output_r2 0.869 best_readout 0.881 tmpl model/oracle 0.02/0.00
+lorenz_rho rho=45.0 5M: ratio 1.359 output_r2 0.818 best_readout 0.838 tmpl model/oracle 0.02/0.01
+lorenz_rho rho=45.0 28M: ratio 1.336 output_r2 0.858 best_readout 0.868 tmpl model/oracle 0.01/0.01
+lorenz_rho rho=45.0 123M: ratio 1.321 output_r2 0.875 best_readout 0.875 tmpl model/oracle -0.00/0.01
+lorenz_rho rho=45.0 209M: ratio 1.311 output_r2 0.881 best_readout 0.886 tmpl model/oracle 0.00/0.01
+logistic_r r=3.2 5M: ratio 1.126 output_r2 1.000 best_readout 1.000 tmpl model/oracle 1.00/1.00
+logistic_r r=3.2 28M: ratio 1.152 output_r2 1.000 best_readout 1.000 tmpl model/oracle 1.00/1.00
+logistic_r r=3.2 123M: ratio 1.041 output_r2 1.000 best_readout 1.000 tmpl model/oracle 1.00/1.00
+logistic_r r=3.2 209M: ratio 1.017 output_r2 1.000 best_readout 1.000 tmpl model/oracle 1.00/1.00
+logistic_r r=3.5 5M: ratio 1.269 output_r2 1.000 best_readout 1.000 tmpl model/oracle 1.00/1.00
+logistic_r r=3.5 28M: ratio 1.214 output_r2 1.000 best_readout 1.000 tmpl model/oracle 1.00/1.00
+logistic_r r=3.5 123M: ratio 1.129 output_r2 1.000 best_readout 1.000 tmpl model/oracle 1.00/1.00
+logistic_r r=3.5 209M: ratio 1.100 output_r2 1.000 best_readout 1.000 tmpl model/oracle 1.00/1.00
+logistic_r r=3.7 5M: ratio 1.064 output_r2 0.999 best_readout 0.989 tmpl model/oracle 0.16/0.04
+logistic_r r=3.7 28M: ratio 1.055 output_r2 0.999 best_readout 0.994 tmpl model/oracle 0.06/0.04
+logistic_r r=3.7 123M: ratio 1.049 output_r2 0.999 best_readout 0.998 tmpl model/oracle 0.06/0.04
+logistic_r r=3.7 209M: ratio 1.048 output_r2 0.999 best_readout 0.998 tmpl model/oracle 0.06/0.04
+logistic_r r=3.9 5M: ratio 1.053 output_r2 0.996 best_readout 0.989 tmpl model/oracle 0.02/0.01
+logistic_r r=3.9 28M: ratio 1.047 output_r2 0.996 best_readout 0.993 tmpl model/oracle 0.03/0.01
+logistic_r r=3.9 123M: ratio 1.044 output_r2 0.995 best_readout 0.996 tmpl model/oracle 0.02/0.01
+logistic_r r=3.9 209M: ratio 1.048 output_r2 0.994 best_readout 0.996 tmpl model/oracle 0.02/0.01
+logistic_r r=4.0 5M: ratio 1.043 output_r2 0.993 best_readout 0.970 tmpl model/oracle 0.00/-0.00
+logistic_r r=4.0 28M: ratio 1.041 output_r2 0.993 best_readout 0.993 tmpl model/oracle 0.01/-0.00
+logistic_r r=4.0 123M: ratio 1.036 output_r2 0.993 best_readout 0.994 tmpl model/oracle -0.00/-0.00
+logistic_r r=4.0 209M: ratio 1.035 output_r2 0.990 best_readout 0.996 tmpl model/oracle -0.00/-0.00
+mackey_tau tau=10.0 5M: ratio 1.866 output_r2 0.983 best_readout 0.998 tmpl model/oracle 0.98/0.99
+mackey_tau tau=10.0 28M: ratio 1.426 output_r2 0.982 best_readout 0.999 tmpl model/oracle 0.98/0.99
+mackey_tau tau=10.0 123M: ratio 1.286 output_r2 0.991 best_readout 0.998 tmpl model/oracle 0.99/0.99
+mackey_tau tau=10.0 209M: ratio 1.236 output_r2 0.992 best_readout 0.999 tmpl model/oracle 0.99/0.99
+mackey_tau tau=17.0 5M: ratio 7.258 output_r2 0.992 best_readout 0.999 tmpl model/oracle 0.87/0.75
+mackey_tau tau=17.0 28M: ratio 6.449 output_r2 0.992 best_readout 1.000 tmpl model/oracle 0.87/0.75
+mackey_tau tau=17.0 123M: ratio 5.197 output_r2 0.997 best_readout 0.999 tmpl model/oracle 0.82/0.75
+mackey_tau tau=17.0 209M: ratio 4.855 output_r2 0.998 best_readout 1.000 tmpl model/oracle 0.81/0.75
+mackey_tau tau=30.0 5M: ratio 17.930 output_r2 0.925 best_readout 0.985 tmpl model/oracle 0.34/0.19
+mackey_tau tau=30.0 28M: ratio 18.088 output_r2 0.888 best_readout 0.994 tmpl model/oracle 0.27/0.19
+mackey_tau tau=30.0 123M: ratio 12.639 output_r2 0.972 best_readout 0.993 tmpl model/oracle 0.22/0.19
+mackey_tau tau=30.0 209M: ratio 12.365 output_r2 0.967 best_readout 0.993 tmpl model/oracle 0.23/0.19
+rossler_c c=3.0 5M: ratio 1.870 output_r2 0.997 best_readout 0.999 tmpl model/oracle 0.93/0.93
+rossler_c c=3.0 28M: ratio 1.492 output_r2 0.998 best_readout 0.999 tmpl model/oracle 0.95/0.93
+rossler_c c=3.0 123M: ratio 1.400 output_r2 0.998 best_readout 0.999 tmpl model/oracle 0.95/0.93
+rossler_c c=3.0 209M: ratio 1.333 output_r2 0.999 best_readout 0.999 tmpl model/oracle 0.95/0.93
+rossler_c c=4.5 5M: ratio 2.259 output_r2 0.996 best_readout 0.997 tmpl model/oracle 0.97/0.94
+rossler_c c=4.5 28M: ratio 1.984 output_r2 0.996 best_readout 0.998 tmpl model/oracle 0.96/0.94
+rossler_c c=4.5 123M: ratio 1.804 output_r2 0.998 best_readout 0.999 tmpl model/oracle 0.96/0.94
+rossler_c c=4.5 209M: ratio 1.712 output_r2 0.998 best_readout 0.999 tmpl model/oracle 0.95/0.94
+rossler_c c=5.7 5M: ratio 2.968 output_r2 0.995 best_readout 0.996 tmpl model/oracle 0.92/0.87
+rossler_c c=5.7 28M: ratio 2.722 output_r2 0.995 best_readout 0.997 tmpl model/oracle 0.91/0.87
+rossler_c c=5.7 123M: ratio 2.557 output_r2 0.997 best_readout 0.998 tmpl model/oracle 0.91/0.87
+rossler_c c=5.7 209M: ratio 2.379 output_r2 0.998 best_readout 0.998 tmpl model/oracle 0.91/0.87
+/content/otp/otp/generators/chaos.py:194: RuntimeWarning: overflow encountered in multiply
+  out[2] = p["b"] + z * (x - p["c"])
+/content/otp/otp/generators/chaos.py:192: RuntimeWarning: invalid value encountered in subtract
+  out[0] = -y - z
+/content/otp/otp/generators/chaos.py:194: RuntimeWarning: overflow encountered in multiply
+  out[2] = p["b"] + z * (x - p["c"])
+/content/otp/otp/generators/chaos.py:192: RuntimeWarning: invalid value encountered in subtract
+  out[0] = -y - z
+/content/otp/otp/generators/chaos.py:194: RuntimeWarning: overflow encountered in multiply
+  out[2] = p["b"] + z * (x - p["c"])
+/content/otp/otp/generators/chaos.py:192: RuntimeWarning: invalid value encountered in subtract
+  out[0] = -y - z
+/content/otp/otp/generators/chaos.py:194: RuntimeWarning: overflow encountered in multiply
+  out[2] = p["b"] + z * (x - p["c"])
+/content/otp/otp/generators/chaos.py:192: RuntimeWarning: invalid value encountered in subtract
+  out[0] = -y - z
+/content/otp/otp/generators/chaos.py:194: RuntimeWarning: overflow encountered in multiply
+  out[2] = p["b"] + z * (x - p["c"])
+/content/otp/otp/generators/chaos.py:192: RuntimeWarning: invalid value encountered in subtract
+  out[0] = -y - z
+/content/otp/otp/generators/chaos.py:194: RuntimeWarning: overflow encountered in multiply
+  out[2] = p["b"] + z * (x - p["c"])
+/content/otp/otp/generators/chaos.py:192: RuntimeWarning: invalid value encountered in subtract
+  out[0] = -y - z
+/content/otp/otp/generators/chaos.py:194: RuntimeWarning: overflow encountered in multiply
+  out[2] = p["b"] + z * (x - p["c"])
+/content/otp/otp/generators/chaos.py:192: RuntimeWarning: invalid value encountered in subtract
+  out[0] = -y - z
+rossler_c c=9.0 5M: ratio nan output_r2 -inf best_readout -inf tmpl model/oracle 0.51/0.49
+rossler_c c=9.0 28M: ratio nan output_r2 -inf best_readout -inf tmpl model/oracle 0.64/0.49
+rossler_c c=9.0 123M: ratio nan output_r2 -inf best_readout -inf tmpl model/oracle 0.60/0.49
+rossler_c c=9.0 209M: ratio nan output_r2 -inf best_readout -inf tmpl model/oracle 0.61/0.49
+mean_jump_d d=16 5M: ratio 3.624 output_r2 0.670 best_readout 0.956 tmpl model/oracle 0.76/0.91
+mean_jump_d d=16 28M: ratio 2.272 output_r2 0.570 best_readout 0.974 tmpl model/oracle 0.81/0.91
+mean_jump_d d=16 123M: ratio 2.018 output_r2 0.701 best_readout 0.977 tmpl model/oracle 0.87/0.91
+mean_jump_d d=16 209M: ratio 2.476 output_r2 0.726 best_readout 0.980 tmpl model/oracle 0.83/0.91
+mean_jump_d d=64 5M: ratio 1.536 output_r2 0.919 best_readout 0.962 tmpl model/oracle 0.87/0.90
+mean_jump_d d=64 28M: ratio 1.198 output_r2 0.939 best_readout 0.976 tmpl model/oracle 0.90/0.90
+mean_jump_d d=64 123M: ratio 1.070 output_r2 0.978 best_readout 0.979 tmpl model/oracle 0.91/0.90
+mean_jump_d d=64 209M: ratio 1.121 output_r2 0.966 best_readout 0.985 tmpl model/oracle 0.90/0.90
+mean_jump_d d=256 5M: ratio 1.087 output_r2 0.977 best_readout 0.965 tmpl model/oracle 0.92/0.93
+mean_jump_d d=256 28M: ratio 1.041 output_r2 0.988 best_readout 0.978 tmpl model/oracle 0.93/0.93
+mean_jump_d d=256 123M: ratio 1.031 output_r2 0.991 best_readout 0.983 tmpl model/oracle 0.93/0.93
+mean_jump_d d=256 209M: ratio 1.026 output_r2 0.993 best_readout 0.985 tmpl model/oracle 0.93/0.93
+mean_jump_d d=1024 5M: ratio 1.048 output_r2 0.986 best_readout 0.966 tmpl model/oracle 0.92/0.92
+mean_jump_d d=1024 28M: ratio 1.027 output_r2 0.992 best_readout 0.979 tmpl model/oracle 0.92/0.92
+mean_jump_d d=1024 123M: ratio 1.016 output_r2 0.994 best_readout 0.985 tmpl model/oracle 0.92/0.92
+mean_jump_d d=1024 209M: ratio 1.013 output_r2 0.995 best_readout 0.987 tmpl model/oracle 0.92/0.92
+freq_jump_d d=64 5M: ratio 2.269 output_r2 0.894 best_readout 0.960 tmpl model/oracle 0.77/0.23
+freq_jump_d d=64 28M: ratio 2.086 output_r2 0.956 best_readout 0.971 tmpl model/oracle 0.69/0.23
+freq_jump_d d=64 123M: ratio 2.020 output_r2 0.947 best_readout 0.975 tmpl model/oracle 0.67/0.23
+freq_jump_d d=64 209M: ratio 1.856 output_r2 0.966 best_readout 0.978 tmpl model/oracle 0.60/0.23
+freq_jump_d d=256 5M: ratio 1.217 output_r2 0.992 best_readout 0.968 tmpl model/oracle 0.87/0.93
+freq_jump_d d=256 28M: ratio 1.126 output_r2 0.993 best_readout 0.971 tmpl model/oracle 0.91/0.93
+freq_jump_d d=256 123M: ratio 1.123 output_r2 0.995 best_readout 0.980 tmpl model/oracle 0.91/0.93
+freq_jump_d d=256 209M: ratio 1.119 output_r2 0.994 best_readout 0.981 tmpl model/oracle 0.92/0.93
+freq_jump_d d=1024 5M: ratio 1.044 output_r2 0.997 best_readout 0.961 tmpl model/oracle 0.94/0.94
+freq_jump_d d=1024 28M: ratio 1.032 output_r2 0.996 best_readout 0.972 tmpl model/oracle 0.95/0.94
+freq_jump_d d=1024 123M: ratio 1.022 output_r2 0.997 best_readout 0.978 tmpl model/oracle 0.95/0.94
+freq_jump_d d=1024 209M: ratio 1.024 output_r2 0.997 best_readout 0.978 tmpl model/oracle 0.95/0.94
+var_jump_d d=64 5M: ratio 1.016 output_r2 0.985 best_readout 0.923 tmpl model/oracle 0.75/0.71
+var_jump_d d=64 28M: ratio 1.011 output_r2 0.981 best_readout 0.955 tmpl model/oracle 0.76/0.71
+var_jump_d d=64 123M: ratio 1.017 output_r2 0.978 best_readout 0.967 tmpl model/oracle 0.77/0.71
+var_jump_d d=64 209M: ratio 1.009 output_r2 0.984 best_readout 0.969 tmpl model/oracle 0.75/0.71
+var_jump_d d=256 5M: ratio 1.024 output_r2 0.986 best_readout 0.932 tmpl model/oracle 0.60/0.56
+var_jump_d d=256 28M: ratio 1.014 output_r2 0.987 best_readout 0.959 tmpl model/oracle 0.61/0.56
+var_jump_d d=256 123M: ratio 1.010 output_r2 0.989 best_readout 0.972 tmpl model/oracle 0.60/0.56
+var_jump_d d=256 209M: ratio 1.011 output_r2 0.990 best_readout 0.974 tmpl model/oracle 0.60/0.56
+var_jump_d d=1024 5M: ratio 1.016 output_r2 0.985 best_readout 0.954 tmpl model/oracle 0.52/0.49
+var_jump_d d=1024 28M: ratio 1.010 output_r2 0.987 best_readout 0.973 tmpl model/oracle 0.53/0.49
+var_jump_d d=1024 123M: ratio 1.006 output_r2 0.992 best_readout 0.986 tmpl model/oracle 0.52/0.49
+var_jump_d d=1024 209M: ratio 1.005 output_r2 0.992 best_readout 0.983 tmpl model/oracle 0.52/0.49
+stable_alpha alpha=2.0 5M: ratio 1.011 output_r2 0.961 best_readout 0.977 tmpl model/oracle 0.06/0.00
+stable_alpha alpha=2.0 28M: ratio 1.011 output_r2 0.964 best_readout 0.980 tmpl model/oracle 0.05/0.00
+stable_alpha alpha=2.0 123M: ratio 1.005 output_r2 0.979 best_readout 0.984 tmpl model/oracle 0.02/0.00
+stable_alpha alpha=2.0 209M: ratio 1.005 output_r2 0.978 best_readout 0.983 tmpl model/oracle 0.02/0.00
+stable_alpha alpha=1.7 5M: ratio 1.006 output_r2 0.972 best_readout 0.954 tmpl model/oracle -0.01/-0.03
+stable_alpha alpha=1.7 28M: ratio 1.001 output_r2 0.980 best_readout 0.950 tmpl model/oracle -0.01/-0.03
+stable_alpha alpha=1.7 123M: ratio 1.000 output_r2 0.982 best_readout 0.966 tmpl model/oracle 0.00/-0.03
+stable_alpha alpha=1.7 209M: ratio 1.003 output_r2 0.976 best_readout 0.971 tmpl model/oracle -0.01/-0.03
+stable_alpha alpha=1.3 5M: ratio 1.020 output_r2 0.996 best_readout 0.646 tmpl model/oracle -0.01/0.00
+stable_alpha alpha=1.3 28M: ratio 1.013 output_r2 0.997 best_readout 0.695 tmpl model/oracle -0.01/0.00
+stable_alpha alpha=1.3 123M: ratio 1.009 output_r2 0.998 best_readout 0.697 tmpl model/oracle -0.01/0.00
+stable_alpha alpha=1.3 209M: ratio 1.010 output_r2 0.997 best_readout 0.773 tmpl model/oracle -0.01/0.00
+stable_alpha alpha=1.1 5M: ratio 1.050 output_r2 0.605 best_readout 0.514 tmpl model/oracle 0.03/-0.01
+stable_alpha alpha=1.1 28M: ratio 1.031 output_r2 0.987 best_readout 0.075 tmpl model/oracle 0.01/-0.01
+stable_alpha alpha=1.1 123M: ratio 1.023 output_r2 0.996 best_readout 0.010 tmpl model/oracle -0.00/-0.01
+stable_alpha alpha=1.1 209M: ratio 1.023 output_r2 0.995 best_readout 0.178 tmpl model/oracle 0.01/-0.01
+fbm_hurst H_hurst=0.2 5M: ratio 1.013 output_r2 0.955 best_readout 0.958 tmpl model/oracle 0.05/0.01
+fbm_hurst H_hurst=0.2 28M: ratio 1.005 output_r2 0.963 best_readout 0.981 tmpl model/oracle 0.05/0.01
+fbm_hurst H_hurst=0.2 123M: ratio 1.007 output_r2 0.968 best_readout 0.981 tmpl model/oracle 0.04/0.01
+fbm_hurst H_hurst=0.2 209M: ratio 1.006 output_r2 0.962 best_readout 0.982 tmpl model/oracle 0.04/0.01
+fbm_hurst H_hurst=0.5 5M: ratio 0.998 output_r2 -0.017 best_readout -0.028 tmpl model/oracle 0.02/0.00
+fbm_hurst H_hurst=0.5 28M: ratio 1.012 output_r2 -0.022 best_readout -0.040 tmpl model/oracle 0.02/0.00
+fbm_hurst H_hurst=0.5 123M: ratio 1.011 output_r2 -0.020 best_readout -0.052 tmpl model/oracle 0.00/0.00
+fbm_hurst H_hurst=0.5 209M: ratio 1.008 output_r2 -0.025 best_readout -0.047 tmpl model/oracle 0.07/0.00
+fbm_hurst H_hurst=0.8 5M: ratio 1.065 output_r2 0.845 best_readout 0.963 tmpl model/oracle 0.06/0.11
+fbm_hurst H_hurst=0.8 28M: ratio 1.067 output_r2 0.886 best_readout 0.958 tmpl model/oracle 0.07/0.11
+fbm_hurst H_hurst=0.8 123M: ratio 1.069 output_r2 0.909 best_readout 0.963 tmpl model/oracle 0.04/0.11
+fbm_hurst H_hurst=0.8 209M: ratio 1.078 output_r2 0.884 best_readout 0.966 tmpl model/oracle 0.04/0.11

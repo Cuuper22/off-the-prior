@@ -125,6 +125,7 @@ def make_sample(proc: Process, context_len: int, horizon: int, seed: int, n_path
     fut, _ = proc.step(big, horizon, rng, np.random.default_rng(exo_seed + 1))  # (P+1, C, H)
     main = list(proc.main_rows)
     paths = fut[1:, main]
+    n_bad = int((~np.isfinite(paths).all(axis=tuple(range(1, paths.ndim)))).sum())  # diverged oracle paths
     oracle_q = np.quantile(paths, LEVELS, axis=0)          # (21, V, H)
     oracle_q = np.moveaxis(oracle_q, 0, -1)                # (V, H, 21)
     past_cov = ctx[0, list(proc.past_cov_rows)] if proc.past_cov_rows else None
@@ -142,6 +143,7 @@ def make_sample(proc: Process, context_len: int, horizon: int, seed: int, n_path
         "T": context_len,
         "H": horizon,
         "tags": proc.tags(),
+        "oracle_paths_nonfinite": n_bad,
         "sample_id": sample_id or f"{proc.name}-{seed}",
     }
     return Sample(ctx[0, main].astype(np.float64), fut[0, main].astype(np.float64), oracle_q, proc.period,
