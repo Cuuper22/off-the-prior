@@ -215,6 +215,8 @@ cannot; past about ten, nobody can, and the ratio returns to about 1. The noise 
 generator sets how good the oracle can be inside that window. Sweeping the noise level
 (dynamic and observation noise together) shows how much of each ratio that choice sets:
 
+![Ratio to the oracle against the noise level of the generator (16 seeds, horizon 128).](figures/noise_sweep.png)
+
 | system | noise (% of scale) | 5M | 28M | 123M | 209M |
 |---|---|---|---|---|---|
 | lorenz63_rho28 | 0.10 | 1.96 | 1.89 | 1.87 | 1.83 |

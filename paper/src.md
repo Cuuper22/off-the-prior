@@ -179,6 +179,8 @@ cannot; past about ten, nobody can, and the ratio returns to about 1. The noise 
 generator sets how good the oracle can be inside that window. Sweeping the noise level
 (dynamic and observation noise together) shows how much of each ratio that choice sets:
 
+![Ratio to the oracle against the noise level of the generator (16 seeds, horizon 128).](figures/noise_sweep.png)
+
 {{table:chaos_noise}}
 
 At 0.1% noise the oracle is nearly exact and Mackey-Glass sits at
