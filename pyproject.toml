@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "off-the-prior"
+version = "0.1.0"
+description = "Mapping where a synthetic-prior time-series foundation model (Timestral) fails, and why"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2",
+    "scipy>=1.10",
+    "statsmodels>=0.14",
+    "torch>=2.4",
+    "timestral @ git+https://github.com/mistralai/timestral.git",
+]
+
+[project.optional-dependencies]
+search = ["cma>=3.3"]
+dev = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+include = ["otp*"]
