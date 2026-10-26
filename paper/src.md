@@ -303,7 +303,27 @@ RESULTS-PENDING.
 
 # 10. Limitations
 
-RESULTS-PENDING (compute actually used, what ran on CPU vs. GPU, what is not run).
+- **The oracle knows the latent state.** It is the best forecast given the true state, which
+  is stronger than the best forecast given only the observed history. Ratios to it therefore
+  bound the possible improvement from above; part of every gap is unavoidable for any
+  forecaster that sees only the data.
+- **Noise sets the size of chaos gaps.** For nearly deterministic systems the oracle's error,
+  and so every ratio to it, depends on the noise level we chose (1% by default); Section 4.2
+  reports the dependence. Orderings (between settings and between model sizes) are more
+  robust than the magnitudes.
+- **Seeds.** Most settings use 8 seeds (16 for the noise sweep, 300 samples per setting for
+  the mechanism runs). Intervals in the result files are bootstrap intervals over seeds; with
+  8 seeds they are wide for heavy-tailed settings.
+- **Diverged simulations.** A few Rössler simulations left the attractor under noise; their
+  oracle could not be scored and they are excluded (counts are given where they occur).
+- **Univariate main series.** Except for the covariate study, every test series is a single
+  variate.
+- **No access to the pretraining data.** Statements about what the synthetic prior contains
+  are inferences from behaviour, labelled as such.
+- **Compute.** Small-model sweeps ran on a 2-core CPU VM; the large-model sweeps, the
+  long-context runs and the mechanism runs at all sizes ran on Colab A100 GPUs; one mechanism
+  test ran on a laptop RTX 3060 GPU. GPU and CPU forecasts of the same series agree to a few
+  parts in 100,000 in MASE (`results/mechanism/analog/parity_vm_cpu_vs_laptop_gpu.json`).
 
 # Reproducibility
 
