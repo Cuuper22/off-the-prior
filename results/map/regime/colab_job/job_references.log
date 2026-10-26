@@ -1,0 +1,8 @@
+1
+loaded 880 samples from samples/regime/samples.npz
+/content/otp/otp/classical.py:85: RuntimeWarning: invalid value encountered in sqrt
+  mean, sd = np.asarray(f.predicted_mean), np.sqrt(np.asarray(f.var_pred_mean))
+/content/otp/otp/classical.py:85: RuntimeWarning: invalid value encountered in sqrt
+  mean, sd = np.asarray(f.predicted_mean), np.sqrt(np.asarray(f.var_pred_mean))
+references done (223s)
+wrote 31680 rows to results/colab_out/regime_refs/scores.csv in 224s
