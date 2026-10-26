@@ -1,0 +1,13 @@
+NVIDIA A100-SXM4-40GB
+loaded 280 samples from samples/tails/samples.npz
+references done (1s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  5.86it/s]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  2.04s/it]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  1.76s/it]
+timestral-123M T=512 done (8s)
+timestral-123M T=2048 done (2s)
+timestral-123M T=8192 done (4s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:06<00:00,  3.15s/it]Fetching 2 files: 100%|██████████| 2/2 [00:06<00:00,  3.15s/it]
+timestral-209M T=512 done (10s)
+timestral-209M T=2048 done (2s)
+timestral-209M T=8192 done (5s)
+wrote 5040 rows to results/colab_out/tails_big/scores.csv in 32s
