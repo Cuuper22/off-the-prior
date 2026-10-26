@@ -563,6 +563,30 @@
   "src": "results/mechanism/readouts/summary.csv",
   "how": "mackey_tau 17.0: max over the four sizes of template_corr_oracle"
  },
+ "ro_ip_out_min": {
+  "value": 0.9958900022009888,
+  "text": "0.996",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "in_prior period 24: min over sizes of output_r2"
+ },
+ "ro_ip_out_max": {
+  "value": 0.9974847696939556,
+  "text": "0.997",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "in_prior period 24: max over sizes of output_r2"
+ },
+ "ro_ip_ro_min": {
+  "value": 0.7842274513054461,
+  "text": "0.784",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "in_prior period 24: min over sizes of best_readout_r2"
+ },
+ "ro_ip_ro_max": {
+  "value": 0.8317913842996962,
+  "text": "0.832",
+  "src": "results/mechanism/readouts/summary.csv",
+  "how": "in_prior period 24: max over sizes of best_readout_r2"
+ },
  "ro_mg17_tm_5M": {
   "value": 0.8701321310748555,
   "text": "0.87",

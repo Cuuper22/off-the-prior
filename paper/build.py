@@ -226,6 +226,10 @@ def readouts():
             if col in g and g[col].notna().any():
                 num(f"ro_{k}_{name}_min", float(g[col].min()), src, f"{study} {kv}: min over the four sizes of {col}", "{:.3f}" if "r2" in col or "corr" in col else "{:.2f}")
                 num(f"ro_{k}_{name}_max", float(g[col].max()), src, f"{study} {kv}: max over the four sizes of {col}", "{:.3f}" if "r2" in col or "corr" in col else "{:.2f}")
+    g = s[(s.study == "in_prior") & (s.knob_value == 24.0)]
+    for col, name in [("output_r2", "out"), ("best_readout_r2", "ro")]:
+        num(f"ro_ip_{name}_min", float(g[col].min()), src, f"in_prior period 24: min over sizes of {col}", "{:.3f}")
+        num(f"ro_ip_{name}_max", float(g[col].max()), src, f"in_prior period 24: max over sizes of {col}", "{:.3f}")
     for size in ("5M", "209M"):
         g = s[(s.study == "mackey_tau") & (s.knob_value == 17.0) & (s["size"] == size)]
         num(f"ro_mg17_tm_{size}", float(g.template_corr_model.iloc[0]), src, f"Mackey-Glass tau=17, {size}: correlation of Timestral's median with the periodic template", "{:.2f}")

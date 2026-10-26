@@ -346,7 +346,11 @@ the oracle's expected change over the first forecast patch (and at single steps 
 how well does Timestral's own forecast predict it, and how well does a linear readout (a
 ridge regression, cross-validated) of the hidden state of the first forecast token predict
 it, at the best layer? If the readout does much better than the output, the information the
-oracle uses is inside the model but does not reach the forecast.
+oracle uses is inside the model but does not reach the forecast. The readout is a lower bound
+on what is linearly present: with 300 samples and 192–768 features per token, the ridge fit
+loses some signal, which shows on the in-prior control, where it scores
+0.784–0.832 against 0.996–0.997
+for the output. Gaps in the readout's favour are therefore conservative.
 
 | setting | size | MASE / oracle | output R2 | best readout R2 | step-1 output R2 | step-1 readout R2 |
 |---|---|---|---|---|---|---|
@@ -377,8 +381,10 @@ after a frequency jump, one step ahead, the readout reaches 0.684–0.775
 against 0.084–0.227 for the output. By 256 steps after
 a mean jump the two agree (0.977–0.993 vs.
 0.965–0.985). The model sees and encodes a recent change and
-then forecasts as if it may not last. A prior built from trend + season + noise contains no
-lasting breaks, and a very recent departure from the pattern looks like noise under that prior.
+then forecasts as if it may not last. Our interpretation, which we cannot check without the
+pretraining data: if lasting breaks are rare in the synthetic trend + season + noise mix, a very
+recent departure from the pattern is better explained as noise under that prior than as a new
+regime.
 
 **Deterministic oscillators: the gap builds later.** On Mackey-Glass (τ = 17) output and readout
 agree for the first patch (0.992–0.998 vs.
