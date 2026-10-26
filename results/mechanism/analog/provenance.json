@@ -1,0 +1,21 @@
+{
+  "script": "scripts/analog_test.py",
+  "git": "7868fe9",
+  "time_utc": "2026-10-26T22:15:06Z",
+  "host": "vm",
+  "torch": "2.14.1+cpu",
+  "threads": 2,
+  "cuda": false,
+  "argv": [
+    "scripts/analog_test.py",
+    "--samples",
+    "/home/claude/otp-wt/lead/results/colab/chaos_full/results/colab_out/chaos/samples.npz",
+    "--sizes",
+    "5M",
+    "28M",
+    "--out",
+    "results/mechanism/analog"
+  ],
+  "n_samples": 344,
+  "wall_sec": 972.2
+}
