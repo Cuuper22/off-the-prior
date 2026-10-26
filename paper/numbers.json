@@ -629,6 +629,102 @@
   "src": "results/fix/selfval/chosen_rule_test_half.csv",
   "how": "first pre-set rule, odd seeds: max over sizes, tails"
  },
+ "reg_mj4_16_5M": {
+  "value": 3.7690096706936713,
+  "text": "3.77",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "mean_jump delta4 switch 16 steps back, timestral-5M, T=2048, H=128"
+ },
+ "reg_mj4_16_209M": {
+  "value": 2.4254256437949744,
+  "text": "2.43",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "mean_jump delta4 switch 16 steps back, timestral-209M, T=2048, H=128"
+ },
+ "reg_mj4_1024_5M": {
+  "value": 1.0614596258809643,
+  "text": "1.06",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "mean_jump delta4 switch 1024 steps back, timestral-5M, T=2048, H=128"
+ },
+ "reg_mj4_1024_209M": {
+  "value": 1.0182253992878534,
+  "text": "1.02",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "mean_jump delta4 switch 1024 steps back, timestral-209M, T=2048, H=128"
+ },
+ "reg_fj3_64_5M": {
+  "value": 2.2442740364914138,
+  "text": "2.24",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "frequency_jump ratio3 switch 64 steps back, timestral-5M, T=2048, H=128"
+ },
+ "reg_fj3_64_209M": {
+  "value": 2.119459284784333,
+  "text": "2.12",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "frequency_jump ratio3 switch 64 steps back, timestral-209M, T=2048, H=128"
+ },
+ "reg_horizon_min": {
+  "value": 0.9294112738090444,
+  "text": "0.93",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "switches during the horizon (all generators, knob values, sizes): min"
+ },
+ "reg_horizon_max": {
+  "value": 1.0630237893363546,
+  "text": "1.06",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "same: max"
+ },
+ "reg_markov_min": {
+  "value": 1.008601131447835,
+  "text": "1.01",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "Markov-switching AR (all switching rates, sizes): min"
+ },
+ "reg_markov_max": {
+  "value": 1.130861273884684,
+  "text": "1.13",
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "same: max"
+ },
+ "adopt_5M_16": {
+  "value": 0.4322927672941473,
+  "text": "0.43",
+  "src": "results/map/regime/adoption.csv",
+  "how": "level adoption at H<=16, all deltas pooled, 5M, switch 16 steps back, T=2048"
+ },
+ "adopt_5M_64": {
+  "value": 0.6552931937654817,
+  "text": "0.66",
+  "src": "results/map/regime/adoption.csv",
+  "how": "level adoption at H<=16, all deltas pooled, 5M, switch 64 steps back, T=2048"
+ },
+ "adopt_5M_256": {
+  "value": 0.9643145927917568,
+  "text": "0.96",
+  "src": "results/map/regime/adoption.csv",
+  "how": "level adoption at H<=16, all deltas pooled, 5M, switch 256 steps back, T=2048"
+ },
+ "adopt_209M_16": {
+  "value": 0.4900540433474568,
+  "text": "0.49",
+  "src": "results/map/regime/adoption.csv",
+  "how": "level adoption at H<=16, all deltas pooled, 209M, switch 16 steps back, T=2048"
+ },
+ "adopt_209M_64": {
+  "value": 0.7011280772900312,
+  "text": "0.70",
+  "src": "results/map/regime/adoption.csv",
+  "how": "level adoption at H<=16, all deltas pooled, 209M, switch 64 steps back, T=2048"
+ },
+ "adopt_209M_256": {
+  "value": 0.9295880597653066,
+  "text": "0.93",
+  "src": "results/map/regime/adoption.csv",
+  "how": "level adoption at H<=16, all deltas pooled, 209M, switch 256 steps back, T=2048"
+ },
  "table:inprior": {
   "src": "results/map/in_prior/summary.csv",
   "how": "geometric mean over the 4 in-prior configs of the per-config geometric-mean MASE ratio to oracle, context 2048"
@@ -664,5 +760,9 @@
  "table:selfval": {
   "src": "results/fix/selfval_confirm/frozen_rule_confirmation.csv",
   "how": "geometric mean over fresh samples of MASE(fix) / MASE(Timestral); frozen rule K=2, m=0.7"
+ },
+ "table:regime": {
+  "src": "results/map/regime/summary_all_sizes.csv",
+  "how": "geometric mean over 8 seeds of MASE ratio to oracle, context 2048, horizon 128"
  }
 }

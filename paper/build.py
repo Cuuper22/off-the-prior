@@ -271,8 +271,42 @@ def selfval():
     num("sv_firstrule_tails_max", float(tt.max()), "results/fix/selfval/chosen_rule_test_half.csv", "first pre-set rule, odd seeds: max over sizes, tails", "{:.3f}")
 
 
+def regime():
+    src = "results/map/regime/summary_all_sizes.csv"
+    s = load_summary(src)
+    q = s[(s["T"] == 2048) & (s.H == 128)].copy()
+    q["d"] = pd.to_numeric(q.config_id.str.extract(r"/d(\d+)$")[0], errors="coerce")
+    rows = []
+    for prefix, label in [("regime/mean_jump/context/delta4/", "level +4 sd"), ("regime/frequency_jump/context/ratio2/", "period x2"),
+                          ("regime/variance_jump/context/factor0.25/", "noise sd x0.25")]:
+        for fc in ("timestral-5M", "timestral-209M"):
+            r = {"switch": label, "size": SIZE_LABEL[fc]}
+            for d in (16, 64, 256, 1024):
+                v = q[(q.config_id == f"{prefix}d{d}") & (q.forecaster == fc)].mase_ratio_oracle_gmean
+                r[f"{d} steps ago"] = float(v.iloc[0]) if len(v) else float("nan")
+            rows.append(r)
+    table("regime", pd.DataFrame(rows), src, "geometric mean over 8 seeds of MASE ratio to oracle, context 2048, horizon 128")
+    for gen, kv, d, k in [("mean_jump", "delta4", 16, "mj4_16"), ("mean_jump", "delta4", 1024, "mj4_1024"), ("frequency_jump", "ratio3", 64, "fj3_64")]:
+        for fc in ("timestral-5M", "timestral-209M"):
+            v = float(q[(q.config_id == f"regime/{gen}/context/{kv}/d{d}") & (q.forecaster == fc)].mase_ratio_oracle_gmean.iloc[0])
+            num(f"reg_{k}_{SIZE_LABEL[fc]}", v, src, f"{gen} {kv} switch {d} steps back, {fc}, T=2048, H=128")
+    hz = q[q.config_id.str.contains("/horizon/")].mase_ratio_oracle_gmean
+    num("reg_horizon_min", hz.min(), src, "switches during the horizon (all generators, knob values, sizes): min")
+    num("reg_horizon_max", hz.max(), src, "same: max")
+    mk = q[q.generator == "markov_ar"].mase_ratio_oracle_gmean
+    num("reg_markov_min", mk.min(), src, "Markov-switching AR (all switching rates, sizes): min")
+    num("reg_markov_max", mk.max(), src, "same: max")
+    asrc = "results/map/regime/adoption.csv"
+    a = pd.read_csv(p(asrc))
+    a = a[(a["T"] == 2048) & (a.delta.astype(str) == "all")]
+    for size in ("5M", "209M"):
+        for d in (16, 64, 256):
+            v = float(a[(a["size"] == size) & (a.d == d)].adoption_mean.iloc[0])
+            num(f"adopt_{size}_{d}", v, asrc, f"level adoption at H<=16, all deltas pooled, {size}, switch {d} steps back, T=2048")
+
+
 def main():
-    for fn in (in_prior, chaos, tails, long_ctx, symavg, normalization, analog, chaos_noise, readouts, selfval):
+    for fn in (in_prior, chaos, tails, long_ctx, symavg, normalization, analog, chaos_noise, readouts, selfval, regime):
         try:
             fn()
         except FileNotFoundError as e:

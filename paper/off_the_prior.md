@@ -262,7 +262,34 @@ does not cover, do not produce failures of the size seen for deterministic dynam
 
 ## 4.4 Regime switches
 
-RESULTS-PENDING.
+Three kinds of switch (a level jump, a change of seasonal period, a change of noise level) placed
+a chosen number of steps before the forecast origin, so the context shows the switch:
+
+![Ratio to the oracle against the number of steps since the switch (context 8,192, horizon 128).](figures/regime_distance.png)
+
+| switch | size | 16 steps ago | 64 steps ago | 256 steps ago | 1024 steps ago |
+|---|---|---|---|---|---|
+| level +4 sd | 5M | 3.77 | 1.64 | 1.09 | 1.06 |
+| level +4 sd | 209M | 2.43 | 1.06 | 1.02 | 1.02 |
+| period x2 | 5M | 2.43 | 2.14 | 1.22 | 1.07 |
+| period x2 | 209M | 2.38 | 1.84 | 1.10 | 1.04 |
+| noise sd x0.25 | 5M | 1.35 | 1.41 | 1.16 | 1.11 |
+| noise sd x0.25 | 209M | 1.06 | 1.16 | 1.05 | 1.03 |
+
+The failure is concentrated right after a switch. Sixteen steps after a level jump of 4 noise
+standard deviations, the error is 3.77 times the oracle's at 5M and
+2.43 at 209M; a thousand steps later it is 1.06 and
+1.02. Period changes last longer: 64 steps after the period triples, the
+ratio is still 2.24 (5M) and 2.12 (209M). A direct measure of
+how much of a level jump the forecast adopts (1 = forecasts at the new level, like the oracle;
+0 = still at the old level), over the first 16 forecast steps and pooled over jump sizes, is
+0.43 / 0.66 / 0.96 at 16 / 64 / 256 steps after the
+switch for 5M and 0.49 / 0.70 / 0.93 for 209M.
+Section 7.3 shows that the change is nevertheless represented inside the model.
+
+When the switch happens during the horizon at a known rate (so nobody can see it coming),
+Timestral stays at 0.93–1.06 of the oracle, and on
+Markov-switching AR processes at 1.01–1.13.
 
 ## 4.5 Does more history help?
 
