@@ -1,0 +1,20 @@
+{
+  "script": "scripts/normalization_test.py",
+  "git": "e244f32",
+  "time_utc": "2026-10-26T20:09:05Z",
+  "host": "vm",
+  "torch": "2.14.1+cpu",
+  "threads": 1,
+  "cuda": false,
+  "argv": [
+    "scripts/normalization_test.py",
+    "--sizes",
+    "5M",
+    "28M",
+    "--seeds",
+    "24",
+    "--out",
+    "results/mechanism/normalization"
+  ],
+  "wall_sec": 562.1
+}
