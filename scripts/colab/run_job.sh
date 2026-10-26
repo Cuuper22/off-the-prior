@@ -33,7 +33,14 @@ colab upload -s "$S" "$JOBSH" /content/otp/job.sh
 for f in "$@"; do  # extra files: LOCAL=REMOTE (REMOTE relative to the repo root on Colab)
   rdir=$(dirname "/content/otp/${f#*=}")
   echo "import os; os.makedirs('$rdir', exist_ok=True)" | colab exec -s "$S"
-  colab upload -s "$S" "${f%%=*}" "/content/otp/${f#*=}"
+  if [ "$(stat -c %s "${f%%=*}")" -gt 41943040 ]; then  # the upload endpoint rejects large files: send 40 MB parts
+    pd=$(mktemp -d); split -b 40M -d -a 3 "${f%%=*}" "$pd/part."
+    for p in "$pd"/part.*; do colab upload -s "$S" "$p" "$rdir/$(basename "$p")"; done
+    echo "import subprocess; subprocess.run('cat $rdir/part.* > /content/otp/${f#*=} && rm $rdir/part.*', shell=True, check=True)" | colab exec -s "$S"
+    rm -rf "$pd"
+  else
+    colab upload -s "$S" "${f%%=*}" "/content/otp/${f#*=}"
+  fi
 done
 colab exec -s "$S" -f "$ROOT/scripts/colab/remote_start.py"
 while true; do
