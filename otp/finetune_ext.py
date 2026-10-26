@@ -246,6 +246,9 @@ def summarize(scores, runs: list[dict], own_sets: set) -> "pd.DataFrame":  # noq
             row["trunc_mase_ratio"] = _gm(tr.mase_ratio_oracle) if len(tr) else float("nan")
             row["trunc_scrps_ratio"] = _gm(tr.scrps_ratio_oracle) if len(tr) else float("nan")
             row["trunc_cov80"] = float(tr.cov80.mean()) if len(tr) else float("nan")
+            for m in ("mase", "scrps"):
+                a, b = row[f"pre_{m}_ratio"], row[f"trunc_{m}_ratio"]
+                row[f"gap_closed_trunc_{m}"] = (a - b) / (a - 1.0) if a > 1.0 and b == b else float("nan")
             row["oracle_cov80"] = float(orc.cov80.mean()) if len(orc) else float("nan")
             rows.append(row)
     return pd.DataFrame(rows)
@@ -263,7 +266,7 @@ def _md(headers: list[str], rows: list[list[str]]) -> list[str]:
     return ["| " + " | ".join(headers) + " |", "|" + "---|" * len(headers)] + ["| " + " | ".join(r) + " |" for r in rows]
 
 
-def write_readme(out: str, summary, costs, scores) -> None:
+def write_readme(out: str, summary, costs, scores, notes: list[str] | None = None) -> None:
     """`<out>/README.md`: every number is read from summary.csv, costs.csv or provenance.json."""
     from otp.io import read_json
 
@@ -340,6 +343,11 @@ def write_readme(out: str, summary, costs, scores) -> None:
                     rows2.append([fam, lab, _f(r.paired_mase_ft_over_pre), f"{_f(r.paired_mase_lo95)} to {_f(r.paired_mase_hi95)}",
                                   _f(r.gap_closed_mase), _f(r.gap_closed_scrps), f"{int(c.trainable_params):,}",
                                   str(int(c.steps)), f"{int(c.time_steps_seen):,}", _f(c.wall_sec, 1)])
+            g = ts[ts.trunc_mase_ratio.notna()]
+            if len(g):  # zero-training context truncation: same samples, no trainable parameters
+                r = g.iloc[0]
+                rows2.append(["regime", "truncate (no training)", "", "", _f(r.gap_closed_trunc_mase),
+                              _f(r.gap_closed_trunc_scrps), "0", "0", "0", "0.0"])
             L += [f"### Size {size}: gain versus cost", ""] + _md(hdr2, rows2) + [""]
 
     reg = summary[summary.role == "regression"].copy()
@@ -387,8 +395,150 @@ def write_readme(out: str, summary, costs, scores) -> None:
                 rows = [[r.case, r.size, r.condition, str(int(r.n)), _f(r.mase_ratio_gmean), _f(r.scrps_ratio_gmean),
                          _f(r.cov80)] for r in n.itertuples()]
                 L += _md(hdr, rows) + [""]
+    # budgets actually used, from costs.csv
+    b = costs.groupby(["size", "method"]).agg(runs=("run_id", "count"), steps=("steps", "first"), batch=("batch_size", "first"),
+                                              lr=("lr", "first"), trainable=("trainable_params", "first")).reset_index()
+    L += ["## Budgets used", "", "From `costs.csv`.", ""] + _md(
+        ["size", "method", "runs", "steps", "batch size", "learning rate", "trainable params"],
+        [[r.size, r.method, str(int(r.runs)), str(int(r.steps)), str(int(r.batch)), f"{r.lr:g}", f"{int(r.trainable):,}"]
+         for r in b.itertuples()]) + [""]
+    if notes:
+        L += ["## Notes", ""] + [f"- {n}" for n in notes] + [""]
     with open(os.path.join(out, "README.md"), "w") as f:
         f.write("\n".join(L) + "\n")
 
 
 S_FAMILIES = ("chaos", "regime", "tails", "mixture")
+
+
+# ---------------------------------------------------------------------------
+# Model cards
+# ---------------------------------------------------------------------------
+COLAB_GRID = {"sizes": ["5M", "28M", "123M", "209M"], "protocols": ["lofo", "knob"], "holdouts": list(S_FAMILIES),
+              "methods": ["full", "lora"], "replay_fracs": [0.0, 0.3, 0.5]}
+
+_FAMILY_TEXT = {
+    "chaos": "chaotic and dynamical-system series (Lorenz63, Rossler, Mackey-Glass, logistic map, Kuramoto)",
+    "regime": "regime switches (mean, variance and frequency jumps; Markov-switching AR)",
+    "tails": "heavy-tailed and fractal series (alpha-stable AR, fractional Brownian motion, Hawkes counts, multifractal cascade)",
+    "mixture": "random mixtures of the primitives and the other families",
+}
+
+
+def _card_header(info: dict) -> list[str]:
+    size, protocol, holdout = info["size"], info["protocol"], info["holdout"]
+    lab = method_label(info["method"], info["replay_frac"])
+    if protocol == "lofo":
+        train = ", ".join(f for f in S_FAMILIES if f != holdout)
+        data = (f"Failure families used for training: {train}. Held out for testing: {holdout} "
+                f"({_FAMILY_TEXT[holdout]}).")
+    else:
+        data = ("Failure families used for training: all four, on one range of each family's difficulty knob; the "
+                f"test set is the other range of the {holdout} family (ranges in `otp/finetune_splits.py`).")
+    mix = (f"{info['replay_frac']:g} of every training batch is replay of in-prior series (random trend + season + "
+           "AR noise)." if info["replay_frac"] > 0 else "No replay: every training batch is failure-family series.")
+    return [f"# Model card draft: Timestral-{size} fine-tuned ({lab}), {protocol} / {holdout}", "",
+            f"Run id: `{info['run_id']}`", "",
+            "## Model", "",
+            f"- Base model: `mistralai/Timestral-{size}` (license and terms: those of the base model; see its model card).",
+            f"- Method: {'all parameters trained' if info['method'] == 'full' else 'LoRA adapters (rank r) on the attention and MLP linears, merged into the weights at export'}.",
+            "- Format: `config.json` + `model.safetensors`, loadable with `otp.model.forecast(size=<checkpoint dir>, ...)` "
+            "(shipped defaults: symmetric averaging on, non-negative clipping on).", "",
+            "## Training data", "", f"- Protocol: `{protocol}`, held-out family: `{holdout}`.", f"- {data}", f"- {mix}",
+            "- Series are simulated by the generators in `otp/generators/`; training seeds are disjoint from evaluation seeds.", ""]
+
+
+def card_local(info: dict, cost: dict, test: dict | None, reg: dict | None, src: str) -> str:
+    L = _card_header(info)
+    L += ["## Training cost", "", f"Copied from `{src}/costs.csv`.", "",
+          f"- Trainable parameters: {int(cost['trainable_params']):,} (base model: {int(cost['base_params']):,})",
+          f"- Steps: {int(cost['steps'])}; batch size: {int(cost['batch_size'])}; learning rate: {cost['lr']:g}",
+          f"- Time steps seen: {int(cost['time_steps_seen']):,}",
+          f"- Training wall time: {_f(cost['wall_sec'], 1)} s; peak resident memory: {int(cost['peak_rss_bytes']):,} bytes; final loss: {_f(cost['final_loss'], 4)}", ""]
+    if test is not None:
+        L += ["## Held-out evaluation", "", f"Copied from `{src}/summary.csv` (set `{test['eval_set']}`, {int(test['n'])} samples, "
+              "500-path true-dynamics oracle). Ratio = geometric mean over samples of the metric divided by the oracle's.", "",
+              "| metric | pretrained | fine-tuned |", "|---|---|---|",
+              f"| MASE ratio to oracle | {_f(test['pre_mase_ratio'])} | {_f(test['ft_mase_ratio'])} |",
+              f"| sCRPS ratio to oracle | {_f(test['pre_scrps_ratio'])} | {_f(test['ft_scrps_ratio'])} |",
+              f"| cov80 | {_f(test['pre_cov80'])} | {_f(test['ft_cov80'])} |", "",
+              f"Paired MASE, fine-tuned / pretrained: {_f(test['paired_mase_ft_over_pre'])} "
+              f"(95% interval {_f(test['paired_mase_lo95'])} to {_f(test['paired_mase_hi95'])}).", ""]
+    if reg is not None:
+        L += ["## Regression check (normal series)", "", f"Copied from `{src}/summary.csv` (set `{reg['eval_set']}`, {int(reg['n'])} series).", "",
+              "| metric | pretrained | fine-tuned |", "|---|---|---|",
+              f"| MASE ratio to oracle | {_f(reg['pre_mase_ratio'])} | {_f(reg['ft_mase_ratio'])} |",
+              f"| sCRPS ratio to oracle | {_f(reg['pre_scrps_ratio'])} | {_f(reg['ft_scrps_ratio'])} |",
+              f"| cov80 | {_f(reg['pre_cov80'])} | {_f(reg['ft_cov80'])} |", "",
+              f"Paired MASE, fine-tuned / pretrained: {_f(reg['paired_mase_ft_over_pre'])}.", ""]
+    L += ["## Scope", "", "Evaluated on synthetic held-out samples at context 2048 and horizon 128 and on the regression "
+          "series listed above. No other settings were evaluated.", ""]
+    return "\n".join(L)
+
+
+def card_placeholder(info: dict) -> str:
+    rid = info["run_id"]
+    base = "results/finetune/colab/<RUN_ID>"
+    sel = f"run_id={rid}"
+    t = f"{info['protocol']}/{info['holdout']}"
+
+    def ph(file: str, eval_set: str | None, col: str) -> str:
+        where = f"{sel}" + (f", eval_set={eval_set}" if eval_set else "")
+        return "{{" + f"{base}/{file} :: {where} :: {col}" + "}}"
+
+    L = _card_header(info)
+    L += ["## Training cost", "", f"Placeholders name the result file and column the number comes from ({base}/costs.csv).", "",
+          f"- Trainable parameters: {ph('costs.csv', None, 'trainable_params')} (base model: {ph('costs.csv', None, 'base_params')})",
+          f"- Steps: {ph('costs.csv', None, 'steps')}; batch size: {ph('costs.csv', None, 'batch_size')}; learning rate: {ph('costs.csv', None, 'lr')}",
+          f"- Time steps seen: {ph('costs.csv', None, 'time_steps_seen')}",
+          f"- Training wall time: {ph('costs.csv', None, 'wall_sec')} s on {ph('costs.csv', None, 'gpu')}; final loss: {ph('costs.csv', None, 'final_loss')}", "",
+          "## Held-out evaluation", "", f"From `{base}/summary.csv`, set `{t}`.", "",
+          "| metric | pretrained | fine-tuned |", "|---|---|---|",
+          f"| MASE ratio to oracle | {ph('summary.csv', t, 'pre_mase_ratio')} | {ph('summary.csv', t, 'ft_mase_ratio')} |",
+          f"| sCRPS ratio to oracle | {ph('summary.csv', t, 'pre_scrps_ratio')} | {ph('summary.csv', t, 'ft_scrps_ratio')} |",
+          f"| cov80 | {ph('summary.csv', t, 'pre_cov80')} | {ph('summary.csv', t, 'ft_cov80')} |", "",
+          f"Paired MASE, fine-tuned / pretrained: {ph('summary.csv', t, 'paired_mase_ft_over_pre')}.", "",
+          "## Regression check (normal series)", "", f"From `{base}/summary.csv`, sets `regression/in_prior` and `regression/real`.", "",
+          "| set | metric | pretrained | fine-tuned |", "|---|---|---|---|"]
+    for sname in ("regression/in_prior", "regression/real"):
+        for lab, a, b in (("MASE ratio to oracle", "pre_mase_ratio", "ft_mase_ratio"), ("cov80", "pre_cov80", "ft_cov80")):
+            if sname == "regression/real" and a == "pre_mase_ratio":
+                continue  # real windows have no oracle
+            L.append(f"| {sname} | {lab} | {ph('summary.csv', sname, a)} | {ph('summary.csv', sname, b)} |")
+        L.append(f"| {sname} | paired MASE ft / pre | | {ph('summary.csv', sname, 'paired_mase_ft_over_pre')} |")
+    L += ["", "## Scope", "", "Evaluated on synthetic held-out samples at context 2048 and horizon 128 and on the regression "
+          "series listed above. No other settings were evaluated.", ""]
+    return "\n".join(L)
+
+
+def write_cards_local(out_dir: str, summary, costs, src: str) -> int:
+    os.makedirs(out_dir, exist_ok=True)
+    cs = costs.set_index("run_id")
+    n = 0
+    for rid in costs.run_id:
+        info = parse_run_id(rid)
+        s = summary[summary.run_id == rid]
+        test = s[s.role == "test"]
+        reg = s[s.eval_set == "regression/in_prior"]
+        txt = card_local(info, cs.loc[rid].to_dict(), None if test.empty else test.iloc[0].to_dict(),
+                         None if reg.empty else reg.iloc[0].to_dict(), src)
+        with open(os.path.join(out_dir, rid + ".md"), "w") as f:
+            f.write(txt + "\n")
+        n += 1
+    return n
+
+
+def write_cards_colab_placeholders(out_dir: str, grid: dict = COLAB_GRID) -> int:
+    n = 0
+    for size in grid["sizes"]:
+        d = os.path.join(out_dir, size)
+        os.makedirs(d, exist_ok=True)
+        for protocol in grid["protocols"]:
+            for holdout in grid["holdouts"]:
+                for method in grid["methods"]:
+                    for rf in grid["replay_fracs"]:
+                        info = parse_run_id(run_id(size, protocol, holdout, method, rf))
+                        with open(os.path.join(d, info["run_id"] + ".md"), "w") as f:
+                            f.write(card_placeholder(info) + "\n")
+                        n += 1
+    return n

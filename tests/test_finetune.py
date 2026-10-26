@@ -80,11 +80,22 @@ def test_run_and_eval_end_to_end(tmp_path):
     assert lora["trainable_params"] < full["trainable_params"] == full["base_params"]
     assert (lora["steps"], full["steps"]) == (2, 2)
     eval_finetuned.main(["--runs-root", f"{root}/runs", "--ckpt-root", f"{root}/ck", "--out", f"{root}/out",
-                         "--n-eval", "3", "--n-regression", "3", "--n-paths", "20"])
+                         "--n-eval", "3", "--n-regression", "3", "--n-paths", "20", "--cards-dir", f"{root}/cards",
+                         "--note", "tiny test run"])
     summ = pd.read_csv(f"{root}/out/summary.csv")
     assert set(summ.role) == {"test", "regression"} and len(summ) == 4
     assert np.isfinite(summ.ft_mase_ratio).all() and np.isfinite(summ.pre_mase_ratio).all()
     assert summ[summ.role == "test"].trunc_mase_ratio.notna().all()  # regime set has the truncation baseline
     assert os.path.exists(f"{root}/out/README.md") and os.path.exists(f"{root}/out/costs.csv")
+    card = open(f"{root}/cards/{runs[1]}.md").read()
+    assert "LoRA adapters" in card and "{{" not in card
+    assert sorted(os.listdir(f"{root}/cards")) == [r + ".md" for r in runs]
     sc = pd.read_csv(f"{root}/out/scores.csv")
     assert {"oracle", "pretrained", "pretrained_truncate", "finetuned"} <= set(sc.forecaster)
+
+
+def test_colab_placeholder_cards_name_their_source_file(tmp_path):
+    n = X.write_cards_colab_placeholders(str(tmp_path))
+    assert n == 4 * 2 * 4 * 2 * 3
+    txt = open(tmp_path / "123M" / "123M__knob-tails__full__mix0.5.md").read()
+    assert "costs.csv :: run_id=123M__knob-tails__full__mix0.5" in txt and "summary.csv" in txt

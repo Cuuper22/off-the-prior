@@ -1,0 +1,99 @@
+{
+  "run_id": "5M__lofo-chaos__lora__nomix",
+  "size": "5M",
+  "protocol": "lofo",
+  "holdout": "chaos",
+  "method": "lora",
+  "replay_frac": 0.0,
+  "trainable_params": 215040,
+  "base_params": 5208960,
+  "params_with_adapters": 5424000,
+  "rank": 8,
+  "alpha": 16.0,
+  "contexts": [
+    512,
+    1024,
+    2048
+  ],
+  "horizons": [
+    32,
+    128,
+    512
+  ],
+  "seed": 0,
+  "warmup": 5,
+  "pool": {
+    "source": {
+      "regime": "cached",
+      "tails": "cached",
+      "mixture": "cached",
+      "replay": "cached"
+    },
+    "files": [
+      "pool__lofo-regime__n60_r3_s0_c512-1024-2048_h32-128-512.npz",
+      "pool__lofo-tails__n60_r3_s0_c512-1024-2048_h32-128-512.npz",
+      "pool__lofo-mixture__n60_r3_s0_c512-1024-2048_h32-128-512.npz",
+      "pool__replay__n60_r8_s0_c512-1024-2048_h32-128-512.npz"
+    ],
+    "sec": 2.9
+  },
+  "train": {
+    "steps": 60,
+    "batch_size": 8,
+    "lr": 0.001,
+    "time_steps_seen": 721664,
+    "wall_sec": 28.9,
+    "final_loss": 16.760833668708802,
+    "peak_cuda_bytes": null
+  },
+  "peak_rss_bytes": 603652096,
+  "device": "cpu",
+  "gpu": null,
+  "checkpoint": "../../scratch_ckpt/pilot/5M__lofo-chaos__lora__nomix",
+  "provenance": {
+    "script": "scripts/finetune.py",
+    "git": "b7c1f8e",
+    "time_utc": "2026-10-26T23:07:11Z",
+    "host": "vm",
+    "torch": "2.14.1+cpu",
+    "threads": 1,
+    "cuda": false,
+    "argv": [
+      "run",
+      "--size",
+      "5M",
+      "--protocol",
+      "lofo",
+      "--holdout",
+      "chaos",
+      "--replay-frac",
+      "0",
+      "--steps",
+      "60",
+      "--batch-size",
+      "8",
+      "--warmup",
+      "5",
+      "--contexts",
+      "512",
+      "1024",
+      "2048",
+      "--horizons",
+      "32",
+      "128",
+      "512",
+      "--pool-dir",
+      "results/finetune/local/pools",
+      "--ckpt-root",
+      "/home/claude/scratch_ckpt/pilot",
+      "--log-every",
+      "10",
+      "--method",
+      "lora",
+      "--lr",
+      "1e-3",
+      "--runs-root",
+      "results/finetune/local/lr_pilot/lora_lr1e-3"
+    ]
+  }
+}

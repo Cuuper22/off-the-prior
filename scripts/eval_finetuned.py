@@ -19,6 +19,8 @@ Outputs in `--out`:
   costs.csv        one row per run: trainable parameters, steps, time steps seen, wall time, memory
   provenance.json  commands, sizes, sample counts, wall time, splits
   README.md        tables copied from the csv files
+With `--cards-dir`, model-card drafts (numbers copied from summary.csv and costs.csv) are written for the scored runs;
+`--cards-colab-placeholders DIR` writes drafts for the Colab grid with placeholders that name the result file and column.
 Per-run score parts are cached in `<out>/parts/` so an interrupted evaluation resumes.
 
   python scripts/eval_finetuned.py --runs-root results/finetune/local/runs \
@@ -99,7 +101,14 @@ def main(argv=None):
     ap.add_argument("--sizes", nargs="+", default=None)
     ap.add_argument("--threads", type=int, default=None)
     ap.add_argument("--no-readme", action="store_true")
+    ap.add_argument("--note", action="append", default=[], help="fact to list under Notes in README.md (repeatable)")
+    ap.add_argument("--cards-dir", default=None, help="also write model-card drafts for the scored runs here")
+    ap.add_argument("--cards-colab-placeholders", default=None, metavar="DIR",
+                    help="write model-card drafts with result-file placeholders for the Colab grid, then exit")
     a = ap.parse_args(argv)
+    if a.cards_colab_placeholders:
+        print("wrote", X.write_cards_colab_placeholders(a.cards_colab_placeholders), "cards to", a.cards_colab_placeholders)
+        return
     set_threads(a.threads)
     t0 = time.time()
     cache = a.cache_dir or os.path.join(a.out, "eval_cache")
@@ -186,7 +195,9 @@ def main(argv=None):
         gpu=torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
         train_wall_sec_total=round(float(costs.wall_sec.sum()), 1), splits=S.split_summary()))
     if not a.no_readme:
-        X.write_readme(a.out, summary, costs, scores)
+        X.write_readme(a.out, summary, costs, scores, a.note)
+    if a.cards_dir:
+        print("wrote", X.write_cards_local(a.cards_dir, summary, costs, a.out), "cards to", a.cards_dir)
     print("wrote", a.out, f"{time.time() - t0:.0f}s", flush=True)
 
 
