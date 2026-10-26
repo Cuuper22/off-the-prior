@@ -1,0 +1,63 @@
+{
+  "a": "results/mechanism/analog/vm_5M_28M/per_sample.csv",
+  "b": "results/mechanism/analog/per_sample.csv",
+  "n_shared": 344,
+  "columns": {
+    "knob_value": {
+      "max_rel_diff": 0.0,
+      "median_rel_diff": 0.0
+    },
+    "mase_oracle": {
+      "max_rel_diff": 0.0,
+      "median_rel_diff": 0.0
+    },
+    "mase_template": {
+      "max_rel_diff": 0.0,
+      "median_rel_diff": 0.0
+    },
+    "mase_analog": {
+      "max_rel_diff": 0.0,
+      "median_rel_diff": 0.0
+    },
+    "mase_5M": {
+      "max_rel_diff": 1.5341095996016218e-05,
+      "median_rel_diff": 3.888621855125652e-07
+    },
+    "corr_5M_template": {
+      "max_rel_diff": 0.0033332508601699312,
+      "median_rel_diff": 3.004772681084598e-07
+    },
+    "corr_5M_analog": {
+      "max_rel_diff": 0.0003758522233475114,
+      "median_rel_diff": 1.8121937279273224e-07
+    },
+    "corr_5M_oracle": {
+      "max_rel_diff": 0.0003546412129888036,
+      "median_rel_diff": 1.6624781092087124e-07
+    },
+    "mase_28M": {
+      "max_rel_diff": 3.585844911061e-05,
+      "median_rel_diff": 5.143081414270093e-07
+    },
+    "corr_28M_template": {
+      "max_rel_diff": 0.004327479393556689,
+      "median_rel_diff": 2.2675789459363556e-07
+    },
+    "corr_28M_analog": {
+      "max_rel_diff": 0.0020861773061406244,
+      "median_rel_diff": 1.6004302710931322e-07
+    },
+    "corr_28M_oracle": {
+      "max_rel_diff": 0.0005247583154672138,
+      "median_rel_diff": 1.3018160906741946e-07
+    },
+    "corr_oracle_template": {
+      "max_rel_diff": 0.0,
+      "median_rel_diff": 0.0
+    },
+    "corr_oracle_analog": {
+      "max_rel_diff": 0.0,
+      "median_rel_diff": 0.0
+    }
+  }
+}

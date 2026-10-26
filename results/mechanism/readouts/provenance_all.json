@@ -1,0 +1,28 @@
+{
+  "script": "scripts/mechanism_run.py",
+  "git": "",
+  "time_utc": "2026-10-26T22:39:37Z",
+  "host": "783955dca531",
+  "torch": "2.11.0+cu130",
+  "threads": 4,
+  "cuda": true,
+  "argv": [
+    "scripts/mechanism_run.py",
+    "--studies",
+    "all",
+    "--sizes",
+    "5M",
+    "28M",
+    "123M",
+    "209M",
+    "--n",
+    "300",
+    "--n-paths",
+    "300",
+    "--workers",
+    "10",
+    "--out",
+    "results/colab_out/mechanism"
+  ],
+  "wall_sec": 5438.5
+}

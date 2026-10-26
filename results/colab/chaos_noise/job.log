@@ -1,0 +1,12 @@
+loaded 208 samples from samples/chaos_noise/samples.npz
+references done (28s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  7.13it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00,  2.52it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00,  2.79it/s]
+timestral-5M T=2048 done (4s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.42it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.42it/s]
+timestral-28M T=2048 done (3s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  1.53s/it]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  1.53s/it]
+timestral-123M T=2048 done (6s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:06<00:00,  3.31s/it]Fetching 2 files: 100%|██████████| 2/2 [00:06<00:00,  3.31s/it]
+timestral-209M T=2048 done (10s)
+wrote 4992 rows to results/colab_out/chaos_noise/scores.csv in 51s
