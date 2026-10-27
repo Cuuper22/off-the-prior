@@ -8,6 +8,12 @@ Run them from the repository root after reviewing the content.
 Publish from a fresh clone of `master` only (task branches are internal working branches),
 after the maintainer's pre-publish history cleanup has been run on that clone.
 
+Blocking: `bench/regression/real.npz` contains windows from 13 GIFT-Eval datasets whose redistribution
+rests on the `Salesforce/GiftEval` card's apache-2.0 tag (see `license_evidence` in
+`bench/regression/sources.csv`). Check each dataset's upstream license first; datasets that are not
+verified move to the gitignored restricted file (flag in `otp/realdata_sources.py`), and only the
+re-fetch script and hashes are published for them.
+
 ## 1. GitHub repository
 
 ```bash

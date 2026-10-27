@@ -1,0 +1,32 @@
+set,forecaster,chunks,platform
+analogues,seasonal_naive,000-001,"laptop (Windows; Python 3.12.10, numpy 2.4.6, scipy 1.18.0, statsmodels 0.15.0)"
+analogues,ets,000-001,"laptop (Windows; Python 3.12.10, numpy 2.4.6, scipy 1.18.0, statsmodels 0.15.0)"
+analogues,arima,000-001,"laptop (Windows; Python 3.12.10, numpy 2.4.6, scipy 1.18.0, statsmodels 0.15.0)"
+analogues,timestral-5M,000-001,Colab T4 GPU (job log in results/colab/rd-timestral/)
+analogues,timestral-28M,000-001,Colab T4 GPU (job log in results/colab/rd-timestral/)
+analogues,timestral-123M,000-001,Colab T4 GPU (job log in results/colab/rd-timestral/)
+analogues,timestral-209M,000-001,Colab T4 GPU (job log in results/colab/rd-timestral/)
+real_extra,seasonal_naive,000-001,"laptop (Windows; Python 3.12.10, numpy 2.4.6, scipy 1.18.0, statsmodels 0.15.0)"
+real_extra,ets,000-001,"laptop (Windows; Python 3.12.10, numpy 2.4.6, scipy 1.18.0, statsmodels 0.15.0)"
+real_extra,arima,000-001,"laptop (Windows; Python 3.12.10, numpy 2.4.6, scipy 1.18.0, statsmodels 0.15.0)"
+real_extra,timestral-5M,000-001,Colab T4 GPU (job log in results/colab/rd-timestral/)
+real_extra,timestral-28M,000-001,Colab T4 GPU (job log in results/colab/rd-timestral/)
+real_extra,timestral-123M,000-001,Colab T4 GPU (job log in results/colab/rd-timestral/)
+real_extra,timestral-209M,000-001,Colab T4 GPU (job log in results/colab/rd-timestral/)
+in_prior,arima,000-012,"laptop (Windows; Python 3.12.10, numpy 2.4.6, scipy 1.18.0, statsmodels 0.15.0)"
+in_prior,ets,011-012,"laptop (Windows; Python 3.12.10, numpy 2.4.6, scipy 1.18.0, statsmodels 0.15.0)"
+in_prior,oracle,000-012,"laptop (Windows; Python 3.12.10, numpy 2.4.6, scipy 1.18.0, statsmodels 0.15.0)"
+real,arima,000-010,"laptop (Windows; Python 3.12.10, numpy 2.4.6, scipy 1.18.0, statsmodels 0.15.0)"
+real,ets,000-002,"laptop (Windows; Python 3.12.10, numpy 2.4.6, scipy 1.18.0, statsmodels 0.15.0)"
+in_prior,ets,000-010,"lab VM (Linux; Python 3.13.16, numpy 2.5.3, scipy 1.18.1, statsmodels 0.15.0, torch 2.14.1 CPU)"
+in_prior,seasonal_naive,000-012,"lab VM (Linux; Python 3.13.16, numpy 2.5.3, scipy 1.18.1, statsmodels 0.15.0, torch 2.14.1 CPU)"
+real,ets,003-010,"lab VM (Linux; Python 3.13.16, numpy 2.5.3, scipy 1.18.1, statsmodels 0.15.0, torch 2.14.1 CPU)"
+real,seasonal_naive,000-010,"lab VM (Linux; Python 3.13.16, numpy 2.5.3, scipy 1.18.1, statsmodels 0.15.0, torch 2.14.1 CPU)"
+in_prior,timestral-5M,000-012,"lab VM (Linux; Python 3.13.16, numpy 2.5.3, scipy 1.18.1, statsmodels 0.15.0, torch 2.14.1 CPU)"
+real,timestral-5M,000-010,"lab VM (Linux; Python 3.13.16, numpy 2.5.3, scipy 1.18.1, statsmodels 0.15.0, torch 2.14.1 CPU)"
+in_prior,timestral-28M,000-012,"lab VM (Linux; Python 3.13.16, numpy 2.5.3, scipy 1.18.1, statsmodels 0.15.0, torch 2.14.1 CPU)"
+real,timestral-28M,000-010,"lab VM (Linux; Python 3.13.16, numpy 2.5.3, scipy 1.18.1, statsmodels 0.15.0, torch 2.14.1 CPU)"
+in_prior,timestral-123M,000-012,"lab VM (Linux; Python 3.13.16, numpy 2.5.3, scipy 1.18.1, statsmodels 0.15.0, torch 2.14.1 CPU)"
+real,timestral-123M,000-010,"lab VM (Linux; Python 3.13.16, numpy 2.5.3, scipy 1.18.1, statsmodels 0.15.0, torch 2.14.1 CPU)"
+in_prior,timestral-209M,000-012,"lab VM (Linux; Python 3.13.16, numpy 2.5.3, scipy 1.18.1, statsmodels 0.15.0, torch 2.14.1 CPU)"
+real,timestral-209M,000-010,"lab VM (Linux; Python 3.13.16, numpy 2.5.3, scipy 1.18.1, statsmodels 0.15.0, torch 2.14.1 CPU)"

@@ -1,0 +1,50 @@
+.taskbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 8px;
+  background: var(--taskbar-bg);
+  border-top: 2px solid var(--inset-light);
+  box-shadow: 0 -2px 0 var(--inset-dark);
+}
+
+.taskbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.start-button,
+.task-button,
+.taskbar-clock {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 2px outset var(--button-face);
+  border-radius: 0;
+  background: var(--button-face);
+  color: var(--text-dark);
+  padding: 4px 10px;
+  font: 700 14px "Pixelify Sans", monospace;
+  white-space: nowrap;
+}
+
+.task-button {
+  max-width: min(42vw, 260px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.taskbar-clock {
+  border-style: inset;
+  font-weight: 600;
+}

@@ -1,0 +1,363 @@
+/* Explainers: marked terms and the small CuperOS window that opens from them.
+   Uses only the shared tokens from 00-foundation.css. Pixel face for the
+   title bar only; body text in the reading sans. */
+
+:root {
+  --gsx-css: 1;
+}
+
+/* ---------- the marked terms ---------- */
+
+.term[data-term],
+abbr[data-term] {
+  --gsx-accent: var(--accent-cyan-deep, oklch(0.42 0.1 195));
+  text-decoration: underline dotted var(--gsx-accent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.22em;
+  text-decoration-skip-ink: none;
+  cursor: help;
+  border-radius: 2px;
+  transition: background-color 150ms ease;
+}
+
+/* A tiny square marker at the end of the term, drawn as a background so it
+   can never wrap onto a line of its own. */
+.term[data-term],
+abbr[data-term] {
+  padding-right: 0.42em;
+  background-image: linear-gradient(var(--gsx-accent), var(--gsx-accent));
+  background-repeat: no-repeat;
+  background-size: 0.28em 0.28em;
+  background-position: right 0.08em top 0.28em;
+  -webkit-box-decoration-break: slice;
+  box-decoration-break: slice;
+}
+
+.term[data-term]:hover,
+.term[data-term][aria-expanded="true"],
+abbr[data-term]:hover,
+abbr[data-term][aria-expanded="true"] {
+  background-color: var(--gold-wash, oklch(0.94 0.07 88));
+  text-decoration-style: solid;
+}
+
+.term[data-term]:focus-visible,
+abbr[data-term]:focus-visible {
+  outline: 2px solid var(--link-color, oklch(0.4 0.15 260));
+  outline-offset: 2px;
+}
+
+.term[data-term][data-gsx="off"],
+abbr[data-term][data-gsx="off"] {
+  text-decoration: none;
+  cursor: inherit;
+  padding-right: 0;
+  background-image: none;
+}
+
+
+/* ---------- the window ---------- */
+
+.gsx-pop {
+  position: fixed;
+  z-index: 9000;
+  top: 0;
+  left: 0;
+  width: 340px;
+  max-width: calc(100vw - 16px);
+  display: flex;
+  flex-direction: column;
+  background: var(--window-chrome, oklch(0.85 0.005 250));
+  border: 2px outset var(--button-face, oklch(0.85 0.005 250));
+  box-shadow: 3px 3px 0 var(--pixel-ink, oklch(0.08 0.004 250));
+  color: var(--text-dark, oklch(0.15 0.005 250));
+  font-family: var(--font-body, system-ui, sans-serif);
+  font-size: 15px;
+  line-height: 1.5;
+  text-align: left;
+  text-indent: 0;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: normal;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.92);
+  transition:
+    opacity 160ms ease,
+    transform 160ms var(--ease-snap, cubic-bezier(0.22, 1, 0.36, 1)),
+    visibility 0s linear 160ms;
+  will-change: transform, opacity;
+}
+
+.gsx-pop.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+  transition:
+    opacity 180ms ease,
+    transform 220ms var(--ease-snap, cubic-bezier(0.22, 1, 0.36, 1)),
+    visibility 0s;
+}
+
+.gsx-pop.no-anim {
+  transition: none;
+}
+
+.gsx-pop:focus {
+  outline: none;
+}
+
+.gsx-pop:focus-visible {
+  outline: 2px solid var(--accent-gold, oklch(0.82 0.15 88));
+  outline-offset: 2px;
+}
+
+/* Keeps the window open while the pointer crosses the gap to it. */
+.gsx-pop::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -14px;
+  height: 14px;
+}
+
+.gsx-pop.is-above::before {
+  top: auto;
+  bottom: -14px;
+}
+
+.gsx-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 5px 4px 7px;
+  background: linear-gradient(90deg, var(--title-bar, oklch(0.4 0.15 260)), var(--title-bar-end, oklch(0.45 0.15 260)));
+  color: var(--text-light, oklch(0.95 0.003 90));
+  border-bottom: 2px solid var(--inset-dark, oklch(0.4 0.005 250));
+  user-select: none;
+}
+
+.gsx-face {
+  flex: 0 0 auto;
+  display: block;
+}
+
+.gsx-face .h {
+  fill: var(--accent-gold, oklch(0.82 0.15 88));
+}
+
+.gsx-face .e {
+  fill: var(--pixel-ink, oklch(0.08 0.004 250));
+}
+
+.gsx-face .e {
+  animation: gsx-blink 4.8s steps(1) infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes gsx-blink {
+  0%,
+  94%,
+  100% {
+    transform: scaleY(1);
+  }
+  96%,
+  98% {
+    transform: scaleY(0.2);
+  }
+}
+
+.gsx-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--font-display, "Pixelify Sans", ui-monospace, monospace);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gsx-x {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 2px outset var(--button-face, oklch(0.85 0.005 250));
+  border-radius: 0;
+  background: var(--button-face, oklch(0.85 0.005 250));
+  color: var(--text-dark, oklch(0.15 0.005 250));
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.gsx-x:hover {
+  background: var(--button-hover, oklch(0.88 0.005 250));
+}
+
+.gsx-x:active {
+  border-style: inset;
+}
+
+.gsx-x:focus-visible,
+.gsx-more:focus-visible {
+  outline: 2px solid var(--accent-gold, oklch(0.82 0.15 88));
+  outline-offset: 1px;
+}
+
+.gsx-main {
+  margin: 4px;
+  padding: 10px 10px 11px;
+  background: var(--window-body, oklch(0.97 0.002 90));
+  border: 2px inset var(--window-chrome, oklch(0.85 0.005 250));
+  min-width: 0;
+  overflow-y: auto;
+}
+
+/* The mini diagram. The box keeps the 260:120 shape so nothing moves when
+   the picture is swapped in. */
+.gsx-visbox {
+  aspect-ratio: 260 / 120;
+  margin: 0 0 9px;
+  border: 2px inset var(--window-chrome, oklch(0.85 0.005 250));
+  background-color: var(--pane-bright, oklch(0.98 0.002 90));
+  background-image: radial-gradient(circle, var(--chrome-well, oklch(0.91 0.006 250)) 1px, transparent 1px);
+  background-size: 6px 6px;
+  overflow: hidden;
+}
+
+.gsx-vis {
+  width: 100%;
+  height: 100%;
+}
+
+.gsx-text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-dark, oklch(0.15 0.005 250));
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+
+.gsx-more {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--link-color, oklch(0.4 0.15 260));
+  text-decoration: underline;
+}
+
+.gsx-more[hidden] {
+  display: none;
+}
+
+/* The little pointer toward the term. */
+.gsx-nub {
+  position: absolute;
+  top: -7px;
+  left: calc(var(--nx, 50%) - 6px);
+  width: 10px;
+  height: 10px;
+  background: var(--title-bar, oklch(0.4 0.15 260));
+  border-top: 2px solid var(--pixel-ink, oklch(0.08 0.004 250));
+  border-left: 2px solid var(--pixel-ink, oklch(0.08 0.004 250));
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+.gsx-pop.is-beside .gsx-nub {
+  display: none;
+}
+
+.gsx-pop.is-above .gsx-nub {
+  top: auto;
+  bottom: -7px;
+  background: var(--window-chrome, oklch(0.85 0.005 250));
+  border: 0;
+  border-bottom: 2px solid var(--pixel-ink, oklch(0.08 0.004 250));
+  border-right: 2px solid var(--pixel-ink, oklch(0.08 0.004 250));
+}
+
+/* ---------- phones: a bottom sheet ---------- */
+
+@media (max-width: 600px) {
+  .gsx-pop,
+  .gsx-pop.is-sheet {
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: 0;
+    width: auto;
+    max-width: none;
+    max-height: min(82vh, 640px);
+    border-width: 2px 0 0;
+    box-shadow: 0 -3px 0 var(--pixel-ink, oklch(0.08 0.004 250));
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    transform: translateY(104%);
+    transform-origin: 50% 100%;
+    transition:
+      transform 240ms var(--ease-snap, cubic-bezier(0.22, 1, 0.36, 1)),
+      opacity 160ms ease,
+      visibility 0s linear 240ms;
+  }
+
+  .gsx-pop.is-open {
+    transform: none;
+    transition:
+      transform 260ms var(--ease-snap, cubic-bezier(0.22, 1, 0.36, 1)),
+      opacity 160ms ease,
+      visibility 0s;
+  }
+
+  .gsx-pop::before,
+  .gsx-nub {
+    display: none;
+  }
+
+  .gsx-title {
+    font-size: 15px;
+  }
+
+  .gsx-x {
+    width: 34px;
+    height: 34px;
+  }
+
+  .gsx-main {
+    padding: 12px;
+  }
+}
+
+/* ---------- reduced motion: no movement, no fades ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .gsx-pop,
+  .gsx-pop.is-open,
+  .gsx-pop.is-sheet {
+    transition: none;
+    transform: none;
+  }
+
+  .term[data-term],
+  abbr[data-term] {
+    transition: none;
+  }
+
+  .gsx-face .e {
+    animation: none;
+  }
+}
+
+.gsx-spacer {
+  height: 0;
+  pointer-events: none;
+}

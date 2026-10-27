@@ -254,6 +254,30 @@ which gets slightly worse at 32,768 steps. {{num:long_nonfinite_oracle_samples}}
 (Rössler, c = 5.7) had oracle paths that left the attractor at long horizons; their oracle
 ratios are excluded.
 
+## 4.6 Real series that stand in for the families
+
+Real data has no oracle, so it cannot show a gap to the best achievable forecast; it can show whether
+the families' pattern against classical models carries over. We gathered open-license series
+(sources, licenses and hashes in `bench/regression/sources.csv`; windows whose license does not allow
+redistribution are kept out of git and rebuilt by `scripts/fetch_realdata.py`). On {{num:rd_n_real}} windows
+from GIFT-Eval and fev-bench datasets, Timestral's MASE relative to seasonal naive is {{num:rd_real_5M}} at 5M
+and {{num:rd_real_209M}} at 209M (ETS {{num:rd_real_ets}}, ARIMA {{num:rd_real_arima}}; GIFT-Eval-style geometric mean over
+dataset groups). These datasets may overlap Timestral's pretraining data.
+
+A separate subset of {{num:rd_n_analogues}} windows was picked as real analogues of the failure families:
+sunspot numbers, lynx and hormone series and El Niño indices for delay feedback; grid frequency,
+pedestrian counts and activity recordings for coupled oscillators; river discharge, earthquake counts,
+financial and crypto series for heavy tails; macro and energy series with documented breaks, traffic
+and COVID-19 cases for regime switches. The table compares Timestral's ratio to the best classical
+model on these windows with the same ratio on the synthetic family (context 2,048, horizon 128):
+
+{{table:rd_analogue}}
+
+On the synthetic delay and oscillator systems Timestral beats the classical models by a wide margin
+while staying far from the oracle (Section 4.2); on the real analogues its margin over classical models
+is smaller. Heavy tails and regime switches sit near 1 on both. With no oracle on the real side, these
+numbers do not say how far Timestral is from the best achievable forecast there.
+
 # 5. Covariates and one-way attention
 
 Timestral reads covariates as conditioning rows: the main series reads them, they never read the
@@ -284,6 +308,8 @@ matched oracle's gain stays at {{num:cov_known_ogain_min}}–{{num:cov_known_oga
 
 {{table:cov_known_lag}}
 
+![Gain from a known-future driver (MASE alone / MASE with the covariate) on LaggedDriver against the lag, for Timestral (solid) and the oracle that reads the same covariate (dashed); context 2,048, horizon 16, 8 seeds.](figures/covariate_lag.png)
+
 When the known covariate is the main series itself, one step late with small noise (LeakyKnown at
 noise ratio 0.05), Timestral's error is several times the oracle's that reads it (MASE over matched-oracle
 MASE):
@@ -302,7 +328,36 @@ of the covariate's information is used at all, not from which way it is routed.
 
 # 6. Searching for failures
 
-RESULTS-PENDING.
+Sections 4 and 5 test failure families we chose by hand. Here a search procedure chooses. The search space
+is the mixture-of-primitives generator (`otp/generators/mixture.py`): a genome of numbers in [0, 1] decodes
+into four component slots (each a trend, season or noise piece, or one of the chaos, regime, heavy-tail or
+fractal generators, with a weight, a mode of combination and its own parameters) plus an observation-noise
+level. Every genome is a simulator with an exact Monte Carlo oracle, so every candidate can be scored as in
+Section 4.
+
+**Objective.** The fitness of a genome is the geometric mean, over a few fixed seeds, of MASE(Timestral-5M) /
+MASE(oracle) at context 2,048 and horizon 128 (`otp/search/objective.py`). A genome counts only if the series
+it makes is forecastable by the oracle: the oracle's sCRPS must be well below seasonal naive's on the same
+samples (a fixed fraction set in the objective), values must be finite and of sane scale. Infeasible genomes
+score zero. Every Timestral forward call is counted, and results are cached by genome.
+
+**Methods, at equal budget.** Each method gets the same number of Timestral calls and three search seeds.
+(1) CMA-ES over the bounded genome. (2) MAP-Elites, a quality-diversity search: two behaviour descriptors (the
+dominant component family and a spectral statistic of the context) define a grid of cells, and each cell keeps
+its best genome, so the archive covers different kinds of failure instead of one peak. (3) Gradient search:
+a differentiable re-implementation of part of the generator (sinusoids, trend, AR noise with fixed noise
+draws, a smooth regime gate) is pushed by gradients through Timestral's differentiable forward pass to raise
+its pinball loss above the oracle's; the final parameters are then scored with the standard pipeline, so all
+three methods are compared on the same metric. A separate input-space study finds, for in-prior series, the
+smallest perturbation of the context that doubles Timestral's MASE on a fixed future; it measures sensitivity,
+not a generator failure, since the oracle is unaffected.
+
+{{table:search_comparison}}
+
+**Transfer.** The top elites of each method are re-scored on 28M, 123M and 209M with fresh seeds, to see whether
+failures found on the smallest model are failures of the family or of one size.
+
+{{table:search_transfer}}
 
 # 7. Why it fails
 
@@ -380,7 +435,44 @@ continuation of the context more than the oracle's forecast does
 ({{num:ro_mg17_tm_5M}} at 5M, {{num:ro_mg17_tm_209M}} at 209M, against
 {{num:ro_mg17_to_min}} for the oracle), and the excess shrinks with size together with the error.
 
-# 8. Benchmarks
+# 8. A neuron atlas
+
+Section 7 looked at a few readouts and attention patterns. This section looks at every MLP neuron of every
+size. Timestral's MLP is SwiGLU, so a neuron's value (gate times up-projection) takes both signs; each neuron
+is studied as two poles, one per sign.
+
+**Corpus.** A labelled corpus of series from the project's generators: in-prior trend, season and noise with
+controlled parameters, and the chaos, regime, tails and mixture families. For every series the generating
+variables are stored, and for every 32-step patch the patch-level variables that can be computed exactly from
+the simulator: local level, slope and noise, seasonal phase, regime indicator, steps since the last switch,
+whether the patch holds an outlier, and the oracle's one-step predictability. A seeded split of series is
+held out and never used for labelling. A mixed-domain set of open-license real windows is added for a
+transfer test (`results/neurons/real/`).
+
+**Labels.** For each pole, the known variable (or simple input motif) that best explains its activation on the
+tokens where that pole is active is found by mutual information and cross-validated linear readout R²
+(single variable and best pair). Each pole stores its best label, score, runner-up and the gap between them.
+
+**One job or many.** A pole has one main job if its best single label explains at least a fraction θ of the
+explainable variance, and is unexplained if no label clears a floor. The fractions of one-job, mixed and
+unexplained poles are reported as curves over θ, per layer and size, never at a single threshold.
+
+{{table:nn_one_job}}
+
+**Checks.** Predictive: on the held-out series, each pole's activation is predicted from its label alone and
+the held-out R² is compared with the labelling-set score. Causal: for a stratified sample of poles, the pole is
+scaled during the forward pass and the change in the forecast is compared with a prediction written down, and
+committed, before any steering run (`results/neurons/steering_preregistration.md`).
+
+{{table:nn_steering}}
+
+**Link to the failure map.** Which poles are active on the Mackey-Glass, Rössler and Kuramoto contexts where
+Timestral falls behind the oracle, whether seasonal or periodic-pattern poles are among them, and whether
+damping them moves the forecast toward the oracle or toward the analogue forecaster of Section 7.2.
+
+{{table:nn_failure_link}}
+
+# 9. Benchmarks
 
 The failure map is released as two benchmark sets built from the same simulators (code and data in
 `bench/`). Each series comes with the oracle's 21 quantiles, so a model is scored against the best
@@ -425,9 +517,9 @@ floating-point differences change the simulated paths, and the chaotic ones dive
 therefore be reported on the published files (`bench/data/cross_platform_diag.json` has the per-config
 comparison).
 
-# 9. Fixing it
+# 10. Fixing it
 
-## 9.1 Without training: let the context decide
+## 10.1 Without training: let the context decide
 
 Section 7.2 showed that a nearest-neighbour forecaster built from the context beats Timestral
 on some deterministic systems and loses badly on others. A forecaster can find out which case
@@ -454,11 +546,33 @@ larger models closing more of the chaos gap on their own.
 The other zero-training idea, cutting the context to the part after a detected change
 (Section 7.1), helps only when at least 256 post-switch steps are available.
 
-## 9.2 Fine-tuning: full, LoRA, and data mixing
+## 10.2 Fine-tuning: full, LoRA, and data mixing
 
-RESULTS-PENDING.
+The direct fix is to train on the failures. We compare full fine-tuning (every weight), LoRA (low-rank adapters
+on the attention and MLP projections, base weights frozen) and data mixing (a share of every batch replaced by
+in-prior trend, season and noise series, on top of either method), with training code in `otp/finetune.py`
+(pinball loss over the 21 quantiles, scaled by the context's naive error; AdamW with warmup and cosine decay).
+Two held-out protocols keep the test away from the training distribution: leave-one-family-out (train on three
+of chaos, regime, tails and mixture, test on the fourth) and held-out knob ranges (train on one range of each
+family's knob, test on the other; splits in `otp/finetune_splits.py`). A regression check scores the
+fine-tuned models on normal series (the in-prior set and, where available, the real-data set) against the
+pretrained model of the same size. Gain is reported as the paired MASE ratio fine-tuned / pretrained on the
+held-out samples (500-path oracle), with 95% intervals, next to cost (trainable parameters, steps, series
+seen, wall time).
 
-# 10. Limitations
+A first pass on the 5M model ran on CPU with a short budget, to validate the pipeline end to end:
+
+{{table:ft_local_lofo}}
+
+{{table:ft_local_knob}}
+
+{{table:ft_local_regression}}
+
+The full-budget runs on all four sizes ran on GPUs:
+
+{{table:ft_colab}}
+
+# 11. Limitations
 
 - **The oracle knows the latent state.** It is the best forecast given the true state, which
   is stronger than the best forecast given only the observed history. Ratios to it therefore

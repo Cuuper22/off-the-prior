@@ -109,7 +109,9 @@ def slice_for(s: C.CovSample, t: int, h: int):
 def update_provenance(out: str, key: str, entry: dict) -> None:
     path = os.path.join(out, "provenance.json")
     cur = read_json(path) if os.path.exists(path) else {"runs": {}}
-    cur["runs"][key] = entry
+    cur["runs"][key] = entry  # latest invocation of this command
+    # every invocation is kept in "history" so a resumed run does not overwrite the record of earlier ones
+    cur.setdefault("history", []).append({"key": key, **entry})
     write_json(path, cur)
 
 

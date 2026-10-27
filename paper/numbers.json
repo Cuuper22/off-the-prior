@@ -863,6 +863,66 @@
   "src": "results/covariates/summary.csv",
   "how": "LeakyKnown 0.05, 5M, H=1024, ratio to matched oracle"
  },
+ "rd_real_5M": {
+  "value": 0.695741960055045,
+  "text": "0.70",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "real set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, timestral-5M"
+ },
+ "rd_real_209M": {
+  "value": 0.6513448115038518,
+  "text": "0.65",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "real set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, timestral-209M"
+ },
+ "rd_real_ets": {
+  "value": 1.0214910341991446,
+  "text": "1.02",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "real set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, ets"
+ },
+ "rd_real_arima": {
+  "value": 1.2686879782435474,
+  "text": "1.27",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "real set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, arima"
+ },
+ "rd_n_real": {
+  "value": 412.0,
+  "text": "412",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "windows in the real set (common basis)"
+ },
+ "rd_analogues_5M": {
+  "value": 0.7651939385961389,
+  "text": "0.77",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "analogues set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, timestral-5M"
+ },
+ "rd_analogues_209M": {
+  "value": 0.7344667003256086,
+  "text": "0.73",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "analogues set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, timestral-209M"
+ },
+ "rd_analogues_ets": {
+  "value": 1.148875798490402,
+  "text": "1.15",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "analogues set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, ets"
+ },
+ "rd_analogues_arima": {
+  "value": 1.1118408493054763,
+  "text": "1.11",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "analogues set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, arima"
+ },
+ "rd_n_analogues": {
+  "value": 69.0,
+  "text": "69",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "windows in the analogues set (common basis)"
+ },
  "bench_ft_coupled_oscillators": {
   "value": 7.941711476813754,
   "text": "7.94",
@@ -1130,6 +1190,10 @@
  "table:cov_leaky": {
   "src": "results/covariates/summary.csv",
   "how": "LeakyKnown noise ratio 0.05, known_cov, T=2048: MASE / matched-oracle MASE = oracle gain / covariate gain (geometric means over the same samples)"
+ },
+ "table:rd_analogue": {
+  "src": "results/regression_baseline/analogue_vs_synthetic.csv",
+  "how": "Timestral MASE / best classical MASE (geometric mean): real analogue windows vs the synthetic family at T=2048, H=128"
  },
  "table:bench_diag": {
   "src": "bench/leaderboard/oracle_diag_all/summary.json, bench/leaderboard/timestral-209M_diag_all/summary.json, bench/leaderboard/timestral-123M_diag_all/summary.json, bench/leaderboard/timestral-28M_diag_all/summary.json, bench/leaderboard/timestral-5M_diag_all/summary.json, bench/leaderboard/ets_diag_all/summary.json, bench/leaderboard/arima_diag_all/summary.json, bench/leaderboard/seasonal_naive_diag_all/summary.json",
