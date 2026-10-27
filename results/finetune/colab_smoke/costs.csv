@@ -1,0 +1,9 @@
+run_id,size,protocol,holdout,method,replay_frac,trainable_params,base_params,params_with_adapters,rank,steps,batch_size,lr,time_steps_seen,wall_sec,pool_sec,final_loss,peak_rss_bytes,peak_cuda_bytes,device,gpu
+5M__lofo-regime__full__mix0.3,5M,lofo,regime,full,0.3,5208960,5208960,5208960,,2,4,5e-05,2304,0.6,0.6,1.8699349164962769,1700737024,122311680,cuda,Tesla T4
+5M__lofo-regime__full__nomix,5M,lofo,regime,full,0.0,5208960,5208960,5208960,,2,4,5e-05,2304,1.8,21.8,2.099467158317566,1727320064,122311680,cuda,Tesla T4
+5M__lofo-regime__lora__mix0.3,5M,lofo,regime,lora,0.3,215040,5208960,5424000,8.0,2,4,0.001,2304,0.7,0.6,1.8712493777275085,1714372608,47905280,cuda,Tesla T4
+5M__lofo-regime__lora__nomix,5M,lofo,regime,lora,0.0,215040,5208960,5424000,8.0,2,4,0.001,2304,0.6,0.6,2.097224533557892,1714188288,47905280,cuda,Tesla T4
+5M__lofo-tails__full__mix0.3,5M,lofo,tails,full,0.3,5208960,5208960,5208960,,2,4,5e-05,2304,0.6,0.0,1.6159418225288391,1641189376,122311680,cuda,Tesla T4
+5M__lofo-tails__full__nomix,5M,lofo,tails,full,0.0,5208960,5208960,5208960,,2,4,5e-05,2304,0.6,0.0,1.8457847237586975,1641533440,122311680,cuda,Tesla T4
+5M__lofo-tails__lora__mix0.3,5M,lofo,tails,lora,0.3,215040,5208960,5424000,8.0,2,4,0.001,2304,0.7,0.0,1.617461621761322,1654939648,47905280,cuda,Tesla T4
+5M__lofo-tails__lora__nomix,5M,lofo,tails,lora,0.0,215040,5208960,5424000,8.0,2,4,0.001,2304,0.6,0.0,1.843795120716095,1655275520,47905280,cuda,Tesla T4

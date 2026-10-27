@@ -1,0 +1,306 @@
+{
+  "script": "scripts/eval_finetuned.py",
+  "git": "1a32a4c",
+  "time_utc": "2026-10-27T06:55:06Z",
+  "host": "be81a3c4bc14",
+  "torch": "2.11.0+cu130",
+  "threads": 4,
+  "cuda": true,
+  "argv": [
+    "--runs-root",
+    "results/colab_out/ft/runs",
+    "--ckpt-root",
+    "/content/ckpt_ft",
+    "--out",
+    "results/colab_out/ft",
+    "--cache-dir",
+    "/content/pools_ft/eval_cache",
+    "--n-eval",
+    "32",
+    "--n-regression",
+    "300",
+    "--n-paths",
+    "500",
+    "--real-npz",
+    "bench/regression/real.npz",
+    "--in-prior-npz",
+    "bench/regression/in_prior.npz",
+    "--threads",
+    "4",
+    "--note",
+    "Colab run on one A100 through scripts/colab/run_job.sh (job script scripts/colab/job_finetune.sh). Budgets per size are in job.json.",
+    "--note",
+    "Regression sets: bench/regression/in_prior.npz (500 series with oracle) and bench/regression/real.npz (the windows committed in that file; real windows have no oracle).",
+    "--note",
+    "Checkpoints were deleted after scoring (--keep-checkpoints not given); only the score tables, costs and loss curves came back."
+  ],
+  "wall_sec": 16.7,
+  "sizes": [
+    "5M",
+    "28M",
+    "123M",
+    "209M"
+  ],
+  "n_runs": 192,
+  "n_eval": 32,
+  "n_regression": 300,
+  "n_paths": 500,
+  "sets": {
+    "knob/chaos": 32,
+    "knob/mixture": 32,
+    "knob/regime": 32,
+    "knob/tails": 32,
+    "lofo/chaos": 32,
+    "lofo/mixture": 32,
+    "lofo/regime": 32,
+    "lofo/tails": 32,
+    "regression/in_prior": 500,
+    "regression/real": 40
+  },
+  "real_npz": "bench/regression/real.npz",
+  "in_prior_npz": "bench/regression/in_prior.npz",
+  "gpu": "NVIDIA A100-SXM4-40GB",
+  "train_wall_sec_total": 4704.6,
+  "splits": {
+    "lofo": {
+      "chaos": {
+        "train_families": [
+          "regime",
+          "tails",
+          "mixture"
+        ],
+        "test_family": "chaos",
+        "n_test_configs": 43
+      },
+      "regime": {
+        "train_families": [
+          "chaos",
+          "tails",
+          "mixture"
+        ],
+        "test_family": "regime",
+        "n_test_configs": 110
+      },
+      "tails": {
+        "train_families": [
+          "chaos",
+          "regime",
+          "mixture"
+        ],
+        "test_family": "tails",
+        "n_test_configs": 35
+      },
+      "mixture": {
+        "train_families": [
+          "chaos",
+          "regime",
+          "tails"
+        ],
+        "test_family": "mixture",
+        "n_test_configs": 1
+      }
+    },
+    "knob": {
+      "chaos": {
+        "train_configs": [
+          "lorenz63/rho10",
+          "lorenz63/rho15",
+          "lorenz63/rho20",
+          "lorenz63/rho24",
+          "rossler/c2",
+          "rossler/c3",
+          "rossler/c4",
+          "rossler/c4.5",
+          "mackey_glass/tau6",
+          "mackey_glass/tau10",
+          "mackey_glass/tau14",
+          "logistic_map/r2.8",
+          "logistic_map/r3.2",
+          "logistic_map/r3.5",
+          "logistic_map/r3.56",
+          "logistic_map/r3.6",
+          "kuramoto/K0",
+          "kuramoto/K0.5",
+          "kuramoto/K1",
+          "kuramoto/K1.5"
+        ],
+        "test_configs": [
+          "lorenz63/rho28",
+          "lorenz63/rho35",
+          "lorenz63/rho45",
+          "lorenz63/rho28_oe2",
+          "lorenz63/rho28_oe5",
+          "lorenz63/rho28_oe20",
+          "rossler/c5.7",
+          "rossler/c6.5",
+          "rossler/c9",
+          "mackey_glass/tau20",
+          "mackey_glass/tau25",
+          "mackey_glass/tau30",
+          "logistic_map/r3.83",
+          "logistic_map/r3.9",
+          "logistic_map/r4",
+          "kuramoto/K3",
+          "kuramoto/K5",
+          "kuramoto/K8"
+        ]
+      },
+      "regime": {
+        "train_configs": [
+          "regime/mean_jump/context/delta0.5/d256",
+          "regime/mean_jump/context/delta0.5/d1024",
+          "regime/mean_jump/context/delta0.5/d4096",
+          "regime/mean_jump/context/delta0.5/d16384",
+          "regime/mean_jump/context/delta1/d256",
+          "regime/mean_jump/context/delta1/d1024",
+          "regime/mean_jump/context/delta1/d4096",
+          "regime/mean_jump/context/delta1/d16384",
+          "regime/mean_jump/context/delta2/d256",
+          "regime/mean_jump/context/delta2/d1024",
+          "regime/mean_jump/context/delta2/d4096",
+          "regime/mean_jump/context/delta2/d16384",
+          "regime/mean_jump/context/delta4/d256",
+          "regime/mean_jump/context/delta4/d1024",
+          "regime/mean_jump/context/delta4/d4096",
+          "regime/mean_jump/context/delta4/d16384",
+          "regime/mean_jump/context/delta8/d256",
+          "regime/mean_jump/context/delta8/d1024",
+          "regime/mean_jump/context/delta8/d4096",
+          "regime/mean_jump/context/delta8/d16384",
+          "regime/variance_jump/context/factor0.25/d256",
+          "regime/variance_jump/context/factor0.25/d1024",
+          "regime/variance_jump/context/factor0.25/d4096",
+          "regime/variance_jump/context/factor0.25/d16384",
+          "regime/variance_jump/context/factor0.5/d256",
+          "regime/variance_jump/context/factor0.5/d1024",
+          "regime/variance_jump/context/factor0.5/d4096",
+          "regime/variance_jump/context/factor0.5/d16384",
+          "regime/variance_jump/context/factor2/d256",
+          "regime/variance_jump/context/factor2/d1024",
+          "regime/variance_jump/context/factor2/d4096",
+          "regime/variance_jump/context/factor2/d16384",
+          "regime/variance_jump/context/factor4/d256",
+          "regime/variance_jump/context/factor4/d1024",
+          "regime/variance_jump/context/factor4/d4096",
+          "regime/variance_jump/context/factor4/d16384",
+          "regime/variance_jump/context/factor8/d256",
+          "regime/variance_jump/context/factor8/d1024",
+          "regime/variance_jump/context/factor8/d4096",
+          "regime/variance_jump/context/factor8/d16384",
+          "regime/frequency_jump/context/ratio0.5/d256",
+          "regime/frequency_jump/context/ratio0.5/d1024",
+          "regime/frequency_jump/context/ratio0.5/d4096",
+          "regime/frequency_jump/context/ratio0.5/d16384",
+          "regime/frequency_jump/context/ratio0.75/d256",
+          "regime/frequency_jump/context/ratio0.75/d1024",
+          "regime/frequency_jump/context/ratio0.75/d4096",
+          "regime/frequency_jump/context/ratio0.75/d16384",
+          "regime/frequency_jump/context/ratio1.5/d256",
+          "regime/frequency_jump/context/ratio1.5/d1024",
+          "regime/frequency_jump/context/ratio1.5/d4096",
+          "regime/frequency_jump/context/ratio1.5/d16384",
+          "regime/frequency_jump/context/ratio2/d256",
+          "regime/frequency_jump/context/ratio2/d1024",
+          "regime/frequency_jump/context/ratio2/d4096",
+          "regime/frequency_jump/context/ratio2/d16384",
+          "regime/frequency_jump/context/ratio3/d256",
+          "regime/frequency_jump/context/ratio3/d1024",
+          "regime/frequency_jump/context/ratio3/d4096",
+          "regime/frequency_jump/context/ratio3/d16384"
+        ],
+        "test_configs": [
+          "regime/mean_jump/context/delta0.5/d16",
+          "regime/mean_jump/context/delta0.5/d64",
+          "regime/mean_jump/context/delta1/d16",
+          "regime/mean_jump/context/delta1/d64",
+          "regime/mean_jump/context/delta2/d16",
+          "regime/mean_jump/context/delta2/d64",
+          "regime/mean_jump/context/delta4/d16",
+          "regime/mean_jump/context/delta4/d64",
+          "regime/mean_jump/context/delta8/d16",
+          "regime/mean_jump/context/delta8/d64",
+          "regime/variance_jump/context/factor0.25/d16",
+          "regime/variance_jump/context/factor0.25/d64",
+          "regime/variance_jump/context/factor0.5/d16",
+          "regime/variance_jump/context/factor0.5/d64",
+          "regime/variance_jump/context/factor2/d16",
+          "regime/variance_jump/context/factor2/d64",
+          "regime/variance_jump/context/factor4/d16",
+          "regime/variance_jump/context/factor4/d64",
+          "regime/variance_jump/context/factor8/d16",
+          "regime/variance_jump/context/factor8/d64",
+          "regime/frequency_jump/context/ratio0.5/d16",
+          "regime/frequency_jump/context/ratio0.5/d64",
+          "regime/frequency_jump/context/ratio0.75/d16",
+          "regime/frequency_jump/context/ratio0.75/d64",
+          "regime/frequency_jump/context/ratio1.5/d16",
+          "regime/frequency_jump/context/ratio1.5/d64",
+          "regime/frequency_jump/context/ratio2/d16",
+          "regime/frequency_jump/context/ratio2/d64",
+          "regime/frequency_jump/context/ratio3/d16",
+          "regime/frequency_jump/context/ratio3/d64"
+        ]
+      },
+      "tails": {
+        "train_configs": [
+          "tails/stable_ar/alpha2_rho0.9",
+          "tails/stable_ar/alpha1.9_rho0.9",
+          "tails/stable_ar/alpha1.7_rho0.9",
+          "tails/stable_ar/alpha1.5_rho0.9",
+          "tails/stable_ar/alpha2_rho1.0",
+          "tails/stable_ar/alpha1.9_rho1.0",
+          "tails/stable_ar/alpha1.7_rho1.0",
+          "tails/stable_ar/alpha1.5_rho1.0",
+          "tails/fbm/H0.3",
+          "tails/fbm/H0.5",
+          "tails/fbm/H0.7",
+          "tails/hawkes/eta0",
+          "tails/hawkes/eta0.3",
+          "tails/hawkes/eta0.6",
+          "tails/msm/k1_ret",
+          "tails/msm/k2_ret",
+          "tails/msm/k4_ret",
+          "tails/msm/k1_cum",
+          "tails/msm/k2_cum",
+          "tails/msm/k4_cum"
+        ],
+        "test_configs": [
+          "tails/stable_ar/alpha1.3_rho0.9",
+          "tails/stable_ar/alpha1.1_rho0.9",
+          "tails/stable_ar/alpha1.3_rho1.0",
+          "tails/stable_ar/alpha1.1_rho1.0",
+          "tails/fbm/H0.1",
+          "tails/fbm/H0.2",
+          "tails/fbm/H0.8",
+          "tails/fbm/H0.9",
+          "tails/hawkes/eta0.9",
+          "tails/hawkes/eta0.95",
+          "tails/msm/k6_ret",
+          "tails/msm/k8_ret",
+          "tails/msm/k6_cum",
+          "tails/msm/k8_cum"
+        ]
+      },
+      "mixture": {
+        "train_configs": [
+          "mixture/noise_gene_0_0.5"
+        ],
+        "test_configs": [
+          "mixture/noise_gene_0.5_1"
+        ]
+      }
+    },
+    "seeds": {
+      "train": [
+        1000000,
+        2000000
+      ],
+      "eval_base": 5000000,
+      "regression_start": 100000
+    },
+    "eval": {
+      "T": 2048,
+      "H": 128
+    }
+  }
+}
