@@ -38,15 +38,15 @@ Paired MASE, fine-tuned / pretrained: 1.028 (95% interval 0.992 to 1.082).
 
 ## Regression check (normal series)
 
-Copied from `results/finetune/local/summary.csv` (set `regression/in_prior`, 300 series).
+Copied from `results/finetune/local/summary.csv` (set `regression/in_prior`, 500 series).
 
 | metric | pretrained | fine-tuned |
 |---|---|---|
-| MASE ratio to oracle | 1.062 | 1.089 |
-| sCRPS ratio to oracle | 1.066 | 1.091 |
-| cov80 | 0.818 | 0.776 |
+| MASE ratio to oracle | 1.070 | 1.089 |
+| sCRPS ratio to oracle | 1.073 | 1.092 |
+| cov80 | 0.810 | 0.777 |
 
-Paired MASE, fine-tuned / pretrained: 1.025.
+Paired MASE, fine-tuned / pretrained: 1.019.
 
 ## Scope
 

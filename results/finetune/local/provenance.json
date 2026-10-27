@@ -1,7 +1,7 @@
 {
   "script": "scripts/eval_finetuned.py",
-  "git": "446caea",
-  "time_utc": "2026-10-27T00:49:30Z",
+  "git": "966a3bc",
+  "time_utc": "2026-10-27T02:52:19Z",
   "host": "vm",
   "torch": "2.14.1+cpu",
   "threads": 1,
@@ -19,8 +19,14 @@
     "300",
     "--n-paths",
     "500",
+    "--real-npz",
+    "bench/regression/real.npz",
+    "--in-prior-npz",
+    "bench/regression/in_prior.npz",
     "--cards-dir",
     "results/finetune/model_cards/local",
+    "--note",
+    "Regression sets: bench/regression/in_prior.npz (500 series with oracle) and bench/regression/real.npz (the windows committed in that file; real windows have no oracle).",
     "--note",
     "Local pass: 5M model only, run on CPU (1 thread). Each run took 180 optimizer steps at batch size 8 over a pool of 60 simulated batches, so every pool batch was used 3 times (the pool is cycled); simulating the training series dominated the cost, so the pool size was kept small.",
     "--note",
@@ -28,13 +34,11 @@
     "--note",
     "Training contexts 512, 1024, 2048; horizons 32, 128, 512. Held-out samples: context 2048, horizon 128.",
     "--note",
-    "Real-data regression check: pending. bench/regression/real.npz and otp/realdata.py were not on master when this ran. The in-prior regression set here is 300 fresh series (seeds 100000 to 100299), not the 500-series bench/regression/in_prior.npz.",
-    "--note",
     "Knob protocol: the four runs with the same method and replay share (one per held-out family) trained on identical data in identical order, so their final_loss values in costs.csv are equal and so are their regression rows. They were trained separately in this local pass (scripts/finetune_job.py, used for the Colab run, trains that model once).",
     "--note",
     "The learning-rate pilot, the number of steps and the choice to cycle the pool were fixed before any held-out set was scored."
   ],
-  "wall_sec": 1.2,
+  "wall_sec": 464.7,
   "sizes": [
     "5M"
   ],
@@ -51,9 +55,11 @@
     "lofo/mixture": 32,
     "lofo/regime": 32,
     "lofo/tails": 32,
-    "regression/in_prior": 300
+    "regression/in_prior": 500,
+    "regression/real": 40
   },
-  "real_npz": null,
+  "real_npz": "bench/regression/real.npz",
+  "in_prior_npz": "bench/regression/in_prior.npz",
   "gpu": null,
   "train_wall_sec_total": 2564.2,
   "splits": {
