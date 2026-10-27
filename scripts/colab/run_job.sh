@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # Run one Off-the-Prior job on a Colab GPU runtime and bring its results back.
-#   scripts/colab/run_job.sh <job_name> <job.sh> <gpu> [extra files to upload...]
+#   scripts/colab/run_job.sh <job_name> <job.sh> <gpu[,gpu,...]> [extra files to upload...]
+# <gpu> may be a comma-separated preference list (e.g. G4,H100,A100): each type is tried in order and the
+# first runtime Colab grants is used (a request that hangs is cut after NEW_TIMEOUT seconds, default 300).
+# CODE_ONLY=1 ships the repository without results/, bench/data/ and bench/regression/ (upload the inputs a
+# job needs as extra files).
 # The job script runs inside the unpacked repo on Colab and must write
 # everything it produces under results/colab_out/; that tree is downloaded into
 # results/colab/<job_name>/ (unpacked), together with usage before/after and the log.
@@ -12,7 +16,11 @@ OUT=$ROOT/results/colab/$JOB
 mkdir -p "$OUT"
 S=otp-$JOB
 BUNDLE=$(mktemp -d)/otp_bundle.tar.gz
-git -C "$ROOT" archive --format=tar.gz -o "$BUNDLE" HEAD
+if [ "${CODE_ONLY:-0}" = 1 ]; then
+  git -C "$ROOT" archive --format=tar.gz -o "$BUNDLE" HEAD -- . ':(exclude)results' ':(exclude)bench/data' ':(exclude)bench/regression'
+else
+  git -C "$ROOT" archive --format=tar.gz -o "$BUNDLE" HEAD
+fi
 # compute-unit balances are logged outside the repo (SPEND_DIR), one JSON line per job
 SPEND_DIR=${OTP_SPEND_DIR:-/home/claude/off-the-prior-tasks/colab_spend}
 mkdir -p "$SPEND_DIR"
@@ -26,7 +34,15 @@ cleanup() {
   echo "{\"job\": \"$JOB\", \"gpu\": \"$GPU\", \"start\": \"$(cat "$OUT/started_utc.txt")\", \"end\": \"$(cat "$OUT/ended_utc.txt")\", \"balance_before\": \"$B0\", \"balance_after\": \"$B1\"}" >> "$SPEND_DIR/colab_spend.jsonl"
 }
 trap cleanup EXIT
-colab new -s "$S" --gpu "$GPU"
+granted=""
+for g in ${GPU//,/ }; do
+  if timeout "${NEW_TIMEOUT:-300}" colab new -s "$S" --gpu "$g"; then granted=$g; break; fi
+  echo "no $g runtime granted; trying the next type"
+  colab stop -s "$S" >/dev/null 2>&1 || true
+done
+[ -n "$granted" ] || { echo "no runtime granted for $GPU"; exit 4; }
+GPU=$granted
+echo "$GPU" > "$OUT/gpu.txt"
 colab upload -s "$S" "$BUNDLE" /content/otp_bundle.tar.gz
 colab exec -s "$S" -f "$ROOT/scripts/colab/remote_setup.py" | tee "$OUT/setup.txt"
 git -C "$ROOT" rev-parse --short HEAD > "$OUT/commit.txt"   # the bundle has no .git; record and ship the commit
