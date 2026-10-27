@@ -5,11 +5,10 @@
 
 `<out>/index.json` describes the sizes, layers, field order and decoding of the exemplar snippets;
 `<out>/<size>/layer_<l>.json` has one row per pole (field order in `fields`). A snippet is the 32 raw values of one
-patch, scaled to 0..255 between its own minimum and maximum (base64 of 32 bytes), with the minimum and maximum and the
+patch, scaled to 0..15 between its own minimum and maximum (32 hexadecimal digits, one per value), with the minimum and maximum and the
 pole's activation on that token. Every file is under 50 MB.
 """
 import argparse
-import base64
 import os
 import sys
 
@@ -45,8 +44,8 @@ def snippet(vals, T, tid, P, act):
     s = PATCH * t if t < L else T + PATCH * (t - L)
     v = np.asarray(vals[pos][s:s + PATCH], float)
     lo, hi = float(v.min()), float(v.max())
-    q = np.clip((v - lo) / max(hi - lo, 1e-12) * 255, 0, 255).astype(np.uint8)
-    return [pos, t, round(float(act), 4), base64.b64encode(q.tobytes()).decode(), float(f"{lo:.4g}"), float(f"{hi:.4g}")]
+    q = np.clip(np.rint((v - lo) / max(hi - lo, 1e-12) * 15), 0, 15).astype(np.uint8)
+    return [pos, t, round(float(act), 4), "".join("0123456789abcdef"[i] for i in q), float(f"{lo:.4g}"), float(f"{hi:.4g}")]
 
 
 def ex_list(row, key_tok, key_act, vals, T, k):
@@ -73,7 +72,7 @@ def main():
     c, _ = parts[0] if len(parts) == 1 else C.merge_corpora([p[0] for p in parts], [p[1] for p in parts])
     cr = C.load_corpus(a.real)[0] if a.real else None
     st = pd.read_csv(a.steering) if a.steering and os.path.exists(a.steering) else None
-    index = {"fields": FIELDS, "snippet": "[series_position, token, activation, base64 of 32 bytes (patch scaled 0..255), min, max]",
+    index = {"fields": FIELDS, "snippet": "[series_position, token, activation, 32 hexadecimal digits (patch scaled 0..15, one digit per value), min, max]",
              "class": {"o": "one_job", "m": "mixed", "u": "unexplained", "d": "dead"}, "theta": 0.7, "floor": 0.1,
              "sizes": {}, "provenance": provenance("scripts/neurons_export_browser.py")}
     os.makedirs(a.out, exist_ok=True)
