@@ -254,6 +254,30 @@ which gets slightly worse at 32,768 steps. {{num:long_nonfinite_oracle_samples}}
 (Rössler, c = 5.7) had oracle paths that left the attractor at long horizons; their oracle
 ratios are excluded.
 
+## 4.6 Real series that stand in for the families
+
+Real data has no oracle, so it cannot show a gap to the best achievable forecast; it can show whether
+the families' pattern against classical models carries over. We gathered open-license series
+(sources, licenses and hashes in `bench/regression/sources.csv`; windows whose license does not allow
+redistribution are kept out of git and rebuilt by `scripts/fetch_realdata.py`). On {{num:rd_n_real}} windows
+from GIFT-Eval and fev-bench datasets, Timestral's MASE relative to seasonal naive is {{num:rd_real_5M}} at 5M
+and {{num:rd_real_209M}} at 209M (ETS {{num:rd_real_ets}}, ARIMA {{num:rd_real_arima}}; GIFT-Eval-style geometric mean over
+dataset groups). These datasets may overlap Timestral's pretraining data.
+
+A separate subset of {{num:rd_n_analogues}} windows was picked as real analogues of the failure families:
+sunspot numbers, lynx and hormone series and El Niño indices for delay feedback; grid frequency,
+pedestrian counts and activity recordings for coupled oscillators; river discharge, earthquake counts,
+financial and crypto series for heavy tails; macro and energy series with documented breaks, traffic
+and COVID-19 cases for regime switches. The table compares Timestral's ratio to the best classical
+model on these windows with the same ratio on the synthetic family (context 2,048, horizon 128):
+
+{{table:rd_analogue}}
+
+On the synthetic delay and oscillator systems Timestral beats the classical models by a wide margin
+while staying far from the oracle (Section 4.2); on the real analogues its margin over classical models
+is smaller. Heavy tails and regime switches sit near 1 on both. With no oracle on the real side, these
+numbers do not say how far Timestral is from the best achievable forecast there.
+
 # 5. Covariates and one-way attention
 
 Timestral reads covariates as conditioning rows: the main series reads them, they never read the

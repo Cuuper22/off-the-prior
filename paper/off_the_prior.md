@@ -336,6 +336,35 @@ which gets slightly worse at 32,768 steps. 2 samples
 (Rössler, c = 5.7) had oracle paths that left the attractor at long horizons; their oracle
 ratios are excluded.
 
+## 4.6 Real series that stand in for the families
+
+Real data has no oracle, so it cannot show a gap to the best achievable forecast; it can show whether
+the families' pattern against classical models carries over. We gathered open-license series
+(sources, licenses and hashes in `bench/regression/sources.csv`; windows whose license does not allow
+redistribution are kept out of git and rebuilt by `scripts/fetch_realdata.py`). On 412 windows
+from GIFT-Eval and fev-bench datasets, Timestral's MASE relative to seasonal naive is 0.70 at 5M
+and 0.65 at 209M (ETS 1.02, ARIMA 1.27; GIFT-Eval-style geometric mean over
+dataset groups). These datasets may overlap Timestral's pretraining data.
+
+A separate subset of 69 windows was picked as real analogues of the failure families:
+sunspot numbers, lynx and hormone series and El Niño indices for delay feedback; grid frequency,
+pedestrian counts and activity recordings for coupled oscillators; river discharge, earthquake counts,
+financial and crypto series for heavy tails; macro and energy series with documented breaks, traffic
+and COVID-19 cases for regime switches. The table compares Timestral's ratio to the best classical
+model on these windows with the same ratio on the synthetic family (context 2,048, horizon 128):
+
+| family | real windows | real 5M | synthetic 5M | real 209M | synthetic 209M |
+|---|---|---|---|---|---|
+| delay feedback | 12 | 0.92 | 0.39 | 0.73 | 0.26 |
+| coupled oscillators | 19 | 0.79 | 0.44 | 0.78 | 0.20 |
+| heavy tails | 15 | 0.90 | 1.02 | 0.87 | 1.01 |
+| regime switches | 23 | 1.03 | 1.02 | 0.98 | 0.96 |
+
+On the synthetic delay and oscillator systems Timestral beats the classical models by a wide margin
+while staying far from the oracle (Section 4.2); on the real analogues its margin over classical models
+is smaller. Heavy tails and regime switches sit near 1 on both. With no oracle on the real side, these
+numbers do not say how far Timestral is from the best achievable forecast there.
+
 # 5. Covariates and one-way attention
 
 Timestral reads covariates as conditioning rows: the main series reads them, they never read the

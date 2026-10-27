@@ -370,6 +370,30 @@ def covariates():
     num("cov_leaky_5M_1024", lk.loc["5M", "H=1024"], src, "LeakyKnown 0.05, 5M, H=1024, ratio to matched oracle")
 
 
+def realdata():
+    src = "results/regression_baseline/summary.csv"
+    s = pd.read_csv(p(src))
+    a = s[(s.group == "ALL") & (s.basis == "common")]
+    for st in ("real", "analogues"):
+        for fc in ("timestral-5M", "timestral-209M", "ets", "arima"):
+            v = float(a[(a.set == st) & (a.forecaster == fc)].mase_rel_snaive.iloc[0])
+            num(f"rd_{st}_{fc.replace('timestral-', '')}", v, src, f"{st} set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, {fc}")
+        num(f"rd_n_{st}", int(a[a.set == st].n.iloc[0]), src, f"windows in the {st} set (common basis)", "{:d}")
+    asrc = "results/regression_baseline/analogue_vs_synthetic.csv"
+    d = pd.read_csv(p(asrc))
+    d = d[(d.level == "family") & (d.metric == "mase")]
+    names = {"delay_feedback": "delay feedback", "coupled_oscillators": "coupled oscillators", "heavy_tails": "heavy tails", "regime_switches": "regime switches"}
+    rows = []
+    for fam, lab in names.items():
+        r = {"family": lab, "real windows": int(d[d.family_analogue == fam].n_windows.iloc[0])}
+        for size in ("5M", "209M"):
+            q = d[(d.family_analogue == fam) & (d.forecaster == f"timestral-{size}")].iloc[0]
+            r[f"real {size}"] = q.real_ratio_to_best_classical_gmean
+            r[f"synthetic {size}"] = q.synthetic_T2048_H128
+        rows.append(r)
+    table("rd_analogue", pd.DataFrame(rows), asrc, "Timestral MASE / best classical MASE (geometric mean): real analogue windows vs the synthetic family at T=2048, H=128")
+
+
 def bench():
     import json as _json
 
@@ -425,7 +449,7 @@ def bench():
 
 
 def main():
-    for fn in (in_prior, chaos, tails, long_ctx, symavg, normalization, analog, chaos_noise, readouts, selfval, regime, covariates, bench):
+    for fn in (in_prior, chaos, tails, long_ctx, symavg, normalization, analog, chaos_noise, readouts, selfval, regime, covariates, realdata, bench):
         try:
             fn()
         except FileNotFoundError as e:
