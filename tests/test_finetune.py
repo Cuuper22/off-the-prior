@@ -99,3 +99,55 @@ def test_colab_placeholder_cards_name_their_source_file(tmp_path):
     assert n == 4 * 2 * 4 * 2 * 3
     txt = open(tmp_path / "123M" / "123M__knob-tails__full__mix0.5.md").read()
     assert "costs.csv :: run_id=123M__knob-tails__full__mix0.5" in txt and "summary.csv" in txt
+
+
+def test_job_resumes_from_the_partial_file(tmp_path):
+    """The Colab job driver: a first pass trains `full`, the machine is 'lost' (only scores_partial.csv survives), a
+    second pass with --resume skips that run, trains `lora`, and the final tables hold both."""
+    import shutil
+
+    import finetune_job
+
+    root = str(tmp_path)
+    common = ["--out", f"{root}/out", "--ckpt-root", f"{root}/ck", "--pool-dir", f"{root}/pools",
+              "--sizes", "5M", "--protocols", "lofo", "--holdouts", "regime", "--replay-fracs", "0",
+              "--steps", "5M=2", "--batch", "5M=4", "--lr-full", "5M=5e-5", "--lr-lora", "5M=1e-3",
+              "--pool-batches", "2", "--pool-workers", "1", "--contexts", "256", "--horizons", "32",
+              "--n-eval", "3", "--n-regression", "3", "--n-paths", "20", "--log-every", "0", "--real-npz", "",
+              "--keep-partial"]
+    finetune_job.main(common + ["--methods", "full"])
+    part = pd.read_csv(f"{root}/out/scores_partial.csv")
+    assert {"part", "run_json", "loss_csv"} <= set(part.columns)
+    assert "run_record__5M__lofo-regime__full__nomix" in set(part.part)
+    assert not os.path.exists(f"{root}/ck/5M__lofo-regime__full__nomix")  # checkpoint deleted after scoring
+    for d in ("runs", "parts", "out_tables"):
+        shutil.rmtree(f"{root}/out/{d}", ignore_errors=True)
+    for f in ("scores.csv", "summary.csv", "costs.csv"):
+        os.remove(f"{root}/out/{f}")
+    finetune_job.main(common + ["--methods", "full", "lora", "--resume"])
+    costs = pd.read_csv(f"{root}/out/costs.csv")
+    assert sorted(costs.run_id) == ["5M__lofo-regime__full__nomix", "5M__lofo-regime__lora__nomix"]
+    summ = pd.read_csv(f"{root}/out/summary.csv")
+    assert set(summ.run_id) == set(costs.run_id) and len(summ) == 4
+    assert os.path.exists(f"{root}/out/loss_curves.csv") and os.path.exists(f"{root}/out/job.json")
+    assert os.path.exists(f"{root}/out/runs/5M__lofo-regime__full__nomix/loss.csv")  # restored from the partial file
+
+
+def test_job_trains_the_knob_model_once_for_all_held_out_families(tmp_path):
+    import finetune_job
+
+    root = str(tmp_path)
+    finetune_job.main(["--out", f"{root}/out", "--ckpt-root", f"{root}/ck", "--pool-dir", f"{root}/pools",
+                       "--sizes", "5M", "--protocols", "knob", "--holdouts", "regime", "tails", "--methods", "lora",
+                       "--replay-fracs", "0", "--steps", "5M=2", "--batch", "5M=4", "--lr-full", "5M=5e-5",
+                       "--lr-lora", "5M=1e-3", "--pool-batches", "2", "--pool-workers", "1", "--contexts", "256",
+                       "--horizons", "32", "--n-eval", "3", "--n-regression", "3", "--n-paths", "20",
+                       "--log-every", "0", "--real-npz", ""])
+    costs = pd.read_csv(f"{root}/out/costs.csv").set_index("run_id")
+    assert list(costs.index) == ["5M__knob-regime__lora__nomix", "5M__knob-tails__lora__nomix"]
+    assert costs.trained_as.isna().tolist() == [True, False]
+    assert costs.trained_as.iloc[1] == "5M__knob-regime__lora__nomix"
+    assert costs.wall_sec.nunique() == 1 and costs.final_loss.nunique() == 1
+    summ = pd.read_csv(f"{root}/out/summary.csv")
+    assert set(summ[summ.role == "test"].eval_set) == {"knob/regime", "knob/tails"}
+    assert os.listdir(f"{root}/ck") == []  # checkpoints and links removed after scoring

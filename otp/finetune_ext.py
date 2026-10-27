@@ -190,7 +190,7 @@ def log_stderr(msg: str) -> None:
 # ---------------------------------------------------------------------------
 COST_COLS = ["run_id", "size", "protocol", "holdout", "method", "replay_frac", "trainable_params", "base_params",
              "params_with_adapters", "rank", "steps", "batch_size", "lr", "time_steps_seen", "wall_sec",
-             "pool_sec", "final_loss", "peak_rss_bytes", "peak_cuda_bytes", "device", "gpu"]
+             "pool_sec", "final_loss", "peak_rss_bytes", "peak_cuda_bytes", "device", "gpu", "trained_as"]
 
 
 def cost_row(run: dict) -> dict:
@@ -286,7 +286,9 @@ def write_readme(out: str, summary, costs, scores, notes: list[str] | None = Non
           "of future points inside the 10%-90% quantile interval (0.8 is calibrated). `trunc_*` = the pretrained model "
           "with the context cut to the last max(d, 64) steps (regime sets only).",
           "- `costs.csv`: per run: trainable parameters, steps, batch size, learning rate, time steps seen "
-          "(context + future values over all training series), training wall time, final loss, peak memory.",
+          "(context + future values over all training series), training wall time, final loss, peak memory. `trained_as` is filled when the run id reuses the model trained under "
+          "another run id (knob protocol: all held-out families are tested on one trained model per size, method and replay share); "
+          "its cost columns then repeat that model's.",
           "- `provenance.json`: command line, commit, host, wall time, splits.",
           "- `runs/<run_id>/run.json`, `runs/<run_id>/loss.csv`: per-run configuration, cost record and loss curve.", ""]
     ev = prov.get("sets", {})
@@ -295,7 +297,7 @@ def write_readme(out: str, summary, costs, scores, notes: list[str] | None = Non
           f"(seeds {prov['splits']['seeds']['regression_start']} and up). Real-data regression: "
           + ("`" + str(prov.get("real_npz")) + "` (" + str(ev.get("regression/real")) + " windows)." if prov.get("real_npz")
              else "pending (`bench/regression/real.npz` was not on master when this ran; rerun with `--real-npz`).") + "",
-          f"Evaluation wall time {prov['wall_sec']} s; training wall time summed over runs "
+          f"Evaluation wall time {prov['wall_sec']} s; training wall time summed over trained models "
           f"{prov['train_wall_sec_total']} s (both from `provenance.json`).", ""]
 
     tests = summary[summary.role == "test"].copy()
@@ -454,7 +456,10 @@ def card_local(info: dict, cost: dict, test: dict | None, reg: dict | None, src:
           f"- Trainable parameters: {int(cost['trainable_params']):,} (base model: {int(cost['base_params']):,})",
           f"- Steps: {int(cost['steps'])}; batch size: {int(cost['batch_size'])}; learning rate: {cost['lr']:g}",
           f"- Time steps seen: {int(cost['time_steps_seen']):,}",
-          f"- Training wall time: {_f(cost['wall_sec'], 1)} s; peak resident memory: {int(cost['peak_rss_bytes']):,} bytes; final loss: {_f(cost['final_loss'], 4)}", ""]
+          f"- Training wall time: {_f(cost['wall_sec'], 1)} s; peak resident memory: {int(cost['peak_rss_bytes']):,} bytes; final loss: {_f(cost['final_loss'], 4)}"]
+    if cost.get("peak_cuda_bytes") == cost.get("peak_cuda_bytes") and cost.get("peak_cuda_bytes") is not None:
+        L += [f"- Peak GPU memory allocated: {int(cost['peak_cuda_bytes']):,} bytes on {cost.get('gpu')}"]
+    L += [""]
     if test is not None:
         L += ["## Held-out evaluation", "", f"Copied from `{src}/summary.csv` (set `{test['eval_set']}`, {int(test['n'])} samples, "
               "500-path true-dynamics oracle). Ratio = geometric mean over samples of the metric divided by the oracle's.", "",
@@ -511,7 +516,8 @@ def card_placeholder(info: dict) -> str:
     return "\n".join(L)
 
 
-def write_cards_local(out_dir: str, summary, costs, src: str) -> int:
+def write_cards_local(out_dir: str, summary, costs, src: str, by_size: bool = False) -> int:
+    """Cards filled from the result tables; `by_size` puts them in one folder per model size (as the placeholders are)."""
     os.makedirs(out_dir, exist_ok=True)
     cs = costs.set_index("run_id")
     n = 0
@@ -522,7 +528,9 @@ def write_cards_local(out_dir: str, summary, costs, src: str) -> int:
         reg = s[s.eval_set == "regression/in_prior"]
         txt = card_local(info, cs.loc[rid].to_dict(), None if test.empty else test.iloc[0].to_dict(),
                          None if reg.empty else reg.iloc[0].to_dict(), src)
-        with open(os.path.join(out_dir, rid + ".md"), "w") as f:
+        d = os.path.join(out_dir, info["size"]) if by_size else out_dir
+        os.makedirs(d, exist_ok=True)
+        with open(os.path.join(d, rid + ".md"), "w") as f:
             f.write(txt + "\n")
         n += 1
     return n

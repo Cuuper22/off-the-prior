@@ -73,6 +73,11 @@ def get_set(cache_dir: str, name: str, maker) -> list[Sample]:
     return samples
 
 
+def _need_ckpt(ck: str) -> str:
+    assert os.path.isdir(ck), f"missing checkpoint {ck}"  # only needed for runs whose scores are not cached
+    return ck
+
+
 def tag(df: pd.DataFrame, **cols) -> pd.DataFrame:
     for k, v in cols.items():
         df[k] = v
@@ -99,6 +104,9 @@ def main(argv=None):
     ap.add_argument("--n-paths", type=int, default=500, help="oracle Monte Carlo paths per sample")
     ap.add_argument("--real-npz", default=None, help="real-data regression windows (bench/regression/real.npz)")
     ap.add_argument("--sizes", nargs="+", default=None)
+    ap.add_argument("--run-ids", nargs="+", default=None, help="score only these runs")
+    ap.add_argument("--parts-only", action="store_true",
+                    help="write the score parts under <out>/parts/ and stop (no tables); used by scripts/finetune_job.py")
     ap.add_argument("--threads", type=int, default=None)
     ap.add_argument("--no-readme", action="store_true")
     ap.add_argument("--note", action="append", default=[], help="fact to list under Notes in README.md (repeatable)")
@@ -117,6 +125,8 @@ def main(argv=None):
     runs = [read_json(p) for p in sorted(glob.glob(os.path.join(a.runs_root, "*", "run.json")))]
     if a.sizes:
         runs = [r for r in runs if r["size"] in a.sizes]
+    if a.run_ids:
+        runs = [r for r in runs if r["run_id"] in set(a.run_ids)]
     assert runs, f"no runs under {a.runs_root}"
     sizes = sorted({r["size"] for r in runs}, key=lambda s: float(s[:-1]))
 
@@ -162,16 +172,19 @@ def main(argv=None):
     for r in runs:
         rid = r["run_id"]
         ck = os.path.join(a.ckpt_root, rid)
-        assert os.path.isdir(ck), f"missing checkpoint {ck}"
         own = f"{r['protocol']}/{r['holdout']}"
         for name in [own] + [k for k in sets if k.startswith("regression/")]:
             ss = sets[name]
             df = score_part(os.path.join(parts, f"run__{rid}__{name.replace('/', '-')}.csv"),
-                            lambda ss=ss, ck=ck: score_samples(ss, [f"timestral-{ck}"]))
+                            lambda ss=ss, ck=ck: score_samples(ss, [f"timestral-{_need_ckpt(ck)}"]))
             df["forecaster"] = "finetuned"
             frames.append(tag(df, eval_set=name, size=r["size"], run_id=rid,
                               role="test" if name == own else "regression"))
         print("scored", rid, f"{time.time() - t0:.0f}s", flush=True)
+
+    if a.parts_only:
+        print("wrote parts to", parts, f"{time.time() - t0:.0f}s", flush=True)
+        return
 
     scores = pd.concat(frames, ignore_index=True)
     meta = pd.DataFrame([{k: r[k] for k in ("run_id", "protocol", "holdout", "method", "replay_frac")} for r in runs])
@@ -193,7 +206,7 @@ def main(argv=None):
         sizes=sizes, n_runs=len(runs), n_eval=a.n_eval, n_regression=a.n_regression, n_paths=a.n_paths,
         sets={k: len(v) for k, v in sets.items()}, real_npz=a.real_npz,
         gpu=torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
-        train_wall_sec_total=round(float(costs.wall_sec.sum()), 1), splits=S.split_summary()))
+        train_wall_sec_total=round(float(costs[costs.trained_as.isna()].wall_sec.sum()), 1), splits=S.split_summary()))
     if not a.no_readme:
         X.write_readme(a.out, summary, costs, scores, a.note)
     if a.cards_dir:
