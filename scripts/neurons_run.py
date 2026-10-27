@@ -41,6 +41,9 @@ def main():
     ap.add_argument("--resume", action="store_true")
     ap.add_argument("--max-series", type=int, default=0, help="use only the first n series (tests)")
     ap.add_argument("--device", default=None)
+    ap.add_argument("--acts-dir", default=None, help="where acts_sub_<size>.npz goes (default: --out)")
+    ap.add_argument("--acts-sub", type=int, default=0,
+                    help="also save the signed activations of every neuron on this many fixed tokens (seeded, same for all sizes)")
     a = ap.parse_args()
     set_threads()
     dev = a.device or default_device()
@@ -72,6 +75,17 @@ def main():
     todo = [li for li in range(n_blocks) if li not in done]
     tok = T // 32 + Cap.N_FC
     info = {}
+    sub_ix = None
+    sub = {}
+    if a.acts_sub:
+        n_tok = c["values"].shape[0] * tok
+        label_tok = np.where(np.repeat(c["split"], tok) == 0)[0]
+        sub_ix = np.sort(np.random.default_rng(12345).choice(label_tok, min(a.acts_sub, len(label_tok)), replace=False))
+        sub_path = os.path.join(a.acts_dir or a.out, f"acts_sub_{a.size}.npz")
+        os.makedirs(os.path.dirname(sub_path), exist_ok=True)
+        if a.resume and os.path.exists(sub_path):
+            with np.load(sub_path) as zz:
+                sub = {k: zz[k] for k in zz.files}
     for i in range(0, len(todo), a.layers_per_chunk):
         chunk = tuple(todo[i:i + a.layers_per_chunk])
         print(f"[{time.time() - t0:.0f}s] capture layers {chunk}", flush=True)
@@ -80,6 +94,11 @@ def main():
         zr = None
         if real is not None:
             zr, _, _ = Cap.capture_corpus(a.size, real["values"], real["T"], batch=a.batch, device=dev, layers=chunk)
+        if sub_ix is not None:
+            for li in chunk:
+                sub[f"L{li}"] = z[li][torch.as_tensor(sub_ix)].numpy()
+            sub["token_ids"] = sub_ix
+            np.savez(sub_path, **sub)
         for li in chunk:
             rl = None if real is None else {"Z": zr[li], "codes": real["codes"], "events": real["events"]}
             res = Lb.label_layer(prep, z[li], code[li], real=rl)
@@ -93,6 +112,11 @@ def main():
                     ids = gid[o[ix_key]]
                     df[f"{name}_tok"] = [" ".join(map(str, r)) for r in ids]
                     df[f"{name}_act"] = [fmt(r) for r in o[act_key]]
+                if "real_top_idx" in o:
+                    for name in ("top", "mid"):
+                        df[f"real_{name}_tok"] = [" ".join(map(str, r)) for r in o[f"real_{name}_idx"]]
+                        df[f"real_{name}_act"] = [fmt(r) for r in o[f"real_{name}_act"]]
+                    df["real_n_active"] = o["real_n_active"]
                 rows.append(df)
             out = pd.concat(rows, ignore_index=True)
             out.to_csv(part, mode="a", header=not os.path.exists(part), index=False, float_format="%.5g")

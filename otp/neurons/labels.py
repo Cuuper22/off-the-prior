@@ -556,6 +556,10 @@ def transfer_scores(cv: dict, real: dict, dev, sign: str, prep: dict) -> dict:
             e = E[m, k] - E[m, k].mean()
             a = Ar[m] - Ar[m].mean(0, keepdim=True)
             ev[f"ev{k}_corr"] = ((e[:, None] * a).sum(0) / (e.pow(2).sum().sqrt() * a.pow(2).sum(0).sqrt()).clamp(min=1e-12)).cpu().numpy()
+    _, rtop, rmid, rnact, _ = _sorted_edges_and_exemplars(Ar)
+    ev.update({"real_top_idx": rtop.T.cpu().numpy(), "real_top_act": torch.gather(Ar, 0, rtop).T.cpu().numpy(),
+               "real_mid_idx": rmid.T.cpu().numpy(), "real_mid_act": torch.gather(Ar, 0, rmid).T.cpu().numpy(),
+               "real_n_active": rnact.cpu().numpy()})
     return {**ev, "tr_corr": torch.where(ok, corr, nan).cpu().numpy(), "tr_r2": torch.where(ok, r2r, nan).cpu().numpy(),
             "tr_analog": an.cpu().numpy(), "tr_r2_syn": torch.where(ok, r2[u, ar], nan).cpu().numpy(),
             "real_mean": Ar.mean(0).cpu().numpy(), "real_active": (Ar > 0).float().mean(0).cpu().numpy()}
