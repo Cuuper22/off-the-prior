@@ -277,18 +277,32 @@ def motif_cohesion(df: pd.DataFrame, X: np.ndarray, label_mask: np.ndarray, chun
 
     X (n_tokens, len(LIBRARY)) with NaN, label_mask (n_tokens,) tokens of the label set. cohesion = mean over the 18
     motif features of (standard deviation over the exemplar list) / (standard deviation over all label tokens); 1 is
-    the value for random tokens, smaller means the list shares the motif. Adds `coh_top`, `coh_mid`.
+    the value for random tokens, smaller means the list shares the motif. Adds `coh_top`, `coh_mid`, and a plain-words
+    description `motif_top`, `motif_mid`: the two motif features whose exemplar mean is furthest from the label-set mean
+    (in label-set standard deviations), among those whose spread over the list is below the label-set spread, written
+    as `name high` or `name low`.
     """
-    mot = [V.VAR_INDEX[n] for n in V.LIBRARY if n.startswith("m_")]
+    names = [n for n in V.LIBRARY if n.startswith("m_")]
+    mot = [V.VAR_INDEX[n] for n in names]
     Xm = X[:, mot]
     sd = np.nanstd(Xm[label_mask], axis=0).clip(min=1e-9)
+    mu = np.nanmean(Xm[label_mask], axis=0)
     out = {}
     for name in ("top", "mid"):
         res = np.full(len(df), np.nan, np.float32)
+        desc = [""] * len(df)
         col = df[f"{name}_tok"].to_numpy()
         for s in range(0, len(df), chunk):
             ids = np.array([[int(t) for t in str(r).split()] if isinstance(r, str) else [0] * 8 for r in col[s:s + chunk]])
             F = Xm[ids]                                                   # (c, k, nm)
-            res[s:s + chunk] = np.nanmean(np.nanstd(F, axis=1) / sd[None], axis=1)
+            ratio = np.nanstd(F, axis=1) / sd[None]
+            res[s:s + chunk] = np.nanmean(ratio, axis=1)
+            z = (np.nanmean(F, axis=1) - mu[None]) / sd[None]
+            z = np.where(ratio < 1.0, z, 0.0)
+            top2 = np.argsort(-np.abs(z), axis=1)[:, :2]
+            for i in range(len(z)):
+                parts = [f"{names[j]} {'high' if z[i, j] > 0 else 'low'}" for j in top2[i] if abs(z[i, j]) >= 0.5]
+                desc[s + i] = "; ".join(parts) if parts else "no shared motif"
         out[f"coh_{name}"] = res
+        out[f"motif_{name}"] = desc
     return pd.DataFrame(out, index=df.index)
