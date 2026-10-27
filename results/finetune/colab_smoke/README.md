@@ -7,5 +7,4 @@ code path only; they are not results.
 
 - `costs.csv`, `summary.csv`, `provenance.json`, `colab_meta.json`: the files the notebook wrote on the runtime.
 - `started_utc.txt`, `ended_utc.txt`: job start and end.
-- `../colab_spend.log`: compute-unit balance before and after each Colab job started by this task (one line per job; the lines for
-  `ft-smoke` cover four launches: the first stopped on an import error in the notebook, the second on the download helper, the third ran through but its job script copied the outputs to a path the driver does not fetch; the fourth is the one in this folder).
+- `ft-smoke` was launched four times: the first stopped on an import error in the notebook, the second on the download helper, the third ran through but its job script copied the outputs to a path the driver does not fetch; the fourth is the one in this folder.
