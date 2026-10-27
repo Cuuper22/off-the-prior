@@ -24,7 +24,7 @@ a secret test set.
 
 ```bash
 # the diagnostic files are in git; the leaderboard files are on the Hugging Face dataset
-huggingface-cli download <user>/off-the-prior-bench --repo-type dataset --include "data/lb_*" --local-dir bench
+huggingface-cli download cuuper22/off-the-prior-bench --repo-type dataset --include "data/lb_*" --local-dir bench
 python bench/eval.py --set diag --model timestral-5M
 python bench/eval.py --set lb --split public --predictions my_preds/ --name mymodel
 ```
