@@ -17,36 +17,39 @@ Run id: `209M__lofo-tails__full__mix0.3`
 
 ## Training cost
 
-Placeholders name the result file and column the number comes from (results/finetune/colab/<RUN_ID>/costs.csv).
+Copied from `results/finetune/colab/run1/costs.csv`.
 
-- Trainable parameters: {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=209M__lofo-tails__full__mix0.3 :: trainable_params}} (base model: {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=209M__lofo-tails__full__mix0.3 :: base_params}})
-- Steps: {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=209M__lofo-tails__full__mix0.3 :: steps}}; batch size: {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=209M__lofo-tails__full__mix0.3 :: batch_size}}; learning rate: {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=209M__lofo-tails__full__mix0.3 :: lr}}
-- Time steps seen: {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=209M__lofo-tails__full__mix0.3 :: time_steps_seen}}
-- Training wall time: {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=209M__lofo-tails__full__mix0.3 :: wall_sec}} s on {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=209M__lofo-tails__full__mix0.3 :: gpu}}; final loss: {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=209M__lofo-tails__full__mix0.3 :: final_loss}}
+- Trainable parameters: 209,312,256 (base model: 209,312,256)
+- Steps: 300; batch size: 16; learning rate: 1e-05
+- Time steps seen: 5,898,240
+- Training wall time: 43.3 s; peak resident memory: 2,718,556,160 bytes; final loss: 0.9600
+- Peak GPU memory allocated: 5,989,050,880 bytes on NVIDIA A100-SXM4-40GB
 
 ## Held-out evaluation
 
-From `results/finetune/colab/<RUN_ID>/summary.csv`, set `lofo/tails`.
+Copied from `results/finetune/colab/run1/summary.csv` (set `lofo/tails`, 32 samples, 500-path true-dynamics oracle). Ratio = geometric mean over samples of the metric divided by the oracle's.
 
 | metric | pretrained | fine-tuned |
 |---|---|---|
-| MASE ratio to oracle | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=209M__lofo-tails__full__mix0.3, eval_set=lofo/tails :: pre_mase_ratio}} | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=209M__lofo-tails__full__mix0.3, eval_set=lofo/tails :: ft_mase_ratio}} |
-| sCRPS ratio to oracle | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=209M__lofo-tails__full__mix0.3, eval_set=lofo/tails :: pre_scrps_ratio}} | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=209M__lofo-tails__full__mix0.3, eval_set=lofo/tails :: ft_scrps_ratio}} |
-| cov80 | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=209M__lofo-tails__full__mix0.3, eval_set=lofo/tails :: pre_cov80}} | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=209M__lofo-tails__full__mix0.3, eval_set=lofo/tails :: ft_cov80}} |
+| MASE ratio to oracle | 1.062 | 1.062 |
+| sCRPS ratio to oracle | 1.062 | 1.057 |
+| cov80 | 0.757 | 0.739 |
 
-Paired MASE, fine-tuned / pretrained: {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=209M__lofo-tails__full__mix0.3, eval_set=lofo/tails :: paired_mase_ft_over_pre}}.
+Paired MASE, fine-tuned / pretrained: 1.000 (95% interval 0.993 to 1.008).
 
 ## Regression check (normal series)
 
-From `results/finetune/colab/<RUN_ID>/summary.csv`, sets `regression/in_prior` and `regression/real`.
+Copied from `results/finetune/colab/run1/summary.csv` (set `regression/in_prior`, 500 series).
 
-| set | metric | pretrained | fine-tuned |
-|---|---|---|---|
-| regression/in_prior | MASE ratio to oracle | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=209M__lofo-tails__full__mix0.3, eval_set=regression/in_prior :: pre_mase_ratio}} | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=209M__lofo-tails__full__mix0.3, eval_set=regression/in_prior :: ft_mase_ratio}} |
-| regression/in_prior | cov80 | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=209M__lofo-tails__full__mix0.3, eval_set=regression/in_prior :: pre_cov80}} | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=209M__lofo-tails__full__mix0.3, eval_set=regression/in_prior :: ft_cov80}} |
-| regression/in_prior | paired MASE ft / pre | | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=209M__lofo-tails__full__mix0.3, eval_set=regression/in_prior :: paired_mase_ft_over_pre}} |
-| regression/real | cov80 | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=209M__lofo-tails__full__mix0.3, eval_set=regression/real :: pre_cov80}} | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=209M__lofo-tails__full__mix0.3, eval_set=regression/real :: ft_cov80}} |
-| regression/real | paired MASE ft / pre | | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=209M__lofo-tails__full__mix0.3, eval_set=regression/real :: paired_mase_ft_over_pre}} |
+| metric | pretrained | fine-tuned |
+|---|---|---|
+| MASE ratio to oracle | 1.029 | 1.027 |
+| sCRPS ratio to oracle | 1.029 | 1.026 |
+| cov80 | 0.808 | 0.787 |
+
+Paired MASE, fine-tuned / pretrained: 0.998.
+
+Real-data windows (`regression/real`, 40 windows, no oracle; from `results/finetune/colab/run1/summary.csv`): paired MASE, fine-tuned / pretrained: 0.999 (95% interval 0.994 to 1.004); cov80 0.770 pretrained, 0.753 fine-tuned.
 
 ## Scope
 

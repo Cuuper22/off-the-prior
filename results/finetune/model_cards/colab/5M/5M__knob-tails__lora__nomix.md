@@ -17,36 +17,40 @@ Run id: `5M__knob-tails__lora__nomix`
 
 ## Training cost
 
-Placeholders name the result file and column the number comes from (results/finetune/colab/<RUN_ID>/costs.csv).
+Copied from `results/finetune/colab/run1/costs.csv`.
 
-- Trainable parameters: {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=5M__knob-tails__lora__nomix :: trainable_params}} (base model: {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=5M__knob-tails__lora__nomix :: base_params}})
-- Steps: {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=5M__knob-tails__lora__nomix :: steps}}; batch size: {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=5M__knob-tails__lora__nomix :: batch_size}}; learning rate: {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=5M__knob-tails__lora__nomix :: lr}}
-- Time steps seen: {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=5M__knob-tails__lora__nomix :: time_steps_seen}}
-- Training wall time: {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=5M__knob-tails__lora__nomix :: wall_sec}} s on {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=5M__knob-tails__lora__nomix :: gpu}}; final loss: {{results/finetune/colab/<RUN_ID>/costs.csv :: run_id=5M__knob-tails__lora__nomix :: final_loss}}
+- Trainable parameters: 215,040 (base model: 5,208,960)
+- Steps: 500; batch size: 32; learning rate: 0.001
+- Time steps seen: 19,478,528
+- Training wall time: 33.0 s; peak resident memory: 1,978,650,624 bytes; final loss: 1.4877
+- Peak GPU memory allocated: 461,856,256 bytes on NVIDIA A100-SXM4-40GB
+- This is the same trained model as run `5M__knob-chaos__lora__nomix` (knob protocol: one model per size, method and replay share is tested on every held-out family); the cost figures above are that model's.
 
 ## Held-out evaluation
 
-From `results/finetune/colab/<RUN_ID>/summary.csv`, set `knob/tails`.
+Copied from `results/finetune/colab/run1/summary.csv` (set `knob/tails`, 32 samples, 500-path true-dynamics oracle). Ratio = geometric mean over samples of the metric divided by the oracle's.
 
 | metric | pretrained | fine-tuned |
 |---|---|---|
-| MASE ratio to oracle | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=5M__knob-tails__lora__nomix, eval_set=knob/tails :: pre_mase_ratio}} | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=5M__knob-tails__lora__nomix, eval_set=knob/tails :: ft_mase_ratio}} |
-| sCRPS ratio to oracle | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=5M__knob-tails__lora__nomix, eval_set=knob/tails :: pre_scrps_ratio}} | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=5M__knob-tails__lora__nomix, eval_set=knob/tails :: ft_scrps_ratio}} |
-| cov80 | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=5M__knob-tails__lora__nomix, eval_set=knob/tails :: pre_cov80}} | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=5M__knob-tails__lora__nomix, eval_set=knob/tails :: ft_cov80}} |
+| MASE ratio to oracle | 1.033 | 1.030 |
+| sCRPS ratio to oracle | 1.046 | 1.009 |
+| cov80 | 0.760 | 0.770 |
 
-Paired MASE, fine-tuned / pretrained: {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=5M__knob-tails__lora__nomix, eval_set=knob/tails :: paired_mase_ft_over_pre}}.
+Paired MASE, fine-tuned / pretrained: 0.997 (95% interval 0.977 to 1.024).
 
 ## Regression check (normal series)
 
-From `results/finetune/colab/<RUN_ID>/summary.csv`, sets `regression/in_prior` and `regression/real`.
+Copied from `results/finetune/colab/run1/summary.csv` (set `regression/in_prior`, 500 series).
 
-| set | metric | pretrained | fine-tuned |
-|---|---|---|---|
-| regression/in_prior | MASE ratio to oracle | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=5M__knob-tails__lora__nomix, eval_set=regression/in_prior :: pre_mase_ratio}} | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=5M__knob-tails__lora__nomix, eval_set=regression/in_prior :: ft_mase_ratio}} |
-| regression/in_prior | cov80 | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=5M__knob-tails__lora__nomix, eval_set=regression/in_prior :: pre_cov80}} | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=5M__knob-tails__lora__nomix, eval_set=regression/in_prior :: ft_cov80}} |
-| regression/in_prior | paired MASE ft / pre | | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=5M__knob-tails__lora__nomix, eval_set=regression/in_prior :: paired_mase_ft_over_pre}} |
-| regression/real | cov80 | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=5M__knob-tails__lora__nomix, eval_set=regression/real :: pre_cov80}} | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=5M__knob-tails__lora__nomix, eval_set=regression/real :: ft_cov80}} |
-| regression/real | paired MASE ft / pre | | {{results/finetune/colab/<RUN_ID>/summary.csv :: run_id=5M__knob-tails__lora__nomix, eval_set=regression/real :: paired_mase_ft_over_pre}} |
+| metric | pretrained | fine-tuned |
+|---|---|---|
+| MASE ratio to oracle | 1.070 | 1.083 |
+| sCRPS ratio to oracle | 1.073 | 1.084 |
+| cov80 | 0.810 | 0.803 |
+
+Paired MASE, fine-tuned / pretrained: 1.013.
+
+Real-data windows (`regression/real`, 40 windows, no oracle; from `results/finetune/colab/run1/summary.csv`): paired MASE, fine-tuned / pretrained: 1.023 (95% interval 1.001 to 1.050); cov80 0.784 pretrained, 0.777 fine-tuned.
 
 ## Scope
 

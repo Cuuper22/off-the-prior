@@ -1,0 +1,45 @@
+{
+  "grid_runs": 192,
+  "trained_in_this_process": 192,
+  "resumed": false,
+  "wall_sec_this_process": 14745.5,
+  "steps": {
+    "5M": 500,
+    "28M": 500,
+    "123M": 300,
+    "209M": 300
+  },
+  "batch": {
+    "5M": 32,
+    "28M": 32,
+    "123M": 16,
+    "209M": 16
+  },
+  "lr_full": {
+    "5M": 5e-05,
+    "28M": 3e-05,
+    "123M": 2e-05,
+    "209M": 1e-05
+  },
+  "lr_lora": {
+    "5M": 0.001,
+    "28M": 0.001,
+    "123M": 0.0005,
+    "209M": 0.0005
+  },
+  "rank": 8,
+  "alpha": 16.0,
+  "pool_batches": 500,
+  "contexts": [
+    256,
+    512,
+    1024,
+    2048
+  ],
+  "horizons": [
+    32,
+    128,
+    512
+  ],
+  "keep_checkpoints": false
+}

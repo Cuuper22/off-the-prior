@@ -48,6 +48,8 @@ Copied from `results/finetune/local/summary.csv` (set `regression/in_prior`, 500
 
 Paired MASE, fine-tuned / pretrained: 0.999.
 
+Real-data windows (`regression/real`, 40 windows, no oracle; from `results/finetune/local/summary.csv`): paired MASE, fine-tuned / pretrained: 1.004 (95% interval 0.992 to 1.018); cov80 0.784 pretrained, 0.769 fine-tuned.
+
 ## Scope
 
 Evaluated on synthetic held-out samples at context 2048 and horizon 128 and on the regression series listed above. No other settings were evaluated.

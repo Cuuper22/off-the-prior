@@ -452,7 +452,7 @@ def _card_header(info: dict) -> list[str]:
             "- Series are simulated by the generators in `otp/generators/`; training seeds are disjoint from evaluation seeds.", ""]
 
 
-def card_local(info: dict, cost: dict, test: dict | None, reg: dict | None, src: str) -> str:
+def card_local(info: dict, cost: dict, test: dict | None, reg: dict | None, src: str, real: dict | None = None) -> str:
     L = _card_header(info)
     L += ["## Training cost", "", f"Copied from `{src}/costs.csv`.", "",
           f"- Trainable parameters: {int(cost['trainable_params']):,} (base model: {int(cost['base_params']):,})",
@@ -461,6 +461,9 @@ def card_local(info: dict, cost: dict, test: dict | None, reg: dict | None, src:
           f"- Training wall time: {_f(cost['wall_sec'], 1)} s; peak resident memory: {int(cost['peak_rss_bytes']):,} bytes; final loss: {_f(cost['final_loss'], 4)}"]
     if cost.get("peak_cuda_bytes") == cost.get("peak_cuda_bytes") and cost.get("peak_cuda_bytes") is not None:
         L += [f"- Peak GPU memory allocated: {int(cost['peak_cuda_bytes']):,} bytes on {cost.get('gpu')}"]
+    ta = cost.get("trained_as")
+    if isinstance(ta, str) and ta:
+        L += [f"- This is the same trained model as run `{ta}` (knob protocol: one model per size, method and replay share is tested on every held-out family); the cost figures above are that model's."]
     L += [""]
     if test is not None:
         L += ["## Held-out evaluation", "", f"Copied from `{src}/summary.csv` (set `{test['eval_set']}`, {int(test['n'])} samples, "
@@ -478,6 +481,10 @@ def card_local(info: dict, cost: dict, test: dict | None, reg: dict | None, src:
               f"| sCRPS ratio to oracle | {_f(reg['pre_scrps_ratio'])} | {_f(reg['ft_scrps_ratio'])} |",
               f"| cov80 | {_f(reg['pre_cov80'])} | {_f(reg['ft_cov80'])} |", "",
               f"Paired MASE, fine-tuned / pretrained: {_f(reg['paired_mase_ft_over_pre'])}.", ""]
+    if real is not None:
+        L += [f"Real-data windows (`{real['eval_set']}`, {int(real['n'])} windows, no oracle; from `{src}/summary.csv`): paired MASE, "
+              f"fine-tuned / pretrained: {_f(real['paired_mase_ft_over_pre'])} (95% interval {_f(real['paired_mase_lo95'])} to "
+              f"{_f(real['paired_mase_hi95'])}); cov80 {_f(real['pre_cov80'])} pretrained, {_f(real['ft_cov80'])} fine-tuned.", ""]
     L += ["## Scope", "", "Evaluated on synthetic held-out samples at context 2048 and horizon 128 and on the regression "
           "series listed above. No other settings were evaluated.", ""]
     return "\n".join(L)
@@ -528,8 +535,9 @@ def write_cards_local(out_dir: str, summary, costs, src: str, by_size: bool = Fa
         s = summary[summary.run_id == rid]
         test = s[s.role == "test"]
         reg = s[s.eval_set == "regression/in_prior"]
+        real = s[s.eval_set == "regression/real"]
         txt = card_local(info, cs.loc[rid].to_dict(), None if test.empty else test.iloc[0].to_dict(),
-                         None if reg.empty else reg.iloc[0].to_dict(), src)
+                         None if reg.empty else reg.iloc[0].to_dict(), src, None if real.empty else real.iloc[0].to_dict())
         d = os.path.join(out_dir, info["size"]) if by_size else out_dir
         os.makedirs(d, exist_ok=True)
         with open(os.path.join(d, rid + ".md"), "w") as f:

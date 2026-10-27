@@ -1,0 +1,11 @@
+{
+  "run_id": "run1",
+  "gpu": "NVIDIA A100-SXM4-40GB",
+  "device": "cuda",
+  "job_script": "scripts/colab/job_finetune.sh",
+  "driver": "scripts/colab/run_job.sh (job name ft-full)",
+  "code_commit_on_colab": "1a32a4c",
+  "note": "the code bundle was a copy of branch task/t6_finetune at 966a3bc without results/, paper/, docs/, tests/ and bench/data (commit on branch tmp/t6_slim_bundle), because the upload endpoint refused the full bundle",
+  "wall_sec_job": 14745.5,
+  "runs": 192
+}
