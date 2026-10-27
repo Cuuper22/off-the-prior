@@ -37,7 +37,7 @@ USECOLS = ["layer", "neuron", "sign", "dead", "label", "r2_cv", "r2_heldout", "r
 # ---------------------------------------------------------------------------------------------
 # runs
 # ---------------------------------------------------------------------------------------------
-def build_manifest(atlas: str, fb_dirs: list[str]) -> pd.DataFrame:
+def build_manifest(atlas: str, fb_dirs: list[str], flat_dirs: list[str] = (), plan: str = "") -> pd.DataFrame:
     rows = []
     for S in SIZES:
         for ctxname, role in (("main", "atlas_main"), ("short", "context"), ("long", "context"), ("xlong", "context")):
@@ -57,6 +57,14 @@ def build_manifest(atlas: str, fb_dirs: list[str]) -> pd.DataFrame:
             if os.path.exists(p):
                 rows.append({"tag": x.tag, "size": x.size, "path": p, "corpus": x.corpus_file, "subsample": int(x.subsample), "seed": int(x.seed),
                              "role": "full_main" if x.role == "reference" else "subsample", "n_series": int(x.n_series)})
+    if plan and os.path.exists(plan):                     # runs of this follow-up: flat folders nn2c_<tag>/scores_partial.csv
+        pl = pd.read_csv(plan)
+        for d in flat_dirs:
+            for x in pl.itertuples(index=False):
+                p = os.path.join(d, f"nn2c_{x.tag}", "scores_partial.csv")
+                if os.path.exists(p):
+                    rows.append({"tag": x.tag, "size": x.size, "path": p, "corpus": x.corpus_file, "subsample": int(x.subsample), "seed": int(x.seed),
+                                 "role": "full_main" if x.role == "reference" else "subsample", "n_series": int(x.n_series)})
     m = pd.DataFrame(rows).drop_duplicates("tag", keep="last")
     return m
 
@@ -137,6 +145,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--atlas", required=True)
     ap.add_argument("--fb", action="append", default=[])
+    ap.add_argument("--flat", action="append", default=[], help="folder holding nn2c_<tag>/scores_partial.csv runs listed in --plan")
+    ap.add_argument("--plan", default="results/neurons/followup/plan_c.csv")
     ap.add_argument("--corpus-dir", default="results/neurons/corpus")
     ap.add_argument("--out", default="results/neurons/followup")
     ap.add_argument("--n-fit", type=int, default=500_000)
@@ -144,7 +154,7 @@ def main():
     a = ap.parse_args()
     t0 = time.time()
     os.makedirs(a.out, exist_ok=True)
-    man = build_manifest(a.atlas, a.fb)
+    man = build_manifest(a.atlas, a.fb, a.flat, a.plan)
     man = man[man["size"].isin(a.sizes)].reset_index(drop=True)
     print(man[["tag", "size", "role", "n_series", "subsample", "seed"]].to_string(), flush=True)
 
@@ -166,6 +176,8 @@ def main():
     cen = vocab[("shape", K_MAIN)]
     ids_f = M.assign(Zshape, cen)
     names = M.name_clusters(Zshape, ids_f, K_MAIN)
+    for n_, cn in zip(names, M.classify(M.shape_norm(cen))):      # descriptive extra: the rule applied to the cluster mean
+        n_["centroid_name"] = str(cn)
     pd.DataFrame(names).to_csv(os.path.join(a.out, "motif_cluster_names.csv"), index=False, float_format="%.4g")
     pd.DataFrame(cen).to_csv(os.path.join(a.out, "motif_vocabulary_K16.csv"), index=False, float_format="%.4g", header=[f"t{i}" for i in range(M.PATCH)])
     cname = {n["cluster"]: n["name"] for n in names}

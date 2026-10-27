@@ -199,7 +199,7 @@ def section_c(motif: pd.DataFrame, names: pd.DataFrame, byname: pd.DataFrame) ->
           "`null` = the same share when exemplar cluster ids are permuted across poles (mean of 20 permutations); `one_job` = known-variable share of the same run "
           "(theta 0.7, floor 0.1).", "", "Cluster names (`motif_cluster_names.csv`):", ""]
     if len(names):
-        L += [md(names[[c for c in ["cluster", "name", "purity", "n"] if c in names]]), ""]
+        L += [md(names[[c for c in ["cluster", "name", "purity", "centroid_name", "n"] if c in names]]), ""]
     cols = ["tag", "role", "n_series", "n_live", "cohesive_top6", "null_top6_mean", "cohesive_mid6", "one_job_0.7", "both_known_and_motif", "motif_only", "known_only", "neither"]
     for s in SIZES:
         x = motif[motif["size"] == s]
