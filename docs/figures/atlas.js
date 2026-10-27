@@ -5,12 +5,12 @@
   var F = root.OTPFigures, C = root.OTPChart;
   function pcf(v) { return (v * 100).toFixed(Math.abs(v) < 0.1 ? 1 : 0) + "%"; }
   var CLASSES = [["one_job", "One job"], ["mixed", "Mixed"], ["unexplained", "Unexplained"]];
-  var CORPUS = { main: "main (1,024-step history)", short: "short histories", long: "long histories", xlong: "very long histories" };
+  var CORPUS_WORD = { main: "main corpus", short: "short histories", long: "long histories", xlong: "very long histories" };
   var ROLE = { labeled: "labeled poles", complement: "the neuron's other pole", control: "random poles (control)" };
 
   F.define("atlas", {
     title: "Inside the neurons",
-    label: "Charts of how many Timestral poles are explained by a single known variable, by threshold, depth, corpus, and the steering test",
+    label: "Charts of how many Timestral poles are explained by a single known variable, by threshold, depth, corpus, number of series, and the steering test",
     summary: "Every pole (one sign of one neuron) of every size, scored against variables known exactly for the generated series. Pick a view.",
     build: root.OTPSlot("neurons", function (ctx, d) {
       var bar = C.h("div", { class: "otp-controls" }), bar2 = C.h("div", { class: "otp-controls" }), plot = C.h("div"), note = C.h("p", { class: "otp-note", "aria-live": "polite" });
@@ -19,6 +19,12 @@
       ctx.el.insertBefore(bar2, plot);
       ctx.el.insertBefore(bar, bar2);
       var cur = rowsOf(d.curves), lay = rowsOf(d.layers), cor = rowsOf(d.corpora), ste = rowsOf(d.steering);
+      var ctl = d.controls ? rowsOf(d.controls) : [], info = d.corpus_info || {};
+      function num(n) { return n.toLocaleString("en-US"); }
+      var CORPUS = {};
+      Object.keys(CORPUS_WORD).forEach(function (c) {
+        CORPUS[c] = CORPUS_WORD[c] + (info[c] ? " (" + num(info[c].T) + " steps, " + num(info[c].n_series) + " series)" : "");
+      });
       var st = { view: "theta", cls: "one_job", floor: 0.1 };
       function sizeLines(rows, xf, yf, extra) {
         return C.SIZES.map(function (s) {
@@ -55,7 +61,33 @@
             });
           });
           C.dots(plot, { rows: rows2, xMin: 0, xFmt: pcf, vFmt: pcf, xLabel: "share of live poles with one job (θ = " + d.theta + ", floor = " + d.floor + ")", label: "One-job share on four corpora, per size" });
-          note.textContent = "Same models, same generator recipe, different history lengths. The share is a property of the pair (neurons, corpus), not of the neurons alone: far fewer of a pole's labels survive a change of corpus.";
+          note.textContent = "Same models, same generator recipe, but the corpora differ in history length and in how many series they hold. The share is a property of the pair (neurons, corpus), not of the neurons alone: far fewer of a pole's labels survive a change of corpus. The next view separates the number of series from the rest.";
+        } else if (st.view === "series") {
+          var rows4 = [], seen = {};
+          function addRow(group, label, r, tipWhat) {
+            var many = r.runs > 1;
+            rows4.push({ group: group, label: label, v: r.one_job, lo: many ? r.lo : null, hi: many ? r.hi : null, color: C.SIZE_COLORS[r.size],
+                         tip: label + ": " + pcf(r.one_job) + " one job" + (many ? " (lowest " + pcf(r.lo) + ", highest " + pcf(r.hi) + " over " + r.runs + " runs)" : "") + (tipWhat ? "; " + tipWhat : "") });
+          }
+          var counts = [];
+          ctl.forEach(function (r) { if (counts.indexOf(r.n_series) < 0) counts.push(r.n_series); });
+          counts.sort(function (a, b) { return b - a; });
+          counts.forEach(function (n) {
+            var grp = num(n) + " series";
+            ["5M", "28M"].forEach(function (s) {
+              ctl.filter(function (r) { return r.n_series === n && r.size === s && r.role === "reference"; }).forEach(function (r) { addRow(grp, s + " full", r, "main corpus, full library: the atlas value"); });
+              ctl.filter(function (r) { return r.n_series === n && r.size === s && r.role === "series_count"; }).forEach(function (r) { addRow(grp, s + " cut down", r, "main corpus cut down to " + num(n) + " series, full library"); });
+            });
+            ctl.filter(function (r) { return r.n_series === n && r.role === "common_library"; }).forEach(function (r) {
+              addRow(grp, r.size + (r.corpus === "main" ? " common" : " " + r.corpus), r, CORPUS_WORD[r.corpus] + ", scored with the library shared by all four corpora");
+            });
+            ctl.filter(function (r) { return r.n_series === n && r.role === "library_size"; }).forEach(function (r) {
+              addRow(grp, r.size + " " + r.library.replace("random", "") + " random", r, "main corpus, a random library of " + r.library.replace("random", "") + " variables");
+            });
+          });
+          C.dots(plot, { rows: rows4, xMin: 0, xFmt: pcf, vFmt: pcf, xLabel: "share of live poles with one job (θ = " + d.theta + ", floor = " + d.floor + ")",
+                         label: "One-job share when the main corpus is cut down to fewer series, with the variable library changed, and on the other corpora" });
+          note.textContent = "Rows are grouped by how many series the scores were estimated from. A line shows the lowest and highest of several runs. Cutting the main corpus down to fewer series raises the one-job share at both sizes, so the full-corpus value is the lowest across series counts. The other corpora do not simply match the cut-down main corpus at the same series count (some sit higher, one sits lower), so history length and recipe matter too. Changing the library on the full corpus moves the share by much less. Only the 5M and 28M models were rerun.";
         } else {
           var rows3 = [];
           C.SIZES.forEach(function (s) {
@@ -69,7 +101,7 @@
           note.textContent = "Each pole was scaled up or down during the forecast and compared with a prediction written down beforehand. The moves were smaller than the pre-set size thresholds, so this test could not detect a match; a hit rate of zero is not evidence against the labels.";
         }
       }
-      C.segmented(bar, [["theta", "By threshold"], ["depth", "By depth"], ["corpus", "By corpus"], ["steer", "Steering test"]], st.view, function (v) { st.view = v; show(); }, "view");
+      C.segmented(bar, [["theta", "By threshold"], ["depth", "By depth"], ["corpus", "By corpus"]].concat(ctl.length ? [["series", "By series count"]] : [], [["steer", "Steering test"]]), st.view, function (v) { st.view = v; show(); }, "view");
       show();
       var b = C.h("p", { class: "go-deeper" }, [C.h("a", { href: "#atlas", "data-open": "atlas", text: "Open the neuron browser" })]);
       ctx.el.appendChild(b);

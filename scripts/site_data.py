@@ -340,6 +340,35 @@ def neurons():
     out["sources"].append(R.name("context_comparison.csv"))
     out["corpora"] = {"columns": ["size", "corpus", "one_job", "unexplained", "E_mean", "same_label_as_main"],
                       "rows": [[r.size, r.context, r4(r.one_job), r4(r.unexplained), r4(r.E_mean), r4(r.same_label_as_main)] for r in cc.itertuples(index=False)]}
+    info = {}
+    for cname in ("main", "short", "long", "xlong"):
+        mf = R.path("corpus", f"{cname}_manifest.json")
+        if os.path.exists(mf):
+            m = json.load(open(mf))
+            info[cname] = {"T": int(m["T"]), "n_series": int(m["n_series"])}
+            out["sources"].append(R.name("corpus", f"{cname}_manifest.json"))
+    out["corpus_info"] = info
+    fb = R.path("followup", "corpus_library_control.csv")
+    if os.path.exists(fb):
+        # follow-up B: the main corpus subsampled to fewer series, a library common to all corpora, random libraries
+        b = pd.read_csv(fb)
+        b = b[np.isclose(b.theta, theta) & np.isclose(b.floor, floor)]
+        g = b.groupby(["size", "role", "corpus", "n_series", "library"]).agg(
+            one_job=("one_job", "mean"), lo=("one_job", "min"), hi=("one_job", "max"), E=("E_mean", "mean"),
+            agree=("same_label_as_reference", "mean"), runs=("tag", "count")).reset_index()
+        out["controls"] = {"columns": ["size", "role", "corpus", "n_series", "library", "runs", "one_job", "lo", "hi", "E_mean", "same_label_as_reference"],
+                           "rows": [[r.size, r.role, r.corpus, int(r.n_series), r.library, int(r.runs), r4(r.one_job), r4(r.lo), r4(r.hi), r4(r.E), r4(r.agree)]
+                                    for r in g.itertuples(index=False)]}
+        out["sources"].append(R.name("followup", "corpus_library_control.csv"))
+        sub = sorted(g[(g.role == "series_count") & (g["size"] == "5M")].n_series.unique(), reverse=True)
+        n_main = int(g[g.role == "reference"].n_series.max())
+        ks = sorted(int(x.replace("random", "")) for x in g[g.role == "library_size"].library.unique())
+        src_fb = R.name("followup", "corpus_library_control.csv")
+        num("nnb_n_main", n_main, f"{n_main:,}", src_fb, "series in the main corpus")
+        num("nnb_n_mid", int(sub[0]), f"{int(sub[0]):,}", src_fb, "largest subsample of the main corpus")
+        num("nnb_n_small", int(sub[-1]), f"{int(sub[-1]):,}", src_fb, "smallest subsample of the main corpus")
+        num("nnb_k_lo", ks[0], str(ks[0]), src_fb, "smallest random library size")
+        num("nnb_k_hi", ks[-1], str(ks[-1]), src_fb, "largest random library size")
     st = pd.read_csv(R.path("steering_summary.csv"))
     out["sources"].append(R.name("steering_summary.csv"))
     st = st[st.group == "all"]
