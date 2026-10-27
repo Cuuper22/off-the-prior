@@ -1,0 +1,173 @@
+{
+  "model": "timestral-5M",
+  "set": "diag",
+  "split": "all",
+  "overall": {
+    "n": 372,
+    "mase_rel_snaive": 0.6555967730509432,
+    "scrps_rel_snaive": 0.5149528085467243,
+    "mase_rel_oracle": 2.4174695983720045,
+    "cov80": 0.705120127688172
+  },
+  "by_family": {
+    "chaos": {
+      "n": 144,
+      "mase_rel_snaive": 0.37195836604963933,
+      "scrps_rel_snaive": 0.27867661690604456,
+      "mase_rel_oracle": 6.105878523787794,
+      "cov80": 0.7159288194444444
+    },
+    "in_prior": {
+      "n": 36,
+      "mase_rel_snaive": 0.6304144130672585,
+      "scrps_rel_snaive": 0.6071092520620041,
+      "mase_rel_oracle": 1.0794472177663033,
+      "cov80": 0.8012152777777778
+    },
+    "regime": {
+      "n": 120,
+      "mase_rel_snaive": 1.074056072334511,
+      "scrps_rel_snaive": 0.8918529616275714,
+      "mase_rel_oracle": 1.6874058202860915,
+      "cov80": 0.6408854166666667
+    },
+    "tails": {
+      "n": 72,
+      "mase_rel_snaive": 0.912242251743071,
+      "scrps_rel_snaive": 0.6483484513391757,
+      "mase_rel_oracle": 1.0459021519969247,
+      "cov80": 0.7425130208333334
+    }
+  },
+  "by_failure_type": {
+    "bursty": {
+      "n": 12,
+      "mase_rel_snaive": 0.9624498480953981,
+      "scrps_rel_snaive": 0.33505718302646964,
+      "mase_rel_oracle": 1.0169974991446928,
+      "cov80": 0.7506510416666666
+    },
+    "chaos_short_reach": {
+      "n": 24,
+      "mase_rel_snaive": 0.8617994297353718,
+      "scrps_rel_snaive": 0.6807871684569703,
+      "mase_rel_oracle": 5.496141941023702,
+      "cov80": 0.7679036458333334
+    },
+    "control_in_prior": {
+      "n": 60,
+      "mase_rel_snaive": 0.7196486767387629,
+      "scrps_rel_snaive": 0.6498437412765065,
+      "mase_rel_oracle": 1.0373343105699904,
+      "cov80": 0.783203125
+    },
+    "control_old_switch": {
+      "n": 12,
+      "mase_rel_snaive": 0.7541512983399477,
+      "scrps_rel_snaive": 0.662197369463551,
+      "mase_rel_oracle": 1.0283863837888974,
+      "cov80": 0.845703125
+    },
+    "control_unknowable": {
+      "n": 12,
+      "mase_rel_snaive": 0.8106275191291313,
+      "scrps_rel_snaive": 0.8245576683966755,
+      "mase_rel_oracle": 0.9862428787500312,
+      "cov80": 0.5891927083333334
+    },
+    "control_unpredictable": {
+      "n": 12,
+      "mase_rel_snaive": 0.7714359451394432,
+      "scrps_rel_snaive": 0.2122152718773634,
+      "mase_rel_oracle": 1.0431240933351753,
+      "cov80": 0.7356770833333334
+    },
+    "coupled_oscillators": {
+      "n": 36,
+      "mase_rel_snaive": 0.29810820241339236,
+      "scrps_rel_snaive": 0.2884349319417794,
+      "mase_rel_oracle": 13.357983922348504,
+      "cov80": 0.8029513888888888
+    },
+    "delay_oscillator": {
+      "n": 36,
+      "mase_rel_snaive": 0.38797303241397685,
+      "scrps_rel_snaive": 0.39571333168912437,
+      "mase_rel_oracle": 11.334120450229982,
+      "cov80": 0.6141493055555556
+    },
+    "heavy_tail_walk": {
+      "n": 12,
+      "mase_rel_snaive": 1.059307133742316,
+      "scrps_rel_snaive": 0.7669853053616721,
+      "mase_rel_oracle": 1.0547424318215484,
+      "cov80": 0.8072916666666666
+    },
+    "long_memory": {
+      "n": 12,
+      "mase_rel_snaive": 0.6740744192137393,
+      "scrps_rel_snaive": 0.5406589187224254,
+      "mase_rel_oracle": 1.1779205203342924,
+      "cov80": 0.5911458333333334
+    },
+    "multifractal": {
+      "n": 12,
+      "mase_rel_snaive": 1.0885014050587516,
+      "scrps_rel_snaive": 1.032232123713689,
+      "mase_rel_oracle": 1.0848621800147091,
+      "cov80": 0.7936197916666666
+    },
+    "periodic_map": {
+      "n": 12,
+      "mase_rel_snaive": 0.04977009300185019,
+      "scrps_rel_snaive": 0.011131963498322801,
+      "mase_rel_oracle": 1.2899724771964882,
+      "cov80": 0.658203125
+    },
+    "recent_switch": {
+      "n": 84,
+      "mase_rel_snaive": 1.22761040282393,
+      "scrps_rel_snaive": 0.9744940710463431,
+      "mase_rel_oracle": 2.0655937741137618,
+      "cov80": 0.5968191964285714
+    },
+    "smooth_chaos": {
+      "n": 24,
+      "mase_rel_snaive": 0.39871486362853437,
+      "scrps_rel_snaive": 0.36709190291327926,
+      "mase_rel_oracle": 4.299651371744134,
+      "cov80": 0.705078125
+    },
+    "switching": {
+      "n": 12,
+      "mase_rel_snaive": 0.7953637654052385,
+      "scrps_rel_snaive": 0.6986661366371271,
+      "mase_rel_oracle": 1.1501138093604315,
+      "cov80": 0.7962239583333334
+    }
+  },
+  "provenance": {
+    "script": "bench/eval.py",
+    "git": "d9a1aaa",
+    "time_utc": "2026-10-27T00:11:59Z",
+    "host": "LAPTOP-TTI9OLBG",
+    "torch": "2.6.0+cu124",
+    "threads": 1,
+    "cuda": true,
+    "argv": [
+      "bench\\eval.py",
+      "--set",
+      "diag",
+      "--split",
+      "all",
+      "--model",
+      "timestral-5M",
+      "--data",
+      "..\\bench_out\\data",
+      "--workers",
+      "14",
+      "--out",
+      "..\\bench_out\\leaderboard"
+    ]
+  }
+}

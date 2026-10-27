@@ -1,0 +1,173 @@
+{
+  "model": "oracle",
+  "set": "diag",
+  "split": "all",
+  "overall": {
+    "n": 372,
+    "mase_rel_snaive": 0.2718126207155389,
+    "scrps_rel_snaive": 0.20937766433498026,
+    "mase_rel_oracle": 1.0,
+    "cov80": 0.7888308625336927
+  },
+  "by_family": {
+    "chaos": {
+      "n": 144,
+      "mase_rel_snaive": 0.061038422116864326,
+      "scrps_rel_snaive": 0.04548268946582816,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.7969842657342657
+    },
+    "in_prior": {
+      "n": 36,
+      "mase_rel_snaive": 0.584015969184462,
+      "scrps_rel_snaive": 0.5628132431436824,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.7782118055555556
+    },
+    "regime": {
+      "n": 120,
+      "mase_rel_snaive": 0.6365131964238514,
+      "scrps_rel_snaive": 0.4973149867613138,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.7846354166666667
+    },
+    "tails": {
+      "n": 72,
+      "mase_rel_snaive": 0.8722061141200838,
+      "scrps_rel_snaive": 0.6266191107291302,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.7849392361111112
+    }
+  },
+  "by_failure_type": {
+    "bursty": {
+      "n": 12,
+      "mase_rel_snaive": 0.9463640263666627,
+      "scrps_rel_snaive": 0.33060162644299523,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.8268229166666666
+    },
+    "chaos_short_reach": {
+      "n": 24,
+      "mase_rel_snaive": 0.15680079571868816,
+      "scrps_rel_snaive": 0.12856798922385837,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.7890625
+    },
+    "control_in_prior": {
+      "n": 60,
+      "mase_rel_snaive": 0.6937480708059613,
+      "scrps_rel_snaive": 0.6261576160444677,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.7748697916666667
+    },
+    "control_old_switch": {
+      "n": 12,
+      "mase_rel_snaive": 0.7333345814648169,
+      "scrps_rel_snaive": 0.636825958216426,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.7936197916666666
+    },
+    "control_unknowable": {
+      "n": 12,
+      "mase_rel_snaive": 0.8219349782849883,
+      "scrps_rel_snaive": 0.7969315599831636,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.7786458333333334
+    },
+    "control_unpredictable": {
+      "n": 12,
+      "mase_rel_snaive": 0.7395437897258561,
+      "scrps_rel_snaive": 0.20309176474573692,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.78515625
+    },
+    "coupled_oscillators": {
+      "n": 36,
+      "mase_rel_snaive": 0.02231685590777241,
+      "scrps_rel_snaive": 0.02120694956554471,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.7888454861111112
+    },
+    "delay_oscillator": {
+      "n": 36,
+      "mase_rel_snaive": 0.03423053726291611,
+      "scrps_rel_snaive": 0.0346043152966051,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.8031684027777778
+    },
+    "heavy_tail_walk": {
+      "n": 12,
+      "mase_rel_snaive": 1.004327788266643,
+      "scrps_rel_snaive": 0.7828546784616254,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.8196614583333334
+    },
+    "long_memory": {
+      "n": 12,
+      "mase_rel_snaive": 0.5722579813979621,
+      "scrps_rel_snaive": 0.4611945736028754,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.6868489583333334
+    },
+    "multifractal": {
+      "n": 12,
+      "mase_rel_snaive": 1.003354550569726,
+      "scrps_rel_snaive": 0.9393470521974917,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.8365885416666666
+    },
+    "periodic_map": {
+      "n": 12,
+      "mase_rel_snaive": 0.038582290616010734,
+      "scrps_rel_snaive": 0.008227786991054324,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.8001302083333334
+    },
+    "recent_switch": {
+      "n": 84,
+      "mase_rel_snaive": 0.5943135664952484,
+      "scrps_rel_snaive": 0.43645215722310315,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.7791108630952381
+    },
+    "smooth_chaos": {
+      "n": 24,
+      "mase_rel_snaive": 0.09416075495158766,
+      "scrps_rel_snaive": 0.0870545180398531,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.8128396739130435
+    },
+    "switching": {
+      "n": 12,
+      "mase_rel_snaive": 0.6915522263379599,
+      "scrps_rel_snaive": 0.604389868992736,
+      "mase_rel_oracle": 1.0,
+      "cov80": 0.8203125
+    }
+  },
+  "provenance": {
+    "script": "bench/eval.py",
+    "git": "d9a1aaa",
+    "time_utc": "2026-10-27T00:09:58Z",
+    "host": "LAPTOP-TTI9OLBG",
+    "torch": "2.6.0+cu124",
+    "threads": 1,
+    "cuda": true,
+    "argv": [
+      "bench\\eval.py",
+      "--set",
+      "diag",
+      "--split",
+      "all",
+      "--model",
+      "oracle",
+      "--data",
+      "..\\bench_out\\data",
+      "--workers",
+      "14",
+      "--out",
+      "..\\bench_out\\leaderboard"
+    ]
+  }
+}

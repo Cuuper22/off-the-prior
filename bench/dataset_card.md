@@ -21,13 +21,16 @@ heavy tails, long memory, bursts, learned mixtures of these, and in-prior contro
 **oracle's 21 quantiles**: a Monte Carlo continuation of the true simulator from its true state, so models can be
 compared with the best achievable forecast, not only with each other.
 
-- **diag**: (not built yet), each tagged with why it is hard.
-- **lb**: (not built yet), all simulator configs, several context lengths and horizons.
+- **diag**: 372 series (372 public, 0 held-out), each tagged with why it is hard.
+- **lb**: 3776 series (1888 public, 1888 held-out), all simulator configs, several context lengths and horizons.
 
 Files are NumPy `.npz` archives (load with `numpy.load`; the Hugging Face `datasets` loader is not used).
 Each `.npz` file holds `series_id`, `context` (N, T), `future` (N, H), `oracle_q` (N, H, 21), `period` (N,) and a
-JSON `meta` string per series (generator, parameters, tags, reason). Files are rebuilt bit-for-bit (array contents)
-by `bench/build.py` from the config lists in `bench/configs/`; `*_SHA256SUMS` lists content hashes.
+JSON `meta` string per series (generator, parameters, tags, reason). `bench/build.py` rebuilds the files from the
+config lists in `configs/`; `*_SHA256SUMS` lists content hashes of the published files. The published files were
+built on Windows 11, Python 3.12, numpy 2.4.6, scipy 1.18.0; a rebuild on Linux, Python 3.13, numpy 2.5.3, scipy 1.18.1 matched array-for-array for 25 of 31 diagnostic
+configs, and in 6 (kuramoto/K1, kuramoto/K1.5, mackey_glass/tau17, mackey_glass/tau20, mackey_glass/tau30, tails/fbm/H0.8) platform floating-point differences change the simulated paths
+(`data/cross_platform_diag.json`). Use these files, not a rebuild, for reported scores.
 
 Evaluation: `python bench/eval.py --set diag --predictions <dir>`; see the repository README.
 

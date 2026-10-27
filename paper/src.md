@@ -3,7 +3,24 @@ title: "Off the Prior: Mapping Where a Synthetic-Prior Time-Series Foundation Mo
 author: "Yousef Anas (Cúper)"
 date: "October 2026"
 abstract: |
-  RESULTS-PENDING: the abstract is written last, from the result files.
+  Timestral (Mistral, October 2026; 5M to 209M parameters) is a time-series foundation model
+  pretrained mostly on synthetic trend + season + noise series. We map where its forecasts fall
+  behind the best achievable forecast, using simulators whose true state is known: a Monte Carlo
+  continuation from that state serves as an oracle, so a large error counts as a failure only when
+  the oracle does better. On series like the pretraining data, all four sizes stay at
+  {{num:inprior_short_min}}–{{num:inprior_short_max}}× the oracle's MASE up to horizon 128; heavy tails, long
+  memory, bursts and multifractal cascades stay at {{num:tails_min}}–{{num:tails_max}}×. The gaps are on
+  smooth, nearly deterministic dynamics (Mackey-Glass at τ = 30: {{num:chaos_mg30_5M}}× at 5M,
+  {{num:chaos_mg30_209M}}× at 209M; for Lorenz the gap is confined to the first Lyapunov times) and on
+  recent regime switches ({{num:reg_mj4_16_5M}}× at 5M and {{num:reg_mj4_16_209M}}× at 209M sixteen steps after a
+  level jump). Linear readouts of the forecast tokens recover the new level after a jump with
+  R² {{num:ro_mj16_ro_min}}–{{num:ro_mj16_ro_max}} while the forecast reaches {{num:ro_mj16_out_min}}–{{num:ro_mj16_out_max}}: the change
+  is represented but not used. A nearest-neighbour forecaster built from the context beats every size
+  on the delay and smooth-chaos systems, and a training-free switch that backtests the two on the
+  context lowers chaos errors to {{num:sv_chaos_5M}}× (5M) and {{num:sv_chaos_209M}}× (209M) of Timestral's on fresh
+  samples, with in-prior and regime series unchanged and tails at most {{num:sv_tails_max}}×. We release two benchmarks with oracle quantiles
+  ({{num:bench_n_diag}} tagged diagnostic series; {{num:bench_n_lb}} leaderboard series), on which Timestral-209M
+  is at {{num:bench_diag_209M_oracle}}× and {{num:bench_lb_209M_oracle}}× the oracle's MASE.
 ---
 
 <!--
@@ -239,7 +256,49 @@ ratios are excluded.
 
 # 5. Covariates and one-way attention
 
-RESULTS-PENDING.
+Timestral reads covariates as conditioning rows: the main series reads them, they never read the
+main series. Several main rows given together read each other both ways. We built six coupled
+systems with known equations (`otp/generators/coupled.py`): an exogenous driver whose past sets the
+main series after a lag (LaggedDriver), the same through a nonlinearity (NonlinearDriver), linear and
+predator-prey feedback loops, a hidden driver seen through a noisy proxy (HiddenDriver), and a
+known-future covariate that is a noisy copy of the main series shifted by one step (LeakyKnown). The
+main series is forecast four ways: alone, with the other channel as a past-only covariate, as a
+known-future covariate where that makes sense, and as a second main row ("joint"). The oracle is
+matched to the information each condition gives. Sizes 5M and 28M ran on the full grid (5 knob values,
+8 seeds, horizons 16 / 128 / 1,024); 123M and 209M on a reduced grid (3 knob values, 4 seeds, horizons
+16 / 128), so the oracle gains below differ slightly between the two pairs of sizes. Details and all
+tables: `results/covariates/README.md`.
+
+**Past covariates are used partly, and more with size.** When the driver's past determines the main
+series over the whole horizon, a forecaster that used it fully would cut the error several-fold. Each
+cell below gives Timestral's covariate gain (MASE alone / MASE with the past covariate) and the matched
+oracle's gain, at context 2,048 and horizon 16:
+
+{{table:cov_past}}
+
+At lag 32, 209M reaches a gain of {{num:cov_lag32_209M_gain}} out of {{num:cov_lag32_209M_ogain}} available.
+
+**Known-future covariates help only when the relation is immediate.** With the driver's future given,
+the 28M gain on LaggedDriver falls from {{num:cov_known_lag0_28M}} at lag 0 to {{num:cov_known_lag512_28M}} at lag 512, while the
+matched oracle's gain stays at {{num:cov_known_ogain_min}}–{{num:cov_known_ogain_max}} (horizon 16):
+
+{{table:cov_known_lag}}
+
+When the known covariate is the main series itself, one step late with small noise (LeakyKnown at
+noise ratio 0.05), Timestral's error is several times the oracle's that reads it (MASE over matched-oracle
+MASE):
+
+{{table:cov_leaky}}
+
+**One-way routing is not the bottleneck.** Giving the same channel as a second main row (two-way
+attention) instead of a past covariate (one-way) changes the error little: joint/past-covariate MASE is
+within 0.95–1.05 in {{num:cov_jp_share_within}}% of the {{num:cov_jp_n}} system × knob × size × horizon cells.
+Among the cells whose 95% interval lies below 1, two-way routing gains most on NonlinearDriver
+with the nonlinearity off (123M; `results/covariates/summary.csv`), the predator-prey loop
+({{num:cov_jp_FeedbackPredPrey_min}}, 95% interval {{num:cov_jp_FeedbackPredPrey_min_lo}}–{{num:cov_jp_FeedbackPredPrey_min_hi}}) and
+LaggedDriver ({{num:cov_jp_LaggedDriver_min}}, {{num:cov_jp_LaggedDriver_min_lo}}–{{num:cov_jp_LaggedDriver_min_hi}}); on the linear feedback loop
+the ratio stays within {{num:cov_jp_FeedbackLinear_min}}–{{num:cov_jp_FeedbackLinear_max}}. The gap to the oracle comes from how much
+of the covariate's information is used at all, not from which way it is routed.
 
 # 6. Searching for failures
 
@@ -323,7 +382,48 @@ continuation of the context more than the oracle's forecast does
 
 # 8. Benchmarks
 
-RESULTS-PENDING.
+The failure map is released as two benchmark sets built from the same simulators (code and data in
+`bench/`). Each series comes with the oracle's 21 quantiles, so a model is scored against the best
+achievable forecast as well as against seasonal naive, the GIFT-Eval convention.
+
+**OffPrior-Diag** has {{num:bench_n_diag}} series: {{num:bench_nconf_diag}} configs with 12 seeds each, at
+context 2,048 and horizon 128. Every config was picked to cover one failure type from Sections 4 and 7,
+or to serve as a control (inside the prior, an old switch, a switch inside the horizon that nobody can
+see coming, a map nobody can forecast); each series carries its failure type and a one-line reason.
+**OffPrior-LB** has {{num:bench_n_lb}} series: every config of the chaos, regime, tails and in-prior
+grids, 40 fixed random mixture genomes and four more in-prior periods ({{num:bench_nconf_lb}} configs), 16 seeds per config spread
+over contexts 512 / 2,048 / 8,192 and horizons 16 / 128 / 1,024, split into public and held-out halves by
+seed parity. The seeds and code are public, so the held-out half is a convenience, not a secret test set.
+`bench/eval.py` scores one model in one command; the summary is the geometric mean over series of MASE
+and sCRPS divided by seasonal naive's, and of MASE divided by the oracle's.
+
+{{table:bench_diag}}
+
+{{table:bench_lb}}
+
+On OffPrior-Diag, Timestral's MASE is {{num:bench_diag_209M_oracle}}× the oracle's at 209M and
+{{num:bench_diag_5M_oracle}}× at 5M, against {{num:bench_diag_ets_oracle}}× for ETS,
+{{num:bench_diag_arima_oracle}}× for ARIMA and {{num:bench_diag_seasonal_naive_oracle}}× for seasonal naive.
+On OffPrior-LB the same ratios are {{num:bench_lb_209M_oracle}}× and {{num:bench_lb_5M_oracle}}× for Timestral,
+and {{num:bench_lb_ets_oracle}}×, {{num:bench_lb_arima_oracle}}× and
+{{num:bench_lb_seasonal_naive_oracle}}× for the classical models. By family on OffPrior-LB, 209M is at
+{{num:bench_lb_fam_chaos}}× the oracle on chaos, {{num:bench_lb_fam_mixture}}× on the mixture genomes and
+{{num:bench_lb_fam_tails}}× on tails.
+
+{{table:bench_diag_ft}}
+
+By failure type, the diagnostic set reproduces the map at 209M: coupled oscillators
+({{num:bench_ft_coupled_oscillators}}×), delay oscillators ({{num:bench_ft_delay_oscillator}}×), chaos within the
+first Lyapunov times ({{num:bench_ft_chaos_short_reach}}×), smooth chaos ({{num:bench_ft_smooth_chaos}}×) and
+recent switches ({{num:bench_ft_recent_switch}}×), while the controls and the heavy-tailed, bursty and
+multifractal types stay at {{num:bench_ft_ctrl_min}}–{{num:bench_ft_ctrl_max}}×.
+
+The published files were built on a Windows laptop. A rebuild on Linux with newer NumPy matched them
+array-for-array for {{num:bench_xp_same}} of {{num:bench_xp_n}} diagnostic configs; in the others
+(Mackey-Glass, Kuramoto near synchronization, and one fractional Brownian motion setting) platform
+floating-point differences change the simulated paths, and the chaotic ones diverge. Scores should
+therefore be reported on the published files (`bench/data/cross_platform_diag.json` has the per-config
+comparison).
 
 # 9. Fixing it
 
