@@ -30,6 +30,10 @@ from otp.neurons import followup as F  # noqa: E402
 from otp.neurons import steer as St  # noqa: E402
 
 SCALES = St.SCALES
+COLUMNS = ["task_id", "size", "family", "role", "variable", "kind", "block_name", "block", "site", "gid", "pool", "label", "sign", "k", "rep",
+           "test_set", "n_series", "n_poles", "mean_r2_cv", "readout_r2_heldout", "quantity", "predicted", "direction", "rho", "effect_size",
+           "ci_lo", "ci_hi", "monotone", "big", "sig", "match", "e0", "e1", "e2", "e3", "gain", "em2", "em1", "em05",
+           "E2_level", "E2_slope", "E2_spread", "E2_amp", "E2_phase", "D_level", "D_slope", "D_spread", "D_amp", "D_phase"]
 
 
 def zero_effs(effs_like: dict) -> dict:
@@ -222,6 +226,7 @@ def main():
     ap.add_argument("--only", default="all", choices=["all", "dir", "group"])
     ap.add_argument("--n-random-dir", type=int, default=F.N_RANDOM_DIR)
     ap.add_argument("--n-random-group", type=int, default=F.N_RANDOM_GROUP)
+    ap.add_argument("--filter", default="", help="run only tasks whose id contains this text (tests)")
     ap.add_argument("--max-tasks", type=int, default=0, help="stop after n tasks (tests)")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
@@ -234,6 +239,8 @@ def main():
         print("resume: tasks done", len(done), flush=True)
     fits = R.readouts(a.out)
     tasks = [(tid, fn) for tid, fn in R.tasks(fits) if tid not in done]
+    if a.filter:
+        tasks = [t for t in tasks if a.filter in t[0]]
     if a.max_tasks:
         tasks = tasks[:a.max_tasks]
     print(f"{a.size}: {len(tasks)} tasks to run (blocks {R.blocks})", flush=True)
@@ -242,6 +249,9 @@ def main():
     def flush():
         if buf:
             df = pd.concat([pd.DataFrame(b) for b in buf], ignore_index=True)
+            extra = set(df.columns) - set(COLUMNS)
+            assert not extra, f"columns missing from COLUMNS: {extra}"
+            df = df.reindex(columns=COLUMNS)
             df.to_csv(part, mode="a", header=not os.path.exists(part), index=False, float_format="%.6g")
             buf.clear()
 
