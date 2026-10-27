@@ -9,7 +9,8 @@
    "body": "Mistral's family of open forecasting models, released October 15, 2026, in four sizes: 5M, 28M, 123M and 209M parameters (the M is millions). Give it the history of a number and it returns 21 guesses per future step, from very low to very high.",
    "aliases": [
     "Timestral"
-   ]
+   ],
+   "visual": "timestral"
   },
   {
    "id": "forecast",
@@ -19,7 +20,8 @@
    "aliases": [
     "forecasts",
     "forecasting"
-   ]
+   ],
+   "visual": "forecast"
   },
   {
    "id": "quantiles",
@@ -29,7 +31,8 @@
    "aliases": [
     "quantile",
     "80% band"
-   ]
+   ],
+   "visual": "quantiles"
   },
   {
    "id": "prior",
@@ -38,7 +41,8 @@
    "body": "Everything a model assumes before it sees your data. Timestral learned its prior mostly from made-up series (trend + season + noise), so 'off the prior' means series that don't look like that.",
    "aliases": [
     "the prior"
-   ]
+   ],
+   "visual": "prior"
   },
   {
    "id": "synthetic",
@@ -48,7 +52,8 @@
    "aliases": [
     "synthetic series",
     "made-up series"
-   ]
+   ],
+   "visual": "synthetic"
   },
   {
    "id": "context",
@@ -58,7 +63,8 @@
    "aliases": [
     "context",
     "history length"
-   ]
+   ],
+   "visual": "context"
   },
   {
    "id": "horizon",
@@ -67,7 +73,8 @@
    "body": "How many steps ahead the forecast goes. Here: 16, 128 or 1,024.",
    "aliases": [
     "horizons"
-   ]
+   ],
+   "visual": "horizon"
   },
   {
    "id": "patch",
@@ -76,7 +83,8 @@
    "body": "Timestral chops the history into pieces of 32 steps and treats each piece the way a language model treats a word.",
    "aliases": [
     "patches"
-   ]
+   ],
+   "visual": "patch"
   },
   {
    "id": "oracle",
@@ -86,7 +94,8 @@
    "aliases": [
     "referee",
     "oracle"
-   ]
+   ],
+   "visual": "oracle"
   },
   {
    "id": "mase",
@@ -95,7 +104,8 @@
    "body": "Mean absolute scaled error: the average miss of the middle guess, divided by how badly 'tomorrow equals today' (or 'same as last season') does on the history. Below 1 beats that naive rule.",
    "aliases": [
     "MASE"
-   ]
+   ],
+   "visual": "mase"
   },
   {
    "id": "crps",
@@ -105,7 +115,8 @@
    "aliases": [
     "sCRPS",
     "CRPS"
-   ]
+   ],
+   "visual": "crps"
   },
   {
    "id": "ratio",
@@ -115,7 +126,8 @@
    "aliases": [
     "error ratio",
     "times the referee"
-   ]
+   ],
+   "visual": "ratio"
   },
   {
    "id": "geomean",
@@ -124,7 +136,8 @@
    "body": "Multiply n numbers and take the n-th root. The right average for ratios: 2x worse and 2x better average to 1, not 1.25.",
    "aliases": [
     "geometric mean"
-   ]
+   ],
+   "visual": "geomean"
   },
   {
    "id": "classical",
@@ -137,7 +150,8 @@
     "ETS",
     "ARIMA",
     "seasonal naive"
-   ]
+   ],
+   "visual": "classical"
   },
   {
    "id": "chaos",
@@ -146,7 +160,8 @@
    "body": "Fully deterministic rules whose tiny differences grow exponentially, so long-range prediction is impossible even with perfect equations. Short-range prediction is very possible, which is where the gap lives.",
    "aliases": [
     "chaotic"
-   ]
+   ],
+   "visual": "chaos"
   },
   {
    "id": "lyapunov",
@@ -155,7 +170,8 @@
    "body": "How long a chaotic system takes to blow a tiny error up by a factor of e (about 2.7). After ten of them, nobody can forecast it, referee included.",
    "aliases": [
     "Lyapunov times"
-   ]
+   ],
+   "visual": "lyapunov"
   },
   {
    "id": "mackey-glass",
@@ -164,7 +180,8 @@
    "body": "A delay equation first written for blood-cell production: today's change depends on the value some time τ ago. Gives smooth, almost-repeating wiggles.",
    "aliases": [
     "Mackey-Glass"
-   ]
+   ],
+   "visual": "mackey-glass"
   },
   {
    "id": "kuramoto",
@@ -173,7 +190,8 @@
    "body": "Many little clocks that nudge each other. Weak coupling: they drift independently. Strong coupling: they sync. In between is the hardest.",
    "aliases": [
     "Kuramoto"
-   ]
+   ],
+   "visual": "kuramoto"
   },
   {
    "id": "regime",
@@ -183,7 +201,8 @@
    "aliases": [
     "regime switches",
     "switch"
-   ]
+   ],
+   "visual": "regime"
   },
   {
    "id": "heavy-tails",
@@ -192,7 +211,8 @@
    "body": "Distributions where huge jumps are rare but not rare enough to ignore. Think market crashes, floods and earthquakes.",
    "aliases": [
     "heavy-tailed"
-   ]
+   ],
+   "visual": "heavy-tails"
   },
   {
    "id": "readout",
@@ -202,7 +222,8 @@
    "aliases": [
     "linear readout",
     "readout"
-   ]
+   ],
+   "visual": "readout"
   },
   {
    "id": "attention",
@@ -211,7 +232,8 @@
    "body": "The part of a transformer that lets each piece of the input look at the others and decide which ones matter.",
    "aliases": [
     "attention"
-   ]
+   ],
+   "visual": "attention"
   },
   {
    "id": "covariate",
@@ -222,7 +244,8 @@
     "covariates",
     "covariate",
     "helper series"
-   ]
+   ],
+   "visual": "covariate"
   },
   {
    "id": "analogues",
@@ -232,7 +255,8 @@
    "aliases": [
     "analogues",
     "nearest-neighbour"
-   ]
+   ],
+   "visual": "analogues"
   },
   {
    "id": "benchmark",
@@ -241,7 +265,8 @@
    "body": "A fixed set of test series plus a scoring rule, so different models can be compared fairly.",
    "aliases": [
     "benchmarks"
-   ]
+   ],
+   "visual": "benchmark"
   },
   {
    "id": "finetune",
@@ -252,7 +277,8 @@
     "fine-tuning",
     "fine-tune",
     "LoRA"
-   ]
+   ],
+   "visual": "finetune"
   },
   {
    "id": "search",
@@ -262,7 +288,8 @@
    "aliases": [
     "CMA-ES",
     "MAP-Elites"
-   ]
+   ],
+   "visual": "search"
   },
   {
    "id": "neuron",
@@ -273,7 +300,8 @@
     "neurons",
     "poles",
     "pole"
-   ]
+   ],
+   "visual": "neuron"
   },
   {
    "id": "parameters",
@@ -282,7 +310,8 @@
    "body": "The numbers a model learns. Timestral-209M has about 209 million.",
    "aliases": [
     "parameter"
-   ]
+   ],
+   "visual": "parameters"
   }
  ]
 }

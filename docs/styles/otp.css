@@ -92,3 +92,6 @@ ul.plain { margin: 6px 0 10px; padding-left: 20px; }
   .atlas-field { width: 100%; }
   .atlas-select { flex: 1; }
 }
+
+/* long file paths in the "results not in yet" box wrap on phones */
+.otp-pending code, .otp-note code { overflow-wrap: anywhere; word-break: break-word; }

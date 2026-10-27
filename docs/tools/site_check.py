@@ -1,7 +1,7 @@
 """Headless-browser check of the site (Playwright + Chromium), at desktop and phone width.
 
     cd docs && python3 -m http.server 8765 &
-    python scripts/site_check.py --url http://localhost:8765/ --shots <folder>
+    python docs/tools/site_check.py --url http://localhost:8765/ --shots <folder>
 
 For each width it opens the page, scrolls the whole story so every figure mounts, opens the Beat it and Atlas windows
 (clicks into the neuron browser), and reports: console errors and failed requests, horizontal overflow of the page and of
@@ -99,6 +99,9 @@ def run(url, shots, only):
             pg.keyboard.press("Enter")
             pg.wait_for_timeout(500)
             r["explainer_open"] = pg.locator(".gsx-pop.is-open, .gsx-pop[aria-hidden='false']").count() > 0 or pg.locator(".gsx-pop").count() > 0
+            r["explainer_visual"] = pg.locator(".gsx-pop .gsx-vis svg").count()
+            if r["explainer_visual"] == 0:
+                problems.append(f"{name}: explainer opened without its mini-diagram")
             if shots:
                 pg.screenshot(path=os.path.join(shots, f"{name}_explainer.png"))
             pg.keyboard.press("Escape")
@@ -135,6 +138,42 @@ def run(url, shots, only):
                 problems.append(f"{name}: console errors: {errs[:5]}")
             if failed:
                 problems.append(f"{name}: failed requests: {failed[:5]}")
+        # reduced motion: no running animations anywhere, explainer diagram is a still frame
+        ctx = browser.new_context(viewport={"width": 390, "height": 844}, reduced_motion="reduce")
+        pg = ctx.new_page()
+        pg.goto(url, wait_until="load")
+        pg.wait_for_timeout(1000)
+        for y in range(0, 12000, 600):
+            pg.evaluate(f"() => window.scrollTo(0, {y})")
+            pg.wait_for_timeout(120)
+        pg.wait_for_timeout(800)
+        running = pg.evaluate("() => document.getAnimations().filter(a => a.playState === 'running' && a.effect && a.effect.getTiming().iterations === Infinity).length")
+        term = pg.locator(".term[data-term]").first
+        term.scroll_into_view_if_needed()
+        term.focus()
+        pg.keyboard.press("Enter")
+        pg.wait_for_timeout(400)
+        running_pop = pg.evaluate("() => [...document.querySelectorAll('.gsx-pop *')].filter(e => getComputedStyle(e).animationName !== 'none' && getComputedStyle(e).animationName !== '').length")
+        report["reduced_motion"] = {"infinite_animations": running, "animated_nodes_in_popup": running_pop}
+        if running_pop:
+            problems.append(f"reduced motion: {running_pop} animated nodes inside the explainer pop-up")
+        if running:
+            problems.append(f"reduced motion: {running} infinite animations still running")
+        ctx.close()
+        # keyboard: Tab through the top of the page and record where focus lands
+        ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+        pg = ctx.new_page()
+        pg.goto(url, wait_until="load")
+        pg.wait_for_timeout(800)
+        seen = []
+        for _ in range(40):
+            pg.keyboard.press("Tab")
+            info = pg.evaluate("() => { const e = document.activeElement; if (!e || e === document.body) return null; const cs = getComputedStyle(e); return [e.tagName, (e.getAttribute('aria-label') || e.textContent || '').trim().slice(0, 30), cs.outlineStyle !== 'none' || cs.boxShadow !== 'none']; }")
+            seen.append(info)
+        report["keyboard_tab"] = {"stops": len([x for x in seen if x]), "no_visible_focus": [x[:2] for x in seen if x and not x[2]][:5]}
+        if report["keyboard_tab"]["stops"] < 10:
+            problems.append("keyboard: fewer than 10 focus stops in 40 Tab presses")
+        ctx.close()
         browser.close()
     return report, problems
 
