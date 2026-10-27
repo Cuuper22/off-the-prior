@@ -1,0 +1,38 @@
+{
+  "seed": 20261030,
+  "window": 1152,
+  "context": 1024,
+  "windows_wanted_per_domain": 64,
+  "windows_per_domain": {
+    "astronomy": 41,
+    "energy": 64,
+    "epidemiology": 38,
+    "finance": 44,
+    "hydrology": 43,
+    "physiology": 24,
+    "sensors": 64,
+    "traffic": 64,
+    "weather": 49,
+    "web traffic": 37
+  },
+  "n_windows": 468,
+  "event_names": [
+    "weekend",
+    "us_holiday",
+    "covid_spring_2020"
+  ],
+  "failed_sources": [],
+  "command": "python scripts/neurons_real.py --raw-dir <dir> --out results/neurons/real --per-domain 64",
+  "cutoff": "2026-09-30",
+  "sha256_real_npz": "694ea770e244fd60eb950e756a8ed2e0c6dd5c960054fd45dc38d07a52d5d298",
+  "bytes_real_npz": 2121783,
+  "provenance": {
+    "script": "scripts/neurons_real.py",
+    "git": "e9f6e0d",
+    "time_utc": "2026-10-27T01:42:55Z",
+    "host": "vm",
+    "torch": "2.14.1+cpu",
+    "threads": 2,
+    "cuda": false
+  }
+}
