@@ -153,6 +153,8 @@ error in a slope grows linearly with the horizon. Family results are read agains
 
 ## 4.2 Chaos and dynamics
 
+![MASE ratio to the oracle along each chaos knob (context 2,048, horizon 128; shaded: 95% bootstrap interval over 8 seeds; dashed: as good as the oracle).](figures/chaos_curves.png)
+
 | series | 5M | 28M | 123M | 209M | 209M vs best classical |
 |---|---|---|---|---|---|
 | lorenz63/rho20 | 1.07 | 1.04 | 1.02 | 1.00 | 0.93 |
@@ -187,6 +189,8 @@ small error in a chaotic system to grow by a factor of e (for Lorenz at ρ = 28 
 on that common axis shows that the ratio is set by how many Lyapunov times the forecast
 reaches, not by the step count:
 
+![Lorenz at four sampling intervals on one axis: forecast reach in Lyapunov times.](figures/lorenz_lyapunov.png)
+
 | sampling step (time units) | horizon (steps) | horizon (Lyapunov times) | 209M MASE / oracle |
 |---|---|---|---|
 | 0.02 | 16 | 0.29 | 6.88 |
@@ -210,6 +214,8 @@ Inside one to three Lyapunov times the oracle can still track the trajectory and
 cannot; past about ten, nobody can, and the ratio returns to about 1. The noise level of the
 generator sets how good the oracle can be inside that window. Sweeping the noise level
 (dynamic and observation noise together) shows how much of each ratio that choice sets:
+
+![Ratio to the oracle against the noise level of the generator (16 seeds, horizon 128).](figures/noise_sweep.png)
 
 | system | noise (% of scale) | 5M | 28M | 123M | 209M |
 |---|---|---|---|---|---|
@@ -251,12 +257,39 @@ the oracle:
 | tails/msm/k8_ret | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
 | tails/msm/k8_cum | 1.03 | 1.07 | 1.02 | 1.00 | 1.04 |
 
-Heavy tails and long memory, which are absent from trend + season + Gaussian-noise
-pretraining data, do not produce failures of the size seen for deterministic dynamics.
+Heavy tails and long memory, which a trend + season + Gaussian-noise description of series
+does not cover, do not produce failures of the size seen for deterministic dynamics.
 
 ## 4.4 Regime switches
 
-RESULTS-PENDING.
+Three kinds of switch (a level jump, a change of seasonal period, a change of noise level) placed
+a chosen number of steps before the forecast origin, so the context shows the switch:
+
+![Ratio to the oracle against the number of steps since the switch (context 8,192, horizon 128).](figures/regime_distance.png)
+
+| switch | size | 16 steps ago | 64 steps ago | 256 steps ago | 1024 steps ago |
+|---|---|---|---|---|---|
+| level +4 sd | 5M | 3.77 | 1.64 | 1.09 | 1.06 |
+| level +4 sd | 209M | 2.43 | 1.06 | 1.02 | 1.02 |
+| period x2 | 5M | 2.43 | 2.14 | 1.22 | 1.07 |
+| period x2 | 209M | 2.38 | 1.84 | 1.10 | 1.04 |
+| noise sd x0.25 | 5M | 1.35 | 1.41 | 1.16 | 1.11 |
+| noise sd x0.25 | 209M | 1.06 | 1.16 | 1.05 | 1.03 |
+
+The failure is concentrated right after a switch. Sixteen steps after a level jump of 4 noise
+standard deviations, the error is 3.77 times the oracle's at 5M and
+2.43 at 209M; a thousand steps later it is 1.06 and
+1.02. Period changes last longer: 64 steps after the period triples, the
+ratio is still 2.24 (5M) and 2.12 (209M). A direct measure of
+how much of a level jump the forecast adopts (1 = forecasts at the new level, like the oracle;
+0 = still at the old level), over the first 16 forecast steps and pooled over jump sizes, is
+0.43 / 0.66 / 0.96 at 16 / 64 / 256 steps after the
+switch for 5M and 0.49 / 0.70 / 0.93 for 209M.
+Section 7.3 shows that the change is nevertheless represented inside the model.
+
+When the switch happens during the horizon at a known rate (so nobody can see it coming),
+Timestral stays at 0.93–1.06 of the oracle, and on
+Markov-switching AR processes at 1.01–1.13.
 
 ## 4.5 Does more history help?
 
@@ -352,6 +385,8 @@ loses some signal, which shows on the in-prior control, where it scores
 0.784–0.832 against 0.996–0.997
 for the output. Gaps in the readout's favour are therefore conservative.
 
+![How well the oracle's expected change can be predicted from Timestral's forecast (solid) and from a linear readout of its first forecast token (dashed), against the time since a mean jump.](figures/readout_vs_output.png)
+
 | setting | size | MASE / oracle | output R2 | best readout R2 | step-1 output R2 | step-1 readout R2 |
 |---|---|---|---|---|---|---|
 | mean_jump_d 16 | 5M | 3.624 | 0.670 | 0.956 | 0.540 | 0.796 |
@@ -400,11 +435,65 @@ RESULTS-PENDING.
 
 # 9. Fixing it
 
+## 9.1 Without training: let the context decide
+
+Section 7.2 showed that a nearest-neighbour forecaster built from the context beats Timestral
+on some deterministic systems and loses badly on others. A forecaster can find out which case
+it is in from the context alone: forecast the last stretch of the context from what comes
+before it, with both methods, and compare. The rule we test switches to the analogue forecast
+(keeping Timestral's quantile spread around the new median) only when the analogues' backtest
+error is below 0.7 times Timestral's on each of the last two 128-step windows.
+
+How the rule was chosen matters. A first pre-set procedure (tune on even seeds, report on odd
+seeds) picked a one-window rule that helped chaos but cost the tails family
+1.031–1.043 on the held-out seeds. We then
+picked the two-window rule from that held-out table, which is a choice made after seeing
+it, so we froze it and evaluated it once more on fresh samples generated for that purpose
+(`results/fix/README.md` lists all three stages). On the fresh samples (MASE of the fix divided
+by Timestral's MASE; below 1 is better):
+
+| family | 5M | 28M | 123M | 209M | share switched (range over sizes) |
+|---|---|---|---|---|---|
+| chaos | 0.824 | 0.877 | 0.970 | 0.982 | 0.067-0.238 |
+| regime | 1.000 | 1.000 | 1.000 | 1.000 | 0.000-0.000 |
+| tails | 1.003 | 1.000 | 1.001 | 1.000 | 0.004-0.011 |
+| in_prior | 1.000 | 1.000 | 1.000 | 1.000 | 0.000-0.000 |
+
+The fix improves chaos by a factor of 0.824 at 5M and 0.982 at
+209M, leaves in-prior and regime series untouched (the rule never switches there), and costs at
+most a factor of 1.003 on tails. Its benefit shrinks with model size, in line with
+larger models closing more of the chaos gap on their own.
+
+The other zero-training idea, cutting the context to the part after a detected change
+(Section 7.1), helps only when at least 256 post-switch steps are available.
+
+## 9.2 Fine-tuning: full, LoRA, and data mixing
+
 RESULTS-PENDING.
 
 # 10. Limitations
 
-RESULTS-PENDING (compute actually used, what ran on CPU vs. GPU, what is not run).
+- **The oracle knows the latent state.** It is the best forecast given the true state, which
+  is stronger than the best forecast given only the observed history. Ratios to it therefore
+  bound the possible improvement from above; part of every gap is unavoidable for any
+  forecaster that sees only the data.
+- **Noise sets the size of chaos gaps.** For nearly deterministic systems the oracle's error,
+  and so every ratio to it, depends on the noise level we chose (1% by default); Section 4.2
+  reports the dependence. Orderings (between settings and between model sizes) are more
+  robust than the magnitudes.
+- **Seeds.** Most settings use 8 seeds (16 for the noise sweep, 300 samples per setting for
+  the mechanism runs). Intervals in the result files are bootstrap intervals over seeds; with
+  8 seeds they are wide for heavy-tailed settings.
+- **Diverged simulations.** A few Rössler simulations left the attractor under noise; their
+  oracle could not be scored and they are excluded (counts are given where they occur).
+- **Univariate main series.** Except for the covariate study, every test series is a single
+  variate.
+- **No access to the pretraining data.** Statements about what the synthetic prior contains
+  are inferences from behaviour, labelled as such.
+- **Compute.** Small-model sweeps ran on a 2-core CPU VM; the large-model sweeps, the
+  long-context runs and the mechanism runs at all sizes ran on Colab A100 GPUs; one mechanism
+  test ran on a laptop RTX 3060 GPU. GPU and CPU forecasts of the same series agree to a few
+  parts in 100,000 in MASE (`results/mechanism/analog/parity_vm_cpu_vs_laptop_gpu.json`).
 
 # Reproducibility
 

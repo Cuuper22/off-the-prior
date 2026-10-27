@@ -28,10 +28,19 @@ def read_json(path: str):
 
 
 def git_rev() -> str:
+    """Short commit of the code being run: from git, else from a GIT_COMMIT file at the repo root (written
+    into code bundles that have no .git, e.g. Colab and laptop runs), else "unknown"."""
     try:
-        return subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
+        rev = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True,
+                             cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))).stdout.strip()
+        if rev:
+            return rev
     except Exception:
-        return "unknown"
+        pass
+    f = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "GIT_COMMIT")
+    if os.path.exists(f):
+        return open(f).read().strip()
+    return "unknown"
 
 
 def provenance(script: str, **kw) -> dict:

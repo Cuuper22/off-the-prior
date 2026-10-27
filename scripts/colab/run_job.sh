@@ -29,6 +29,8 @@ trap cleanup EXIT
 colab new -s "$S" --gpu "$GPU"
 colab upload -s "$S" "$BUNDLE" /content/otp_bundle.tar.gz
 colab exec -s "$S" -f "$ROOT/scripts/colab/remote_setup.py" | tee "$OUT/setup.txt"
+git -C "$ROOT" rev-parse --short HEAD > "$OUT/commit.txt"   # the bundle has no .git; record and ship the commit
+colab upload -s "$S" "$OUT/commit.txt" /content/otp/GIT_COMMIT
 colab upload -s "$S" "$JOBSH" /content/otp/job.sh
 for f in "$@"; do  # extra files: LOCAL=REMOTE (REMOTE relative to the repo root on Colab)
   rdir=$(dirname "/content/otp/${f#*=}")
@@ -58,6 +60,9 @@ while true; do
       fi
     done
   fi
+  # keepalive: Colab reclaims runtimes whose kernel stays idle, and the job runs detached from the
+  # kernel, so touch the kernel every poll (time-limited, since the exec channel can hang)
+  timeout 60 colab exec -s "$S" -f "$ROOT/scripts/colab/remote_status.py" >/dev/null 2>&1 || true
   if timeout 90 colab ls -s "$S" /content 2>/dev/null | grep -q "job.exit"; then break; fi
   if ! timeout 90 colab sessions 2>/dev/null | grep -q "\[$S\]"; then echo "session $S is gone"; exit 3; fi
   echo "$(date -u +%T) running"

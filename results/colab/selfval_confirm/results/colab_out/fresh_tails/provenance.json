@@ -1,0 +1,32 @@
+{
+  "script": "scripts/sweep.py",
+  "git": "",
+  "time_utc": "2026-10-26T23:27:15Z",
+  "host": "5255d57cdc19",
+  "torch": "2.11.0+cu130",
+  "threads": 1,
+  "cuda": true,
+  "argv": [
+    "scripts/sweep.py",
+    "--grid",
+    "otp.grids.tails",
+    "--seed-offset",
+    "100",
+    "--seeds",
+    "8",
+    "--sizes",
+    "--classical",
+    "--contexts",
+    "2048",
+    "--horizons",
+    "128",
+    "--workers",
+    "12",
+    "--no-references",
+    "--out",
+    "results/colab_out/fresh_tails"
+  ],
+  "n_samples": 280,
+  "n_rows": 0,
+  "wall_sec": 4.1
+}
