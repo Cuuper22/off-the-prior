@@ -1,0 +1,17 @@
+{
+  "method": "cmaes",
+  "seed": 1,
+  "size": "5M",
+  "budget": 3000,
+  "calls": 3000,
+  "evaluations": 1000,
+  "replayed_from_checkpoint": 0,
+  "sample_generations_this_process": 3000,
+  "timestral_calls_made_by_objective": 3000,
+  "best_fitness": 68.88721936497711,
+  "wall_seconds": 2399.876778125763,
+  "info": {
+    "restarts": 1,
+    "generations": 77
+  }
+}

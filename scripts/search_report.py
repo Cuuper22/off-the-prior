@@ -73,6 +73,7 @@ def run_stats(h: pd.DataFrame, method: str, seed: int) -> dict:
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--dir", default="results/search")
+    ap.add_argument("--jobs", default="results/colab/srch-*", help="pulled Colab job folders (commit, start and end times)")
     a = ap.parse_args(argv)
     d = a.dir
     rows, cell_rows = [], []
@@ -126,6 +127,20 @@ def main(argv=None):
         prov["invocations"] += read_json(p).get("invocations", [])
     for p in sorted(glob.glob(os.path.join(d, "runs", "*", "run.json"))):
         prov["runs"].append(read_json(p))
+    from datetime import datetime
+    prov["jobs"] = []
+    for jd in sorted(glob.glob(a.jobs)):
+        def rd(n):
+            fp = os.path.join(jd, n)
+            return open(fp).read().strip() if os.path.exists(fp) else None
+        j = {"job": os.path.basename(jd), "bundle_commit": rd("commit.txt"), "started_utc": rd("started_utc.txt"),
+             "ended_utc": rd("ended_utc.txt"), "exit_code": rd("job.exit")}
+        try:
+            fmt = "%Y-%m-%dT%H:%M:%SZ"
+            j["wall_seconds"] = (datetime.strptime(j["ended_utc"], fmt) - datetime.strptime(j["started_utc"], fmt)).total_seconds()
+        except Exception:
+            j["wall_seconds"] = None
+        prov["jobs"].append(j)
     tj = os.path.join(d, "transfer.json")
     if os.path.exists(tj):
         prov["transfer"] = read_json(tj)
@@ -221,6 +236,16 @@ def main(argv=None):
                  "divided by the context std; `l2_over_std` is the perturbation's L2 norm divided by the context std.\n")
         L.append(md(isum) + "\n")
     L.append("## Exact commands\n")
+    L.append("Colab job scripts (`results/search/colab_jobs/`), each run with `scripts/colab/run_job.sh <job> <script> a100` "
+             "(timing and smoke jobs only chose the budget and checked the code path):\n")
+    for jp in sorted(glob.glob(os.path.join(d, "colab_jobs", "job_search_*.sh")) + glob.glob(os.path.join(d, "colab_jobs", "job_transfer*.sh"))):
+        L.append(f"`{os.path.basename(jp)}`\n")
+        L.append("```")
+        L.append("\n".join(x for x in open(jp).read().splitlines() if not x.startswith("#") and not x.startswith("export") and not x.startswith("set ")))
+        L.append("```\n")
+    if prov["jobs"]:
+        L.append("Jobs (from the pulled job folders, also in `provenance.json`):\n")
+        L.append(md(pd.DataFrame(prov["jobs"])) + "\n")
     L.append("```")
     for inv in prov["invocations"]:
         L.append(f"{inv.get('script')} {' '.join(inv.get('argv', []))}   # git {inv.get('git')}, host {inv.get('host')}, "
