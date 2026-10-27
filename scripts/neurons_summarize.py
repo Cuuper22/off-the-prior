@@ -82,7 +82,9 @@ def main():
         for s, t in poles.items():
             u = up[up["size"] == s].drop(columns=["label", "group", "r2_cv"])
             t = t.drop(columns=[c for c in t.columns if c.startswith("up")]).merge(u, on=["size", "layer", "sign", "neuron"], how="left")
-            t.to_parquet(o(f"{s}/poles.parquet"), index=False)
+            f32 = t.select_dtypes("float64").columns
+            t[f32] = t[f32].astype("float32")
+            t.to_parquet(o(f"{s}/poles.parquet"), index=False, compression="zstd", compression_level=15)
         done.append("upstream columns")
     write_json(o("provenance_summarize.json"), provenance("scripts/neurons_summarize.py", produced=done))
     print("done:", done)

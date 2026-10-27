@@ -144,7 +144,7 @@ def main():
                  "mase_timestral": gm(m0["mase"][cfg == c_]), "mase_oracle": gm(orc_m[cfg == c_]),
                  "mase_analog": gm(ana_m[cfg == c_])} for c_ in sorted(set(cfg))]
     pd.DataFrame(cfg_rows).to_csv(os.path.join(a.out, f"failure_configs_{a.size}.csv"), index=False, float_format="%.5g")
-    print({k: int((st == k).sum()) for k in ("failing", "reference", "other")}, flush=True)
+    print("chaos contexts (the 35 seasonal reference contexts are added below):", {k: int((st == k).sum()) for k in ("failing", "reference", "other")}, flush=True)
 
     # pole activations on these contexts: mean over the last TAIL context patches and the forecast tokens
     n_blocks, hidden = Cap.layer_dims(a.size, dev)

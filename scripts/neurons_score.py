@@ -43,6 +43,14 @@ def load_corpus_for(meta: dict, corpus_dir: str):
     return parts[0] if len(parts) == 1 else C.merge_corpora([x[0] for x in parts], [x[1] for x in parts])
 
 
+def save_table(t, path):
+    """Parquet with float32 numbers and zstd compression (keeps every file well below the 50 MB limit)."""
+    t = t.copy()
+    f = t.select_dtypes("float64").columns
+    t[f] = t[f].astype("float32")
+    t.to_parquet(path, index=False, compression="zstd", compression_level=15)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--runs", default="results/colab_out")
@@ -84,11 +92,12 @@ def main():
     os.makedirs(a.out, exist_ok=True)
     for s in sizes:
         os.makedirs(os.path.join(a.out, s), exist_ok=True)
-        tabs[(s, "main")].to_parquet(os.path.join(a.out, s, "poles.parquet"), index=False)
+        save_table(tabs[(s, "main")], os.path.join(a.out, s, "poles.parquet"))
     for (s, ctx), t in tabs.items():
         if ctx != "main":
-            keep = [c_ for c_ in t.columns if not c_.startswith(("pos_mean", "pos_active"))]
-            t[keep].to_parquet(os.path.join(a.out, s, f"poles_{ctx}.parquet"), index=False)
+            keep = [c_ for c_ in ("size", "layer", "neuron", "sign", "n_active_label", "mean", "std", "max", "label", "label_corr", "r2_cv",
+                                  "r2_heldout", "pair_label", "r2_pair", "r2_add", "dead", "E", "ratio", "group") if c_ in t.columns]
+            save_table(t[keep], os.path.join(a.out, s, f"poles_{ctx}.parquet"))
     cv = Sc.curves(main_all)
     cv.to_csv(os.path.join(a.out, "one_job_curves.csv"), index=False, float_format="%.5g")
     Sc.scaling(cv).to_csv(os.path.join(a.out, "scaling.csv"), index=False, float_format="%.5g")
