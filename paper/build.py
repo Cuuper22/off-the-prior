@@ -451,11 +451,57 @@ def finetune_results():
 
 
 def neuron_results():
-    for key, f, how in (("nn_one_job", "results/neurons/one_job_curves.csv", "fraction of one-job, mixed and unexplained poles over the threshold"),
-                        ("nn_steering", "results/neurons/steering_results.csv", "steered poles against their pre-registered predictions"),
-                        ("nn_failure_link", "results/neurons/failure_link.csv", "poles active on the failure systems and the effect of damping them")):
-        if os.path.exists(p(f)):
-            generic_table(key, f, how)
+    d = "results/neurons"
+    f = f"{d}/scaling.csv"
+    if os.path.exists(p(f)):
+        sc = pd.read_csv(p(f)).set_index("size").loc[["5M", "28M", "123M", "209M"]]
+        rows = [{"size": sz, "live poles": int(r.n_live), "one job": r.one_job, "95% low": r.one_job_lo, "95% high": r.one_job_hi,
+                 "one job, held-out series": r.one_job_heldout, "mixed": r.mixed, "unexplained": r.unexplained} for sz, r in sc.iterrows()]
+        table("nn_one_job", pd.DataFrame(rows), f, "share of live poles per class at theta 0.7, floor 0.1 (main corpus, all layers, both poles); interval: bootstrap over poles", "{:.3f}")
+        for sz in ("5M", "209M"):
+            num(f"nn_onejob_{sz}", 100 * float(sc.loc[sz, "one_job"]), f, f"{sz}: percent of live poles that are one-job at theta 0.7, floor 0.1", "{:.1f}")
+            num(f"nn_mixed_{sz}", 100 * float(sc.loc[sz, "mixed"]), f, f"{sz}: percent mixed at theta 0.7, floor 0.1", "{:.0f}")
+    f = f"{d}/context_comparison.csv"
+    if os.path.exists(p(f)):
+        c = pd.read_csv(p(f))
+        rows = []
+        for ctx in ("main", "short", "long", "xlong"):
+            for sz in ("5M", "209M"):
+                r = c[(c.context == ctx) & (c["size"] == sz)].iloc[0]
+                rows.append({"corpus": ctx, "size": sz, "one job": r.one_job, "unexplained": r.unexplained, "mean E": r.E_mean,
+                             "same label as main": r.same_label_as_main})
+        table("nn_context", pd.DataFrame(rows), f, "the same scoring on corpora of different context length (theta 0.7, floor 0.1); E = best of single, pair and additive readout R^2", "{:.3f}")
+        oj = c[c.context != "main"].one_job
+        num("nn_ctx_onejob_min", 100 * float(oj.min()), f, "min over sizes and non-main corpora of the one-job percent", "{:.0f}")
+        num("nn_ctx_onejob_max", 100 * float(oj.max()), f, "max of the same", "{:.0f}")
+        ag = c[c.context != "main"].same_label_as_main
+        num("nn_ctx_agree_min", 100 * float(ag.min()), f, "min over sizes and non-main corpora of the percent of poles whose best label matches the main corpus", "{:.0f}")
+        num("nn_ctx_agree_max", 100 * float(ag.max()), f, "max of the same", "{:.0f}")
+    f = f"{d}/steering_summary.csv"
+    if os.path.exists(p(f)):
+        s2 = pd.read_csv(p(f))
+        s2 = s2[s2.group == "all"]
+        rows = [{"size": r.size, "poles": r.role, "n": int(r.n), "matched": int(r.n_match), "match rate": r.match_rate, "95% high": r.ci_hi,
+                 "monotone share": r.monotone_rate} for r in s2.itertuples()]
+        table("nn_steering", pd.DataFrame(rows), f, "single-pole steering (scales 0, 0.5, 2, 4) judged against the pre-registered predictions; controls are random poles with a random predicted direction", "{:.3f}")
+        sr = pd.read_csv(p(f"{d}/steering_results.csv"))
+        lab = sr[(sr.role == "labeled") & sr.predicted.astype(bool)] if "predicted" in sr else sr[sr.role == "labeled"]
+        num("nn_steer_max_effect", float(lab.effect_size.abs().max()), f"{d}/steering_results.csv", "largest |effect(scale 4) - effect(scale 0)| over steered labeled poles, in context standard deviations", "{:.3f}")
+        num("nn_steer_n_labeled", int(s2[s2.role == "labeled"].n.sum()), f, "steered labeled poles over all sizes", "{:d}")
+    f = f"{d}/failure_link.csv"
+    if os.path.exists(p(f)):
+        fl = pd.read_csv(p(f))
+        rows = []
+        for sz in ("5M", "28M", "123M", "209M"):
+            g = fl[fl["size"] == sz]
+            en = g[(g.analysis == "elevated") & (g.set == "chaos")].enrichment
+            ab = g[(g.analysis == "ablate") & (g.set == "periodic_elevated") & (g.scale == 0.0)]
+            rnd = g[(g.analysis == "ablate") & (g.set == "random_same_layers") & (g.scale == 0.0)]
+            rows.append({"size": sz, "chaos-label enrichment among elevated poles": float(en.iloc[0]) if len(en) else float("nan"),
+                         "MASE ratio before": float(ab.mase_before.iloc[0]) if len(ab) else float("nan"),
+                         "after ablating periodic poles": float(ab.mase_after.iloc[0]) if len(ab) else float("nan"),
+                         "after ablating random poles": float(rnd.mase_after.iloc[0]) if len(rnd) else float("nan")})
+        table("nn_failure_link", pd.DataFrame(rows), f, "failing chaos contexts: enrichment of chaos-labeled poles among poles elevated on failing vs reference contexts, and the forecast's MASE ratio to the oracle before and after ablating the elevated periodic-label poles (or as many random poles in the same layers)", "{:.3f}")
 
 
 def bench():

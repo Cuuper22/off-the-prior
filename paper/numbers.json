@@ -1139,6 +1139,66 @@
   "src": "bench/data/lb_manifest.csv",
   "how": "number of configs"
  },
+ "nn_onejob_5M": {
+  "value": 4.531000000000001,
+  "text": "4.5",
+  "src": "results/neurons/scaling.csv",
+  "how": "5M: percent of live poles that are one-job at theta 0.7, floor 0.1"
+ },
+ "nn_mixed_5M": {
+  "value": 83.41499999999999,
+  "text": "83",
+  "src": "results/neurons/scaling.csv",
+  "how": "5M: percent mixed at theta 0.7, floor 0.1"
+ },
+ "nn_onejob_209M": {
+  "value": 2.3352999999999997,
+  "text": "2.3",
+  "src": "results/neurons/scaling.csv",
+  "how": "209M: percent of live poles that are one-job at theta 0.7, floor 0.1"
+ },
+ "nn_mixed_209M": {
+  "value": 81.135,
+  "text": "81",
+  "src": "results/neurons/scaling.csv",
+  "how": "209M: percent mixed at theta 0.7, floor 0.1"
+ },
+ "nn_ctx_onejob_min": {
+  "value": 24.186,
+  "text": "24",
+  "src": "results/neurons/context_comparison.csv",
+  "how": "min over sizes and non-main corpora of the one-job percent"
+ },
+ "nn_ctx_onejob_max": {
+  "value": 47.465,
+  "text": "47",
+  "src": "results/neurons/context_comparison.csv",
+  "how": "max of the same"
+ },
+ "nn_ctx_agree_min": {
+  "value": 12.228,
+  "text": "12",
+  "src": "results/neurons/context_comparison.csv",
+  "how": "min over sizes and non-main corpora of the percent of poles whose best label matches the main corpus"
+ },
+ "nn_ctx_agree_max": {
+  "value": 55.138,
+  "text": "55",
+  "src": "results/neurons/context_comparison.csv",
+  "how": "max of the same"
+ },
+ "nn_steer_max_effect": {
+  "value": 0.041151,
+  "text": "0.041",
+  "src": "results/neurons/steering_results.csv",
+  "how": "largest |effect(scale 4) - effect(scale 0)| over steered labeled poles, in context standard deviations"
+ },
+ "nn_steer_n_labeled": {
+  "value": 203.0,
+  "text": "203",
+  "src": "results/neurons/steering_summary.csv",
+  "how": "steered labeled poles over all sizes"
+ },
  "table:inprior": {
   "src": "results/map/in_prior/summary.csv",
   "how": "geometric mean over the 4 in-prior configs of the per-config geometric-mean MASE ratio to oracle, context 2048"
@@ -1206,5 +1266,21 @@
  "table:bench_diag_ft": {
   "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
   "how": "Timestral-209M on OffPrior-Diag by failure type"
+ },
+ "table:nn_one_job": {
+  "src": "results/neurons/scaling.csv",
+  "how": "share of live poles per class at theta 0.7, floor 0.1 (main corpus, all layers, both poles); interval: bootstrap over poles"
+ },
+ "table:nn_context": {
+  "src": "results/neurons/context_comparison.csv",
+  "how": "the same scoring on corpora of different context length (theta 0.7, floor 0.1); E = best of single, pair and additive readout R^2"
+ },
+ "table:nn_steering": {
+  "src": "results/neurons/steering_summary.csv",
+  "how": "single-pole steering (scales 0, 0.5, 2, 4) judged against the pre-registered predictions; controls are random poles with a random predicted direction"
+ },
+ "table:nn_failure_link": {
+  "src": "results/neurons/failure_link.csv",
+  "how": "failing chaos contexts: enrichment of chaos-labeled poles among poles elevated on failing vs reference contexts, and the forecast's MASE ratio to the oracle before and after ablating the elevated periodic-label poles (or as many random poles in the same layers)"
  }
 }

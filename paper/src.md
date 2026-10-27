@@ -459,6 +459,21 @@ unexplained poles are reported as curves over θ, per layer and size, never at a
 
 {{table:nn_one_job}}
 
+Against this variable library, few poles are single-variable: at θ = 0.7 the one-job share is
+{{num:nn_onejob_5M}}% at 5M and {{num:nn_onejob_209M}}% at 209M, and most poles are mixed ({{num:nn_mixed_5M}}% and
+{{num:nn_mixed_209M}}%). This number depends on the corpus as much as on the neurons. Scored the same way on
+corpora of shorter and longer contexts (same generator recipe), the one-job share is
+{{num:nn_ctx_onejob_min}}–{{num:nn_ctx_onejob_max}}%, and only {{num:nn_ctx_agree_min}}–{{num:nn_ctx_agree_max}}% of poles keep the
+best label they had on the main corpus:
+
+{{table:nn_context}}
+
+The main corpus has the largest explainable ceiling E (more of each pole's variance is explained by
+combinations of variables), which lowers every single-variable ratio. We therefore read the one-job share as
+a property of the pair (neurons, variable library), and do not report it as evidence that the neurons are
+polysemantic in general. A label space that is not fixed in advance (for example motif shapes named from
+the exemplars, as interpretability work on language models does) could give a different answer.
+
 **Checks.** Predictive: on the held-out series, each pole's activation is predicted from its label alone and
 the held-out R² is compared with the labelling-set score. Causal: for a stratified sample of poles, the pole is
 scaled during the forward pass and the change in the forecast is compared with a prediction written down, and
@@ -466,11 +481,23 @@ committed, before any steering run (`results/neurons/steering_preregistration.md
 
 {{table:nn_steering}}
 
+No labeled pole matched its prediction. This does not show that the labels are not causal: scaling a single
+pole (up to four times, or to zero) moved the forecast by at most {{num:nn_steer_max_effect}} context standard deviations
+over all {{num:nn_steer_n_labeled}} steered labeled poles, below every pre-registered size threshold, so the test had no
+power to detect a match. A test with power needs a positive control (steering a direction the model is known
+to use, scaled until the measured effect is clear) and group steering; that follow-up is described in
+`results/neurons/README.md` when it has run.
+
 **Link to the failure map.** Which poles are active on the Mackey-Glass, Rössler and Kuramoto contexts where
 Timestral falls behind the oracle, whether seasonal or periodic-pattern poles are among them, and whether
 damping them moves the forecast toward the oracle or toward the analogue forecaster of Section 7.2.
 
 {{table:nn_failure_link}}
+
+Poles with chaos-related labels are over-represented among the poles that are more active on failing chaos
+contexts than on reference contexts, at every size. Ablating the elevated poles with periodic labels leaves
+the forecast's error ratio essentially where it was, as does ablating as many random poles in the same layers:
+the periodic-template behaviour of Section 7.2 is not carried by a small set of neurons that can be switched off.
 
 # 9. Benchmarks
 

@@ -585,20 +585,79 @@ tokens where that pole is active is found by mutual information and cross-valida
 explainable variance, and is unexplained if no label clears a floor. The fractions of one-job, mixed and
 unexplained poles are reported as curves over θ, per layer and size, never at a single threshold.
 
-*(Results pending: `results/neurons/one_job_curves.csv` is not in the repository yet.)*
+| size | live poles | one job | 95% low | 95% high | one job, held-out series | mixed | unexplained |
+|---|---|---|---|---|---|---|---|
+| 5M | 8188 | 0.045 | 0.041 | 0.050 | 0.041 | 0.834 | 0.121 |
+| 28M | 24566 | 0.029 | 0.026 | 0.031 | 0.024 | 0.830 | 0.142 |
+| 123M | 68463 | 0.027 | 0.026 | 0.028 | 0.022 | 0.813 | 0.160 |
+| 209M | 98273 | 0.023 | 0.022 | 0.024 | 0.019 | 0.811 | 0.165 |
+
+Against this variable library, few poles are single-variable: at θ = 0.7 the one-job share is
+4.5% at 5M and 2.3% at 209M, and most poles are mixed (83% and
+81%). This number depends on the corpus as much as on the neurons. Scored the same way on
+corpora of shorter and longer contexts (same generator recipe), the one-job share is
+24–47%, and only 12–55% of poles keep the
+best label they had on the main corpus:
+
+| corpus | size | one job | unexplained | mean E | same label as main |
+|---|---|---|---|---|---|
+| main | 5M | 0.045 | 0.121 | 0.257 | 1.000 |
+| main | 209M | 0.023 | 0.165 | 0.212 | 1.000 |
+| short | 5M | 0.415 | 0.240 | 0.209 | 0.212 |
+| short | 209M | 0.308 | 0.457 | 0.136 | 0.234 |
+| long | 5M | 0.242 | 0.314 | 0.189 | 0.551 |
+| long | 209M | 0.242 | 0.418 | 0.153 | 0.547 |
+| xlong | 5M | 0.475 | 0.380 | 0.164 | 0.198 |
+| xlong | 209M | 0.431 | 0.444 | 0.146 | 0.122 |
+
+The main corpus has the largest explainable ceiling E (more of each pole's variance is explained by
+combinations of variables), which lowers every single-variable ratio. We therefore read the one-job share as
+a property of the pair (neurons, variable library), and do not report it as evidence that the neurons are
+polysemantic in general. A label space that is not fixed in advance (for example motif shapes named from
+the exemplars, as interpretability work on language models does) could give a different answer.
 
 **Checks.** Predictive: on the held-out series, each pole's activation is predicted from its label alone and
 the held-out R² is compared with the labelling-set score. Causal: for a stratified sample of poles, the pole is
 scaled during the forward pass and the change in the forecast is compared with a prediction written down, and
 committed, before any steering run (`results/neurons/steering_preregistration.md`).
 
-*(Results pending: `results/neurons/steering_results.csv` is not in the repository yet.)*
+| size | poles | n | matched | match rate | 95% high | monotone share |
+|---|---|---|---|---|---|---|
+| 123M | labeled | 68 | 0 | 0.000 | 0.053 | 0.574 |
+| 123M | complement | 26 | 0 | 0.000 | 0.129 | 0.500 |
+| 123M | control | 432 | 0 | 0.000 | 0.009 | 0.486 |
+| 209M | labeled | 63 | 0 | 0.000 | 0.057 | 0.603 |
+| 209M | complement | 20 | 0 | 0.000 | 0.161 | 0.650 |
+| 209M | control | 432 | 0 | 0.000 | 0.009 | 0.521 |
+| 28M | labeled | 47 | 0 | 0.000 | 0.076 | 0.532 |
+| 28M | complement | 20 | 0 | 0.000 | 0.161 | 0.600 |
+| 28M | control | 432 | 0 | 0.000 | 0.009 | 0.481 |
+| 5M | labeled | 25 | 0 | 0.000 | 0.133 | 0.320 |
+| 5M | complement | 11 | 0 | 0.000 | 0.259 | 0.364 |
+| 5M | control | 432 | 5 | 0.012 | 0.027 | 0.449 |
+
+No labeled pole matched its prediction. This does not show that the labels are not causal: scaling a single
+pole (up to four times, or to zero) moved the forecast by at most 0.041 context standard deviations
+over all 203 steered labeled poles, below every pre-registered size threshold, so the test had no
+power to detect a match. A test with power needs a positive control (steering a direction the model is known
+to use, scaled until the measured effect is clear) and group steering; that follow-up is described in
+`results/neurons/README.md` when it has run.
 
 **Link to the failure map.** Which poles are active on the Mackey-Glass, Rössler and Kuramoto contexts where
 Timestral falls behind the oracle, whether seasonal or periodic-pattern poles are among them, and whether
 damping them moves the forecast toward the oracle or toward the analogue forecaster of Section 7.2.
 
-*(Results pending: `results/neurons/failure_link.csv` is not in the repository yet.)*
+| size | chaos-label enrichment among elevated poles | MASE ratio before | after ablating periodic poles | after ablating random poles |
+|---|---|---|---|---|
+| 5M | 2.487 | 1.850 | 1.850 | 1.851 |
+| 28M | 2.072 | 1.754 | 1.759 | 1.755 |
+| 123M | 1.957 | 1.685 | 1.688 | 1.683 |
+| 209M | 2.017 | 2.050 | 2.050 | 2.053 |
+
+Poles with chaos-related labels are over-represented among the poles that are more active on failing chaos
+contexts than on reference contexts, at every size. Ablating the elevated poles with periodic labels leaves
+the forecast's error ratio essentially where it was, as does ablating as many random poles in the same layers:
+the periodic-template behaviour of Section 7.2 is not carried by a small set of neurons that can be switched off.
 
 # 9. Benchmarks
 
