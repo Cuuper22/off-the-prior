@@ -1,0 +1,37 @@
+NVIDIA A100-SXM4-40GB
+/content/otp/otp/generators/chaos.py:194: RuntimeWarning: overflow encountered in multiply
+  out[2] = p["b"] + z * (x - p["c"])
+/content/otp/otp/generators/chaos.py:192: RuntimeWarning: invalid value encountered in subtract
+  out[0] = -y - z
+/content/otp/otp/generators/chaos.py:194: RuntimeWarning: overflow encountered in multiply
+  out[2] = p["b"] + z * (x - p["c"])
+/content/otp/otp/generators/chaos.py:192: RuntimeWarning: invalid value encountered in subtract
+  out[0] = -y - z
+/content/otp/otp/generators/chaos.py:194: RuntimeWarning: overflow encountered in multiply
+  out[2] = p["b"] + z * (x - p["c"])
+/content/otp/otp/generators/chaos.py:192: RuntimeWarning: invalid value encountered in subtract
+  out[0] = -y - z
+/content/otp/otp/generators/chaos.py:194: RuntimeWarning: overflow encountered in multiply
+  out[2] = p["b"] + z * (x - p["c"])
+/content/otp/otp/generators/chaos.py:192: RuntimeWarning: invalid value encountered in subtract
+  out[0] = -y - z
+generated 344 samples (289s)
+references done (866s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  7.93it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.48it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.68it/s]
+timestral-5M T=512 done (6s)
+timestral-5M T=2048 done (2s)
+timestral-5M T=8192 done (2s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  6.84it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.08it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.24it/s]
+timestral-28M T=512 done (4s)
+timestral-28M T=2048 done (2s)
+timestral-28M T=8192 done (4s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  9.16it/s]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  1.76s/it]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  1.51s/it]
+timestral-123M T=512 done (8s)
+timestral-123M T=2048 done (4s)
+timestral-123M T=8192 done (9s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  7.49it/s]Fetching 2 files: 100%|██████████| 2/2 [00:04<00:00,  2.59s/it]Fetching 2 files: 100%|██████████| 2/2 [00:04<00:00,  2.22s/it]
+timestral-209M T=512 done (11s)
+timestral-209M T=2048 done (6s)
+timestral-209M T=8192 done (14s)
+wrote 33024 rows to results/colab_out/chaos/scores.csv in 939s

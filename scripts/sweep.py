@@ -90,7 +90,7 @@ def _pool_map(fn, jobs, workers):
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--grid", required=True)
-    ap.add_argument("--sizes", nargs="+", default=["5M"])
+    ap.add_argument("--sizes", nargs="*", default=["5M"], help="Timestral sizes; give none to compute references only")
     ap.add_argument("--contexts", nargs="+", type=int, default=[2048])
     ap.add_argument("--horizons", nargs="+", type=int, default=[16, 128, 1024])
     ap.add_argument("--seeds", type=int, default=8)
@@ -105,6 +105,9 @@ def main(argv=None):
     ap.add_argument("--batch-size", type=int, default=16)
     ap.add_argument("--no-symmetric", action="store_true",
                     help="ablation: turn off Timestral's symmetric averaging (forecaster name gets '-nosym')")
+    ap.add_argument("--checkpoint-every", type=int, default=64,
+                    help="append rows to scores_partial.csv every this many samples (references) and after each model pass")
+    ap.add_argument("--resume", action="store_true", help="skip work already in scores_partial.csv")
     ap.add_argument("--workers", type=int, default=1, help="processes for sample generation and classical fits")
     ap.add_argument("--samples-from", default=None, help="load samples.npz from this folder instead of generating")
     ap.add_argument("--no-references", action="store_true", help="skip oracle/classical rows (merge them from the "
@@ -134,22 +137,47 @@ def main(argv=None):
         except ValueError:
             print("samples have mixed shapes; not saved as one npz")
 
-    rows = []
+    partial = os.path.join(a.out, "scores_partial.csv")
+    done = pd.read_csv(partial) if (a.resume and os.path.exists(partial)) else None
+    if done is None and os.path.exists(partial):
+        os.remove(partial)
+
+    cols = ["config_id", "sample_id", "family", "generator", "knob", "knob_value", "seed", "T", "H", "variate",
+            "forecaster", *METRIC_COLS, "sec_per_sample"]
+
+    def flush(rows):
+        if rows:
+            pd.DataFrame(rows).reindex(columns=cols).to_csv(partial, mode="a", header=not os.path.exists(partial),
+                                                              index=False)
+
     ref_samples = [] if a.no_references else samples
-    ref_q = _pool_map(_refs_one, [(s, list(a.classical), hmax) for s in ref_samples], a.workers)
-    for s, qs in zip(ref_samples, ref_q):  # oracle + classical once per sample (classical uses the last 1024 steps)
-        for t in a.contexts:  # the oracle's quantiles do not depend on T, but MASE/sCRPS scaling does
-            rows += rows_for(s, s.oracle_q, "oracle", t, a.horizons, {})
-        for name, q in zip(a.classical, qs):
-            for t in a.contexts:
-                rows += rows_for(s, q, name, t, a.horizons, {})
+    if done is not None:
+        have = set(done[done.forecaster == "oracle"].sample_id)
+        ref_samples = [s for s in ref_samples if s.meta["sample_id"] not in have]
+    step = max(1, a.checkpoint_every)
+    for c0 in range(0, len(ref_samples), step):  # oracle + classical once per sample (classical uses the last 1024 steps)
+        chunk = ref_samples[c0:c0 + step]
+        ref_q = _pool_map(_refs_one, [(s, list(a.classical), hmax) for s in chunk], a.workers)
+        rows = []
+        for s, qs in zip(chunk, ref_q):
+            for t in a.contexts:  # the oracle's quantiles do not depend on T, but MASE/sCRPS scaling does
+                rows += rows_for(s, s.oracle_q, "oracle", t, a.horizons, {})
+            for name, q in zip(a.classical, qs):
+                for t in a.contexts:
+                    rows += rows_for(s, q, name, t, a.horizons, {})
+        flush(rows)
+        print(f"references {min(c0 + step, len(ref_samples))}/{len(ref_samples)} ({time.time() - t_start:.0f}s)", flush=True)
     print(f"references done ({time.time() - t_start:.0f}s)", flush=True)
 
     specs = [(size, False) for size in a.sizes] + ([(size, True) for size in a.sizes] if a.covariates else [])
     for size, use_cov in specs:
         name = f"timestral-{size}" + ("+cov" if use_cov else "") + ("-nosym" if a.no_symmetric else "")
         for t in a.contexts:
+            if done is not None and ((done.forecaster == name) & (done["T"] == t)).sum() >= len(samples) * len(a.horizons):
+                print(f"{name} T={t} already done (resume)")
+                continue
             t0 = time.time()
+            rows = []
             groups: dict = {}
             for i, s in enumerate(samples):
                 groups.setdefault((s.context.shape, s.past_cov is None, s.known_cov is None), []).append(i)
@@ -165,14 +193,18 @@ def main(argv=None):
                 for j, i in enumerate(idx):
                     rows += rows_for(samples[i], q[j], name, t, a.horizons,
                                      {"sec_per_sample": (time.time() - t0) / len(samples)})
+            flush(rows)
             print(f"{name} T={t} done ({time.time() - t0:.0f}s)", flush=True)
 
+    rows = pd.read_csv(partial).to_dict("records") if os.path.exists(partial) else []
     df = pd.DataFrame(rows)
     df.to_csv(os.path.join(a.out, "scores.csv"), index=False)
     write_json(os.path.join(a.out, "provenance.json"),
                provenance("scripts/sweep.py", argv=sys.argv, n_samples=len(samples), n_rows=len(df),
                           wall_sec=round(time.time() - t_start, 1)))
     print(f"wrote {len(df)} rows to {a.out}/scores.csv in {time.time() - t_start:.0f}s")
+    if os.path.exists(partial):
+        os.remove(partial)
 
 
 if __name__ == "__main__":

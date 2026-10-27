@@ -1,0 +1,4 @@
+torch 2.11.0+cu130 cuda True NVIDIA A100-SXM4-40GB
+name, memory.total [MiB]
+NVIDIA A100-SXM4-40GB, 40960 MiB
+

@@ -1,0 +1,32 @@
+{
+  "script": "scripts/sweep.py",
+  "git": "4166f28",
+  "time_utc": "2026-10-26T20:42:09Z",
+  "host": "vm",
+  "torch": "2.14.1+cpu",
+  "threads": 1,
+  "cuda": false,
+  "argv": [
+    "scripts/sweep.py",
+    "--grid",
+    "otp.grids.symavg",
+    "--sizes",
+    "5M",
+    "28M",
+    "--contexts",
+    "2048",
+    "--horizons",
+    "16",
+    "128",
+    "1024",
+    "--seeds",
+    "16",
+    "--classical",
+    "seasonal_naive",
+    "--out",
+    "results/mechanism/symavg/on"
+  ],
+  "n_samples": 224,
+  "n_rows": 2688,
+  "wall_sec": 429.1
+}
