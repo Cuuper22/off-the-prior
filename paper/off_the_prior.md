@@ -3,7 +3,24 @@ title: "Off the Prior: Mapping Where a Synthetic-Prior Time-Series Foundation Mo
 author: "Yousef Anas (Cúper)"
 date: "October 2026"
 abstract: |
-  RESULTS-PENDING: the abstract is written last, from the result files.
+  Timestral (Mistral, October 2026; 5M to 209M parameters) is a time-series foundation model
+  pretrained mostly on synthetic trend + season + noise series. We map where its forecasts fall
+  behind the best achievable forecast, using simulators whose true state is known: a Monte Carlo
+  continuation from that state serves as an oracle, so a large error counts as a failure only when
+  the oracle does better. On series like the pretraining data, all four sizes stay at
+  0.99–1.15× the oracle's MASE up to horizon 128; heavy tails, long
+  memory, bursts and multifractal cascades stay at 0.94–1.34×. The gaps are on
+  smooth, nearly deterministic dynamics (Mackey-Glass at τ = 30: 21.87× at 5M,
+  13.68× at 209M; for Lorenz the gap is confined to the first Lyapunov times) and on
+  recent regime switches (3.77× at 5M and 2.43× at 209M sixteen steps after a
+  level jump). Linear readouts of the forecast tokens recover the new level after a jump with
+  R² 0.956–0.980 while the forecast reaches 0.570–0.726: the change
+  is represented but not used. A nearest-neighbour forecaster built from the context beats every size
+  on the delay and smooth-chaos systems, and a training-free switch that backtests the two on the
+  context lowers chaos errors to 0.824× (5M) and 0.982× (209M) of Timestral's on fresh
+  samples, with in-prior and regime series unchanged and tails at most 1.003×. We release two benchmarks with oracle quantiles
+  (372 tagged diagnostic series; 3,776 leaderboard series), on which Timestral-209M
+  is at 2.00× and 1.31× the oracle's MASE.
 ---
 
 <!--

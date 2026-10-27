@@ -3,7 +3,24 @@ title: "Off the Prior: Mapping Where a Synthetic-Prior Time-Series Foundation Mo
 author: "Yousef Anas (Cúper)"
 date: "October 2026"
 abstract: |
-  RESULTS-PENDING: the abstract is written last, from the result files.
+  Timestral (Mistral, October 2026; 5M to 209M parameters) is a time-series foundation model
+  pretrained mostly on synthetic trend + season + noise series. We map where its forecasts fall
+  behind the best achievable forecast, using simulators whose true state is known: a Monte Carlo
+  continuation from that state serves as an oracle, so a large error counts as a failure only when
+  the oracle does better. On series like the pretraining data, all four sizes stay at
+  {{num:inprior_short_min}}–{{num:inprior_short_max}}× the oracle's MASE up to horizon 128; heavy tails, long
+  memory, bursts and multifractal cascades stay at {{num:tails_min}}–{{num:tails_max}}×. The gaps are on
+  smooth, nearly deterministic dynamics (Mackey-Glass at τ = 30: {{num:chaos_mg30_5M}}× at 5M,
+  {{num:chaos_mg30_209M}}× at 209M; for Lorenz the gap is confined to the first Lyapunov times) and on
+  recent regime switches ({{num:reg_mj4_16_5M}}× at 5M and {{num:reg_mj4_16_209M}}× at 209M sixteen steps after a
+  level jump). Linear readouts of the forecast tokens recover the new level after a jump with
+  R² {{num:ro_mj16_ro_min}}–{{num:ro_mj16_ro_max}} while the forecast reaches {{num:ro_mj16_out_min}}–{{num:ro_mj16_out_max}}: the change
+  is represented but not used. A nearest-neighbour forecaster built from the context beats every size
+  on the delay and smooth-chaos systems, and a training-free switch that backtests the two on the
+  context lowers chaos errors to {{num:sv_chaos_5M}}× (5M) and {{num:sv_chaos_209M}}× (209M) of Timestral's on fresh
+  samples, with in-prior and regime series unchanged and tails at most {{num:sv_tails_max}}×. We release two benchmarks with oracle quantiles
+  ({{num:bench_n_diag}} tagged diagnostic series; {{num:bench_n_lb}} leaderboard series), on which Timestral-209M
+  is at {{num:bench_diag_209M_oracle}}× and {{num:bench_lb_209M_oracle}}× the oracle's MASE.
 ---
 
 <!--
