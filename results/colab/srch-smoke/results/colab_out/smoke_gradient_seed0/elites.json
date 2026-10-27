@@ -1,0 +1,1554 @@
+{
+  "method": "gradient",
+  "seed": 0,
+  "size": "5M",
+  "budget": 120,
+  "calls": 117,
+  "top": [
+    {
+      "rank": 1,
+      "hash": "79d6e417312ace18",
+      "fitness": 6.321016250746274,
+      "ratio_scrps": 6.178329584069137,
+      "cov80": 0.9713541666666666,
+      "family": "primitive",
+      "signature": "season+variance_jump",
+      "spec_entropy": 0.3076815148629822,
+      "eval": 13,
+      "genome": [
+        0.53125,
+        0.09500172170592863,
+        0.04097352393619469,
+        0.19716209189049544,
+        0.8132702392002724,
+        0.9127555772777217,
+        0.09375,
+        0.9073121475385609,
+        0.5436249914654229,
+        0.9350724237877682,
+        0.8158535541215322,
+        0.002738500170148095,
+        0.15625,
+        0.0,
+        0.7296554464299441,
+        0.27530538785069886,
+        0.8631789223498866,
+        0.5414612202490917,
+        0.59375,
+        0.424516944336771,
+        0.028319671145462966,
+        0.0,
+        0.5672180694352771,
+        0.6471895115742501,
+        0.43989521726419745
+      ],
+      "recipe": {
+        "slots": [
+          {
+            "component": "mean_jump",
+            "family": "regime",
+            "weight": 0.0181,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 96,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "horizon",
+              "d": 64,
+              "hazard": 0.00391,
+              "delta": -4.84541
+            }
+          },
+          {
+            "component": "season",
+            "family": "primitive",
+            "weight": 1.6464,
+            "mode": "add",
+            "params": {
+              "period": 365,
+              "amplitude": 1.0,
+              "harmonics": 4,
+              "phase_seed": 2738
+            }
+          },
+          {
+            "component": "ar_noise",
+            "family": "primitive",
+            "weight": 0.0,
+            "mode": "add",
+            "params": {
+              "rho": 0.27255,
+              "sigma": 1.0
+            }
+          },
+          {
+            "component": "variance_jump",
+            "family": "regime",
+            "weight": 0.3604,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 48,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 499,
+              "hazard": 0.00391,
+              "factor": 0.2
+            }
+          }
+        ],
+        "noise_sd": 0.012582
+      }
+    },
+    {
+      "rank": 2,
+      "hash": "ffb2bc7a6535a20c",
+      "fitness": 4.323560257897106,
+      "ratio_scrps": 4.185687993610867,
+      "cov80": 0.8697916666666666,
+      "family": "primitive",
+      "signature": "season+variance_jump",
+      "spec_entropy": 0.3043505815105024,
+      "eval": 10,
+      "genome": [
+        0.53125,
+        0.15129093617741582,
+        0.04097352393619469,
+        0.13665707008093206,
+        0.8132702392002724,
+        0.9127555772777217,
+        0.09375,
+        0.8493936199795658,
+        0.5436249914654229,
+        0.9350724237877682,
+        0.8158535541215322,
+        0.002738500170148095,
+        0.15625,
+        0.0,
+        0.7296554464299441,
+        0.25490856355729075,
+        0.8631789223498866,
+        0.5414612202490917,
+        0.59375,
+        0.38006282923121804,
+        0.028319671145462966,
+        0.004412398876695842,
+        0.6057728547590028,
+        0.6471895115742501,
+        0.49791916554896337
+      ],
+      "recipe": {
+        "slots": [
+          {
+            "component": "mean_jump",
+            "family": "regime",
+            "weight": 0.0458,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 96,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "horizon",
+              "d": 64,
+              "hazard": 0.00391,
+              "delta": -5.81349
+            }
+          },
+          {
+            "component": "season",
+            "family": "primitive",
+            "weight": 1.4429,
+            "mode": "add",
+            "params": {
+              "period": 365,
+              "amplitude": 1.0,
+              "harmonics": 4,
+              "phase_seed": 2738
+            }
+          },
+          {
+            "component": "ar_noise",
+            "family": "primitive",
+            "weight": 0.0,
+            "mode": "add",
+            "params": {
+              "rho": 0.25236,
+              "sigma": 1.0
+            }
+          },
+          {
+            "component": "variance_jump",
+            "family": "regime",
+            "weight": 0.2889,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 48,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 631,
+              "hazard": 0.00391,
+              "factor": 0.20328
+            }
+          }
+        ],
+        "noise_sd": 0.017571
+      }
+    },
+    {
+      "rank": 3,
+      "hash": "a2e490e0e9ef5b3f",
+      "fitness": 3.505851128585876,
+      "ratio_scrps": 3.2998648543643285,
+      "cov80": 0.7682291666666666,
+      "family": "primitive",
+      "signature": "mean_jump+season+variance_jump",
+      "spec_entropy": 0.30487914500823626,
+      "eval": 7,
+      "genome": [
+        0.53125,
+        0.18094213904766557,
+        0.04097352393619469,
+        0.10656739697466926,
+        0.8132702392002724,
+        0.9127555772777217,
+        0.09375,
+        0.819544207289932,
+        0.5436249914654229,
+        0.9350724237877682,
+        0.8158535541215322,
+        0.002738500170148095,
+        0.15625,
+        0.0,
+        0.7296554464299441,
+        0.24194751989237448,
+        0.8631789223498866,
+        0.5414612202490917,
+        0.59375,
+        0.364737472343483,
+        0.028319671145462966,
+        0.03450414206957715,
+        0.6153592413028518,
+        0.6471895115742501,
+        0.5274331955049064
+      ],
+      "recipe": {
+        "slots": [
+          {
+            "component": "mean_jump",
+            "family": "regime",
+            "weight": 0.0655,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 96,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "horizon",
+              "d": 64,
+              "hazard": 0.00391,
+              "delta": -6.29492
+            }
+          },
+          {
+            "component": "season",
+            "family": "primitive",
+            "weight": 1.3433,
+            "mode": "add",
+            "params": {
+              "period": 365,
+              "amplitude": 1.0,
+              "harmonics": 4,
+              "phase_seed": 2738
+            }
+          },
+          {
+            "component": "ar_noise",
+            "family": "primitive",
+            "weight": 0.0,
+            "mode": "add",
+            "params": {
+              "rho": 0.23953,
+              "sigma": 1.0
+            }
+          },
+          {
+            "component": "variance_jump",
+            "family": "regime",
+            "weight": 0.2661,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 48,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 668,
+              "hazard": 0.00391,
+              "factor": 0.22715
+            }
+          }
+        ],
+        "noise_sd": 0.020825
+      }
+    },
+    {
+      "rank": 4,
+      "hash": "49b648e73c1b7244",
+      "fitness": 3.0706225348262723,
+      "ratio_scrps": 2.8490898763612487,
+      "cov80": 0.7161458333333334,
+      "family": "primitive",
+      "signature": "mean_jump+season+variance_jump",
+      "spec_entropy": 0.30986536053402275,
+      "eval": 4,
+      "genome": [
+        0.53125,
+        0.21050285874818292,
+        0.04097352393619469,
+        0.07652713520186977,
+        0.8132702392002724,
+        0.9127555772777217,
+        0.09375,
+        0.7895336274727379,
+        0.5436249914654229,
+        0.9350724237877682,
+        0.8158535541215322,
+        0.002738500170148095,
+        0.15625,
+        0.0,
+        0.7296554464299441,
+        0.22612473444251713,
+        0.8631789223498866,
+        0.5414612202490917,
+        0.59375,
+        0.3652217332774811,
+        0.028319671145462966,
+        0.06447448263694658,
+        0.6245829969895463,
+        0.6471895115742501,
+        0.556639306831345
+      ],
+      "recipe": {
+        "slots": [
+          {
+            "component": "mean_jump",
+            "family": "regime",
+            "weight": 0.0886,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 96,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "horizon",
+              "d": 64,
+              "hazard": 0.00391,
+              "delta": -6.77557
+            }
+          },
+          {
+            "component": "season",
+            "family": "primitive",
+            "weight": 1.2467,
+            "mode": "add",
+            "params": {
+              "period": 365,
+              "amplitude": 1.0,
+              "harmonics": 4,
+              "phase_seed": 2738
+            }
+          },
+          {
+            "component": "ar_noise",
+            "family": "primitive",
+            "weight": 0.0,
+            "mode": "add",
+            "params": {
+              "rho": 0.22386,
+              "sigma": 1.0
+            }
+          },
+          {
+            "component": "variance_jump",
+            "family": "regime",
+            "weight": 0.2668,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 48,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 707,
+              "hazard": 0.00391,
+              "factor": 0.2537
+            }
+          }
+        ],
+        "noise_sd": 0.024638
+      }
+    },
+    {
+      "rank": 5,
+      "hash": "be4100c27aac3247",
+      "fitness": 2.13152195391811,
+      "ratio_scrps": 1.9322985734648443,
+      "cov80": 0.703125,
+      "family": "primitive",
+      "signature": "mean_jump+season+variance_jump",
+      "spec_entropy": 0.33804411322874395,
+      "eval": 1,
+      "genome": [
+        0.53125,
+        0.2697867137638703,
+        0.04097352393619469,
+        0.016527635528529094,
+        0.8132702392002724,
+        0.9127555772777217,
+        0.09375,
+        0.7294965609839984,
+        0.5436249914654229,
+        0.9350724237877682,
+        0.8158535541215322,
+        0.002738500170148095,
+        0.15625,
+        0.033585575305464355,
+        0.7296554464299441,
+        0.17565562060255901,
+        0.8631789223498866,
+        0.5414612202490917,
+        0.59375,
+        0.42268722119765845,
+        0.028319671145462966,
+        0.12428327649956394,
+        0.6706244146936303,
+        0.6471895115742501,
+        0.6153851114812539
+      ],
+      "recipe": {
+        "slots": [
+          {
+            "component": "mean_jump",
+            "family": "regime",
+            "weight": 0.1456,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 96,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "horizon",
+              "d": 64,
+              "hazard": 0.00391,
+              "delta": -7.73556
+            }
+          },
+          {
+            "component": "season",
+            "family": "primitive",
+            "weight": 1.0643,
+            "mode": "add",
+            "params": {
+              "period": 365,
+              "amplitude": 1.0,
+              "harmonics": 4,
+              "phase_seed": 2738
+            }
+          },
+          {
+            "component": "ar_noise",
+            "family": "primitive",
+            "weight": 0.0023,
+            "mode": "add",
+            "params": {
+              "rho": 0.1739,
+              "sigma": 1.0
+            }
+          },
+          {
+            "component": "variance_jump",
+            "family": "regime",
+            "weight": 0.3573,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 48,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 934,
+              "hazard": 0.00391,
+              "factor": 0.31633
+            }
+          }
+        ],
+        "noise_sd": 0.034551
+      }
+    },
+    {
+      "rank": 6,
+      "hash": "f703fe4d26ca6056",
+      "fitness": 1.1535592833504005,
+      "ratio_scrps": 1.2984336446007632,
+      "cov80": 0.9973958333333334,
+      "family": "regime",
+      "signature": "mean_jump+variance_jump",
+      "spec_entropy": 0.4234563181740713,
+      "eval": 14,
+      "genome": [
+        0.59375,
+        0.6908187589894306,
+        0.6884467305709401,
+        0.21546663353200798,
+        0.0,
+        0.7214883401940817,
+        0.03125,
+        0.1385056919654723,
+        0.4858353588317891,
+        1.0,
+        0.7884023813828221,
+        0.31770275089854927,
+        0.03125,
+        0.1462561395739235,
+        0.5943000301996968,
+        0.506346878235428,
+        0.5631719116177851,
+        1.0,
+        0.53125,
+        0.44547946576394976,
+        0.08401534358238483,
+        1.0,
+        0.7000635598221407,
+        0.23936944299295215,
+        0.699856649371599
+      ],
+      "recipe": {
+        "slots": [
+          {
+            "component": "variance_jump",
+            "family": "regime",
+            "weight": 0.9545,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 48,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 16,
+              "hazard": 0.00391,
+              "factor": 0.44281
+            }
+          },
+          {
+            "component": "trend",
+            "family": "primitive",
+            "weight": 0.0384,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "slope": 0.01,
+              "slope_noise": 0.00232,
+              "phi": 0.96589
+            }
+          },
+          {
+            "component": "trend",
+            "family": "primitive",
+            "weight": 0.0428,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "slope": 0.00013,
+              "slope_noise": 0.00049,
+              "phi": 1.0
+            }
+          },
+          {
+            "component": "mean_jump",
+            "family": "regime",
+            "weight": 0.3969,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 12,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 1117,
+              "hazard": 0.00391,
+              "delta": 8.0
+            }
+          }
+        ],
+        "noise_sd": 0.056188
+      }
+    },
+    {
+      "rank": 7,
+      "hash": "d90f4dde4f0157e1",
+      "fitness": 1.1119886431425647,
+      "ratio_scrps": 1.1811490882792222,
+      "cov80": 0.9739583333333334,
+      "family": "regime",
+      "signature": "mean_jump+trend+variance_jump",
+      "spec_entropy": 0.44334290293535705,
+      "eval": 11,
+      "genome": [
+        0.59375,
+        0.6430627736193519,
+        0.6884467305709401,
+        0.27184146502971107,
+        0.023104422224942387,
+        0.7214883401940817,
+        0.03125,
+        0.19248910527089175,
+        0.4858353588317891,
+        1.0,
+        0.8180728466092337,
+        0.29996261219162684,
+        0.03125,
+        0.2047640080500596,
+        0.5943000301996968,
+        0.4512383914184114,
+        0.5076047178298998,
+        1.0,
+        0.53125,
+        0.5031094767614586,
+        0.08401534358238483,
+        0.9523126813772597,
+        0.731098145761622,
+        0.23936944299295215,
+        0.7593222332548822
+      ],
+      "recipe": {
+        "slots": [
+          {
+            "component": "variance_jump",
+            "family": "regime",
+            "weight": 0.8271,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 48,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 18,
+              "hazard": 0.00391,
+              "factor": 0.54518
+            }
+          },
+          {
+            "component": "trend",
+            "family": "primitive",
+            "weight": 0.0741,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "slope": 0.01,
+              "slope_noise": 0.00285,
+              "phi": 0.965
+            }
+          },
+          {
+            "component": "trend",
+            "family": "primitive",
+            "weight": 0.0839,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "slope": -0.00098,
+              "slope_noise": 0.00033,
+              "phi": 1.0
+            }
+          },
+          {
+            "component": "mean_jump",
+            "family": "regime",
+            "weight": 0.5062,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 12,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 1348,
+              "hazard": 0.00391,
+              "delta": 7.237
+            }
+          }
+        ],
+        "noise_sd": 0.079124
+      }
+    },
+    {
+      "rank": 8,
+      "hash": "8bc8792bd3735bf5",
+      "fitness": 1.1028299338968648,
+      "ratio_scrps": 1.1447218816445086,
+      "cov80": 0.9557291666666666,
+      "family": "regime",
+      "signature": "mean_jump+trend+variance_jump",
+      "spec_entropy": 0.45732770111395543,
+      "eval": 8,
+      "genome": [
+        0.59375,
+        0.6243769381612375,
+        0.6884467305709401,
+        0.30064334409420235,
+        0.050088317293543204,
+        0.7214883401940817,
+        0.03125,
+        0.22085410447046364,
+        0.4858353588317891,
+        0.9772404209676236,
+        0.8469141187730027,
+        0.2994049939367598,
+        0.03125,
+        0.2338864266933537,
+        0.5943000301996968,
+        0.4239609852435024,
+        0.47890935834679554,
+        0.9803324273362304,
+        0.53125,
+        0.5332328368897695,
+        0.08401534358238483,
+        0.9223813460777653,
+        0.738308721446341,
+        0.23936944299295215,
+        0.7888775655083033
+      ],
+      "recipe": {
+        "slots": [
+          {
+            "component": "variance_jump",
+            "family": "regime",
+            "weight": 0.7797,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 48,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 22,
+              "hazard": 0.00391,
+              "factor": 0.60629
+            }
+          },
+          {
+            "component": "trend",
+            "family": "primitive",
+            "weight": 0.0976,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "slope": 0.00954,
+              "slope_noise": 0.00347,
+              "phi": 0.96497
+            }
+          },
+          {
+            "component": "trend",
+            "family": "primitive",
+            "weight": 0.1094,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "slope": -0.00152,
+              "slope_noise": 0.00027,
+              "phi": 0.99902
+            }
+          },
+          {
+            "component": "mean_jump",
+            "family": "regime",
+            "weight": 0.5687,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 12,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 1409,
+              "hazard": 0.00391,
+              "delta": 6.7581
+            }
+          }
+        ],
+        "noise_sd": 0.093798
+      }
+    },
+    {
+      "rank": 9,
+      "hash": "caaf9a5f3d5e51c1",
+      "fitness": 1.0938936183061467,
+      "ratio_scrps": 1.1189360258260754,
+      "cov80": 0.9375,
+      "family": "regime",
+      "signature": "mean_jump+trend+variance_jump",
+      "spec_entropy": 0.46386879781111495,
+      "eval": 5,
+      "genome": [
+        0.59375,
+        0.6144786359229635,
+        0.6884467305709401,
+        0.32951168935133585,
+        0.07739146009861572,
+        0.7214883401940817,
+        0.03125,
+        0.25064871874972444,
+        0.4858353588317891,
+        0.948759054802695,
+        0.8749754482344881,
+        0.3086599054593036,
+        0.03125,
+        0.26248438538032604,
+        0.5943000301996968,
+        0.39781415894548605,
+        0.4510836187433439,
+        0.9502975878335826,
+        0.53125,
+        0.5632260806913224,
+        0.08401534358238483,
+        0.8926477425538423,
+        0.7349930462314512,
+        0.23936944299295215,
+        0.8180132670174806
+      ],
+      "recipe": {
+        "slots": [
+          {
+            "component": "variance_jump",
+            "family": "regime",
+            "weight": 0.7552,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 48,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 26,
+              "hazard": 0.00391,
+              "factor": 0.67442
+            }
+          },
+          {
+            "component": "trend",
+            "family": "primitive",
+            "weight": 0.1256,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "slope": 0.00898,
+              "slope_noise": 0.00422,
+              "phi": 0.96543
+            }
+          },
+          {
+            "component": "trend",
+            "family": "primitive",
+            "weight": 0.1378,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "slope": -0.00204,
+              "slope_noise": 0.00023,
+              "phi": 0.99751
+            }
+          },
+          {
+            "component": "mean_jump",
+            "family": "regime",
+            "weight": 0.6344,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 12,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 1381,
+              "hazard": 0.00391,
+              "delta": 6.28236
+            }
+          }
+        ],
+        "noise_sd": 0.110926
+      }
+    },
+    {
+      "rank": 10,
+      "hash": "0bebd9c2e5cb45b8",
+      "fitness": 1.090498263608331,
+      "ratio_scrps": 1.098038317891284,
+      "cov80": 0.8802083333333334,
+      "family": "regime",
+      "signature": "mean_jump+trend+variance_jump",
+      "spec_entropy": 0.46938342462649985,
+      "eval": 2,
+      "genome": [
+        0.59375,
+        0.6504592762678163,
+        0.6884467305709401,
+        0.3889214239791038,
+        0.13509650502241122,
+        0.7214883401940817,
+        0.03125,
+        0.31024187555895566,
+        0.4858353588317891,
+        0.8894878343490003,
+        0.9340435159562497,
+        0.35779519670907023,
+        0.03125,
+        0.32186939107594215,
+        0.5943000301996968,
+        0.33791122550713326,
+        0.39161900052816123,
+        0.8902743520047923,
+        0.53125,
+        0.6231871446860424,
+        0.08401534358238483,
+        0.8326441476533978,
+        0.7870983074886834,
+        0.23936944299295215,
+        0.8764842308107038
+      ],
+      "recipe": {
+        "slots": [
+          {
+            "component": "variance_jump",
+            "family": "regime",
+            "weight": 0.8462,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 48,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 36,
+              "hazard": 0.00391,
+              "factor": 0.83966
+            }
+          },
+          {
+            "component": "trend",
+            "family": "primitive",
+            "weight": 0.1925,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "slope": 0.00779,
+              "slope_noise": 0.00634,
+              "phi": 0.96789
+            }
+          },
+          {
+            "component": "trend",
+            "family": "primitive",
+            "weight": 0.2072,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "slope": -0.00324,
+              "slope_noise": 0.00015,
+              "phi": 0.99451
+            }
+          },
+          {
+            "component": "mean_jump",
+            "family": "regime",
+            "weight": 0.7767,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 12,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 1894,
+              "hazard": 0.00391,
+              "delta": 5.32231
+            }
+          }
+        ],
+        "noise_sd": 0.155314
+      }
+    },
+    {
+      "rank": 11,
+      "hash": "62094e8a92327aae",
+      "fitness": 0.9934474129975762,
+      "ratio_scrps": 0.9996321273943727,
+      "cov80": 0.8489583333333334,
+      "family": "primitive",
+      "signature": "ar_noise+variance_jump",
+      "spec_entropy": 0.8835866618369549,
+      "eval": 3,
+      "genome": [
+        0.59375,
+        0.450339366649287,
+        0.7963242702872942,
+        0.23064220899374743,
+        0.05202130106440961,
+        0.4045518398215282,
+        0.53125,
+        0.0907530456191219,
+        0.5803323859868507,
+        0.2986961328189226,
+        0.6719948779563594,
+        0.1995154439682133,
+        0.15625,
+        0.36511016824482856,
+        0.10549527957022953,
+        0.6291081515397092,
+        0.9271545530678674,
+        0.440377154715784,
+        0.15625,
+        0.499895813687647,
+        0.42522862484907553,
+        0.6202134520153778,
+        0.9950965052353241,
+        0.9489436749377653,
+        0.4600451393090961
+      ],
+      "recipe": {
+        "slots": [
+          {
+            "component": "variance_jump",
+            "family": "regime",
+            "weight": 0.4056,
+            "mode": "modulate",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 24,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 22,
+              "hazard": 0.00391,
+              "factor": 0.46831
+            }
+          },
+          {
+            "component": "mean_jump",
+            "family": "regime",
+            "weight": 0.0165,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 12,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 942,
+              "hazard": 0.00391,
+              "delta": -3.22086
+            }
+          },
+          {
+            "component": "ar_noise",
+            "family": "primitive",
+            "weight": 0.2666,
+            "mode": "add",
+            "params": {
+              "rho": 0.62282,
+              "sigma": 1.0
+            }
+          },
+          {
+            "component": "ar_noise",
+            "family": "primitive",
+            "weight": 0.4998,
+            "mode": "add",
+            "params": {
+              "rho": 0.61401,
+              "sigma": 1.0
+            }
+          }
+        ],
+        "noise_sd": 0.014129
+      }
+    },
+    {
+      "rank": 12,
+      "hash": "4a013656e79b79b5",
+      "fitness": 0.988576777385291,
+      "ratio_scrps": 1.0098645646030795,
+      "cov80": 0.8515625,
+      "family": "primitive",
+      "signature": "ar_noise+variance_jump",
+      "spec_entropy": 0.8741698215807302,
+      "eval": 9,
+      "genome": [
+        0.59375,
+        0.54046064419633,
+        0.7963242702872942,
+        0.1671443176005406,
+        0.10007383672737583,
+        0.4045518398215282,
+        0.53125,
+        0.005302140383696946,
+        0.5803323859868507,
+        0.21657300533662324,
+        0.6065844827106291,
+        0.1995154439682133,
+        0.15625,
+        0.434947448012315,
+        0.10549527957022953,
+        0.7163838617171867,
+        0.9271545530678674,
+        0.440377154715784,
+        0.15625,
+        0.45038389086187736,
+        0.42522862484907553,
+        0.6013460945161933,
+        0.9950965052353241,
+        0.9489436749377653,
+        0.37638815733872505
+      ],
+      "recipe": {
+        "slots": [
+          {
+            "component": "variance_jump",
+            "family": "regime",
+            "weight": 0.5842,
+            "mode": "modulate",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 24,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 29,
+              "hazard": 0.00391,
+              "factor": 0.37051
+            }
+          },
+          {
+            "component": "mean_jump",
+            "family": "regime",
+            "weight": 0.0001,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 12,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 634,
+              "hazard": 0.00391,
+              "delta": -4.53483
+            }
+          },
+          {
+            "component": "ar_noise",
+            "family": "primitive",
+            "weight": 0.3784,
+            "mode": "add",
+            "params": {
+              "rho": 0.70922,
+              "sigma": 1.0
+            }
+          },
+          {
+            "component": "ar_noise",
+            "family": "primitive",
+            "weight": 0.4057,
+            "mode": "add",
+            "params": {
+              "rho": 0.59533,
+              "sigma": 1.0
+            }
+          }
+        ],
+        "noise_sd": 0.008729
+      }
+    },
+    {
+      "rank": 13,
+      "hash": "58c34743fa57579d",
+      "fitness": 0.9879263260746017,
+      "ratio_scrps": 1.0151776409531088,
+      "cov80": 0.8489583333333334,
+      "family": "primitive",
+      "signature": "ar_noise+variance_jump",
+      "spec_entropy": 0.8682647858793818,
+      "eval": 12,
+      "genome": [
+        0.59375,
+        0.5706428362893335,
+        0.7963242702872942,
+        0.15405299414701823,
+        0.08073714226591208,
+        0.4045518398215282,
+        0.53125,
+        0.0,
+        0.5803323859868507,
+        0.19677508377261643,
+        0.5952946465257472,
+        0.1995154439682133,
+        0.15625,
+        0.4414982490297488,
+        0.10549527957022953,
+        0.7444044014409094,
+        0.9271545530678674,
+        0.440377154715784,
+        0.15625,
+        0.4619213101191159,
+        0.42522862484907553,
+        0.6174944314721958,
+        0.9950965052353241,
+        0.9489436749377653,
+        0.36009146681601817
+      ],
+      "recipe": {
+        "slots": [
+          {
+            "component": "variance_jump",
+            "family": "regime",
+            "weight": 0.6513,
+            "mode": "modulate",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 24,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 26,
+              "hazard": 0.00391,
+              "factor": 0.35305
+            }
+          },
+          {
+            "component": "mean_jump",
+            "family": "regime",
+            "weight": 0.0,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 12,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 592,
+              "hazard": 0.00391,
+              "delta": -4.8516
+            }
+          },
+          {
+            "component": "ar_noise",
+            "family": "primitive",
+            "weight": 0.3898,
+            "mode": "add",
+            "params": {
+              "rho": 0.73696,
+              "sigma": 1.0
+            }
+          },
+          {
+            "component": "ar_noise",
+            "family": "primitive",
+            "weight": 0.4267,
+            "mode": "add",
+            "params": {
+              "rho": 0.61132,
+              "sigma": 1.0
+            }
+          }
+        ],
+        "noise_sd": 0.007947
+      }
+    },
+    {
+      "rank": 14,
+      "hash": "4a86194a024a56ff",
+      "fitness": 0.9878966478608902,
+      "ratio_scrps": 1.005459971668247,
+      "cov80": 0.8515625,
+      "family": "primitive",
+      "signature": "ar_noise+variance_jump",
+      "spec_entropy": 0.8811752599811368,
+      "eval": 6,
+      "genome": [
+        0.59375,
+        0.5103755413155764,
+        0.7963242702872942,
+        0.17170975036842773,
+        0.1102896713045511,
+        0.4045518398215282,
+        0.53125,
+        0.03178907865667459,
+        0.5803323859868507,
+        0.2406600245719931,
+        0.620435941232421,
+        0.1995154439682133,
+        0.15625,
+        0.41633605524907236,
+        0.10549527957022953,
+        0.68734369280853,
+        0.9271545530678674,
+        0.440377154715784,
+        0.15625,
+        0.4538492409481714,
+        0.42522862484907553,
+        0.5898273322039067,
+        0.9950965052353241,
+        0.9489436749377653,
+        0.4004634932415283
+      ],
+      "recipe": {
+        "slots": [
+          {
+            "component": "variance_jump",
+            "family": "regime",
+            "weight": 0.521,
+            "mode": "modulate",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 24,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 31,
+              "hazard": 0.00391,
+              "factor": 0.37681
+            }
+          },
+          {
+            "component": "mean_jump",
+            "family": "regime",
+            "weight": 0.002,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 12,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 689,
+              "hazard": 0.00391,
+              "delta": -4.14944
+            }
+          },
+          {
+            "component": "ar_noise",
+            "family": "primitive",
+            "weight": 0.3467,
+            "mode": "add",
+            "params": {
+              "rho": 0.68047,
+              "sigma": 1.0
+            }
+          },
+          {
+            "component": "ar_noise",
+            "family": "primitive",
+            "weight": 0.412,
+            "mode": "add",
+            "params": {
+              "rho": 0.58393,
+              "sigma": 1.0
+            }
+          }
+        ],
+        "noise_sd": 0.010027
+      }
+    },
+    {
+      "rank": 15,
+      "hash": "f1f3b0995c3d8151",
+      "fitness": 0.9874138846251178,
+      "ratio_scrps": 1.0300275091179276,
+      "cov80": 0.8385416666666666,
+      "family": "primitive",
+      "signature": "ar_noise+variance_jump",
+      "spec_entropy": 0.8597939342146893,
+      "eval": 15,
+      "genome": [
+        0.59375,
+        0.6313701102992071,
+        0.7963242702872942,
+        0.11300487333498685,
+        0.038839861749428974,
+        0.4045518398215282,
+        0.53125,
+        0.0,
+        0.5803323859868507,
+        0.16561900832932225,
+        0.5775277800269966,
+        0.1995154439682133,
+        0.15625,
+        0.458594331412018,
+        0.10549527957022953,
+        0.8017544485287914,
+        0.9271545530678674,
+        0.440377154715784,
+        0.15625,
+        0.4871178126873116,
+        0.42522862484907553,
+        0.6160099748128455,
+        0.9950965052353241,
+        0.9489436749377653,
+        0.31602221894016125
+      ],
+      "recipe": {
+        "slots": [
+          {
+            "component": "variance_jump",
+            "family": "regime",
+            "weight": 0.7973,
+            "mode": "modulate",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 24,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 20,
+              "hazard": 0.00391,
+              "factor": 0.30344
+            }
+          },
+          {
+            "component": "mean_jump",
+            "family": "regime",
+            "weight": 0.0,
+            "mode": "add",
+            "params": {
+              "level": 0.0,
+              "amplitude": 1.0,
+              "harmonics": 2,
+              "phase_seed": 0,
+              "period": 12,
+              "rho": 0.5,
+              "sigma": 0.25,
+              "placement": "context",
+              "d": 531,
+              "hazard": 0.00391,
+              "delta": -5.3501
+            }
+          },
+          {
+            "component": "ar_noise",
+            "family": "primitive",
+            "weight": 0.4206,
+            "mode": "add",
+            "params": {
+              "rho": 0.79374,
+              "sigma": 1.0
+            }
+          },
+          {
+            "component": "ar_noise",
+            "family": "primitive",
+            "weight": 0.4746,
+            "mode": "add",
+            "params": {
+              "rho": 0.60985,
+              "sigma": 1.0
+            }
+          }
+        ],
+        "noise_sd": 0.006167
+      }
+    }
+  ]
+}
