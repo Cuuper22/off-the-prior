@@ -172,6 +172,9 @@ def main():
     w("The pre-registration (prediction table, matching criterion, sampling rule) was committed before any steering run. "
       "`role` labeled = poles drawn for the table of predictions; `complement` = the other pole of a drawn neuron; `control` = random poles, "
       "each judged for level, slope and spread against a random direction (the null rate).\n")
+    w("Essay style (a qualitative label per pole plus a steering check) is this section together with the `label` and `motif_*` columns of "
+      "`poles.parquet`; this project's known-variable scoring (R^2 and mutual information against the generating variables, as curves over "
+      "thresholds) is sections 1 and 2. The browser rows carry both for each pole.\n")
     ss = rd("steering_summary.csv")
     w(md(ss[ss.group == "all"][["size", "role", "n", "n_match", "match_rate", "ci_lo", "ci_hi", "monotone_rate", "size_rate", "interval_rate"]]))
     w("By predicted quantity group (labeled poles)\n")
