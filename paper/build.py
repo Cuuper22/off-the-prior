@@ -394,6 +394,70 @@ def realdata():
     table("rd_analogue", pd.DataFrame(rows), asrc, "Timestral MASE / best classical MASE (geometric mean): real analogue windows vs the synthetic family at T=2048, H=128")
 
 
+# ------------------------------------------------------------------------------ sections whose results land later
+# Each key below may be referenced in src.md before its result file exists; until then it renders as a
+# "results pending" note naming the file. Once the file exists, the function that defines the key must fill it.
+OPTIONAL = {
+    "search_comparison": "results/search/comparison.csv",
+    "search_transfer": "results/search/transfer.csv",
+    "ft_local_lofo": "results/finetune/local/summary.csv",
+    "ft_local_knob": "results/finetune/local/summary.csv",
+    "ft_local_regression": "results/finetune/local/summary.csv",
+    "ft_colab": "results/finetune/colab/summary.csv",
+    "nn_one_job": "results/neurons/one_job_curves.csv",
+    "nn_steering": "results/neurons/steering_results.csv",
+    "nn_failure_link": "results/neurons/failure_link.csv",
+}
+
+
+def generic_table(key, path, how, max_rows=40, cols=None):
+    d = pd.read_csv(p(path))
+    if cols:
+        d = d[[c for c in cols if c in d.columns]]
+    table(key, d.head(max_rows), path, how + (f" (first {max_rows} of {len(d)} rows)" if len(d) > max_rows else ""), "{:.3f}")
+
+
+def search_results():
+    f = "results/search/comparison.csv"
+    if os.path.exists(p(f)):
+        generic_table("search_comparison", f, "per search method, from results/search/comparison.csv")
+    f = "results/search/transfer.csv"
+    if os.path.exists(p(f)):
+        generic_table("search_transfer", f, "elites re-scored on larger sizes, from results/search/transfer.csv")
+
+
+def finetune_results():
+    f = "results/finetune/local/summary.csv"
+    if os.path.exists(p(f)):
+        s = pd.read_csv(p(f))
+        label = lambda r: r.method + (f"+mix{r.replay_frac:g}" if r.replay_frac > 0 else "")
+        for proto, key in (("lofo", "ft_local_lofo"), ("knob", "ft_local_knob")):
+            q = s[(s.protocol == proto) & (s.role == "test")].copy()
+            if len(q):
+                q["method"] = [label(r) for r in q.itertuples()]
+                rows = [{"held out": r.holdout, "method": r.method, "n": int(r.n), "ratio to oracle before": r.pre_mase_ratio,
+                         "after": r.ft_mase_ratio, "paired MASE after/before": r.paired_mase_ft_over_pre,
+                         "95% low": r.paired_mase_lo95, "95% high": r.paired_mase_hi95} for r in q.sort_values(["holdout", "method"]).itertuples()]
+                table(key, pd.DataFrame(rows), f, f"5M, protocol {proto}, held-out test sets: geometric-mean MASE ratio to oracle before and after, paired ratio with 95% interval", "{:.3f}")
+        q = s[s.role == "regression"].copy() if "role" in s else pd.DataFrame()
+        if len(q):
+            q["method"] = [label(r) for r in q.itertuples()]
+            rows = [{"run": r.run_id, "set": r.eval_set, "n": int(r.n), "paired MASE after/before": r.paired_mase_ft_over_pre,
+                     "95% low": r.paired_mase_lo95, "95% high": r.paired_mase_hi95} for r in q.itertuples()]
+            table("ft_local_regression", pd.DataFrame(rows), f, "regression sets: paired MASE ratio fine-tuned / pretrained", "{:.3f}")
+    f = "results/finetune/colab/summary.csv"
+    if os.path.exists(p(f)):
+        generic_table("ft_colab", f, "GPU runs, from results/finetune/colab/summary.csv")
+
+
+def neuron_results():
+    for key, f, how in (("nn_one_job", "results/neurons/one_job_curves.csv", "fraction of one-job, mixed and unexplained poles over the threshold"),
+                        ("nn_steering", "results/neurons/steering_results.csv", "steered poles against their pre-registered predictions"),
+                        ("nn_failure_link", "results/neurons/failure_link.csv", "poles active on the failure systems and the effect of damping them")):
+        if os.path.exists(p(f)):
+            generic_table(key, f, how)
+
+
 def bench():
     import json as _json
 
@@ -449,7 +513,7 @@ def bench():
 
 
 def main():
-    for fn in (in_prior, chaos, tails, long_ctx, symavg, normalization, analog, chaos_noise, readouts, selfval, regime, covariates, realdata, bench):
+    for fn in (in_prior, chaos, tails, long_ctx, symavg, normalization, analog, chaos_noise, readouts, selfval, regime, covariates, realdata, bench, search_results, finetune_results, neuron_results):
         try:
             fn()
         except FileNotFoundError as e:
@@ -460,6 +524,8 @@ def main():
     def sub(m):
         kind, key = m.group(1), m.group(2)
         d = (NUMS if kind == "num" else TABLES).get(key)
+        if d is None and key in OPTIONAL and not os.path.exists(p(OPTIONAL[key])):
+            return f"*(Results pending: `{OPTIONAL[key]}` is not in the repository yet.)*"
         if d is None:
             missing.append(m.group(0))
             return m.group(0)
