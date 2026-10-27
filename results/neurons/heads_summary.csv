@@ -1,0 +1,48 @@
+size,query,description,n_heads,share
+123M,context,diffuse,29,0.145
+123M,context,mixed,33,0.165
+123M,context,post-switch patches,90,0.45
+123M,context,recent patches,35,0.175
+123M,context,seasonal lag,1,0.005
+123M,context,self,12,0.06
+123M,forecast,diffuse,45,0.225
+123M,forecast,mixed,37,0.185
+123M,forecast,post-switch patches,86,0.43
+123M,forecast,recent patches,30,0.15
+123M,forecast,self,2,0.01
+209M,context,diffuse,41,0.14236
+209M,context,mixed,63,0.21875
+209M,context,post-switch patches,110,0.38194
+209M,context,recent patches,50,0.17361
+209M,context,seasonal lag,3,0.010417
+209M,context,self,19,0.065972
+209M,context,sink (first patch),2,0.0069444
+209M,forecast,diffuse,64,0.22222
+209M,forecast,mixed,47,0.16319
+209M,forecast,post-switch patches,137,0.47569
+209M,forecast,recent patches,35,0.12153
+209M,forecast,seasonal lag,1,0.0034722
+209M,forecast,self,3,0.010417
+209M,forecast,sink (first patch),1,0.0034722
+28M,context,diffuse,8,0.11111
+28M,context,mixed,12,0.16667
+28M,context,post-switch patches,24,0.33333
+28M,context,recent patches,19,0.26389
+28M,context,seasonal lag,4,0.055556
+28M,context,self,5,0.069444
+28M,forecast,diffuse,18,0.25
+28M,forecast,mixed,12,0.16667
+28M,forecast,post-switch patches,27,0.375
+28M,forecast,recent patches,14,0.19444
+28M,forecast,self,1,0.013889
+5M,context,diffuse,3,0.125
+5M,context,mixed,4,0.16667
+5M,context,post-switch patches,5,0.20833
+5M,context,recent patches,8,0.33333
+5M,context,seasonal lag,1,0.041667
+5M,context,self,3,0.125
+5M,forecast,diffuse,5,0.20833
+5M,forecast,mixed,5,0.20833
+5M,forecast,post-switch patches,8,0.33333
+5M,forecast,recent patches,5,0.20833
+5M,forecast,self,1,0.041667

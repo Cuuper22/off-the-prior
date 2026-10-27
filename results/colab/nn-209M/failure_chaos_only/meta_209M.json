@@ -1,0 +1,24 @@
+{
+  "script": "scripts/neurons_failure.py",
+  "git": "69140f1",
+  "time_utc": "2026-10-27T02:36:33Z",
+  "host": "de1eefdb6c0c",
+  "torch": "2.11.0+cu130",
+  "threads": 4,
+  "cuda": true,
+  "size": "209M",
+  "device": "cuda",
+  "wall_s": 328.1,
+  "n_samples": 184,
+  "T": 2048,
+  "H": 128,
+  "n_paths": 200,
+  "seeds": 8,
+  "d_min": 0.8,
+  "tail_patches": 16,
+  "status_counts": {
+    "failing": 88,
+    "reference": 40,
+    "other": 56
+  }
+}

@@ -1,0 +1,4 @@
+model,n_neurons,n_poles,n_live,one_job,mixed,unexplained,E_mean,r2_cv_mean,distinct_labels_one_job,distinct_groups_one_job,mean_best_over_pair_r2,share_one_job_group_level_only
+w256,1024,2048,2048,0.025391,0.92334,0.05127,0.25781,0.10386,6,4,0.81726,0.46154
+w32,128,256,256,0.015625,0.94531,0.039062,0.3309,0.13966,4,4,0.84894,0.25
+w4,16,32,31,0.064516,0.87097,0.064516,0.3296,0.14711,1,1,0.94565,0

@@ -1,0 +1,145 @@
+NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  9.74it/s]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  2.22s/it]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  1.90s/it]
+[5s] capture layers (0, 1, 2, 3, 4, 5, 6, 7)
+  captured 256/3580 rows
+  captured 256/468 rows
+[10s] layer 0 labeled (3424 poles)
+[11s] layer 1 labeled (3424 poles)
+[12s] layer 2 labeled (3424 poles)
+[13s] layer 3 labeled (3424 poles)
+[14s] layer 4 labeled (3424 poles)
+[15s] layer 5 labeled (3424 poles)
+[16s] layer 6 labeled (3424 poles)
+[17s] layer 7 labeled (3424 poles)
+[17s] capture layers (8, 9, 10, 11, 12, 13, 14, 15)
+  captured 256/3580 rows
+  captured 256/468 rows
+[20s] layer 8 labeled (3424 poles)
+[21s] layer 9 labeled (3424 poles)
+[22s] layer 10 labeled (3424 poles)
+[23s] layer 11 labeled (3424 poles)
+[24s] layer 12 labeled (3424 poles)
+[25s] layer 13 labeled (3424 poles)
+[26s] layer 14 labeled (3424 poles)
+[27s] layer 15 labeled (3424 poles)
+[27s] capture layers (16, 17, 18, 19)
+  captured 256/3580 rows
+  captured 256/468 rows
+[30s] layer 16 labeled (3424 poles)
+[31s] layer 17 labeled (3424 poles)
+[32s] layer 18 labeled (3424 poles)
+[33s] layer 19 labeled (3424 poles)
+done 33.2 s
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1489.45it/s]
+[1s] capture layers (0, 1, 2, 3, 4, 5, 6, 7)
+  captured 256/1034 rows
+[1s] layer 0 labeled (3424 poles)
+[2s] layer 1 labeled (3424 poles)
+[2s] layer 2 labeled (3424 poles)
+[2s] layer 3 labeled (3424 poles)
+[2s] layer 4 labeled (3424 poles)
+[3s] layer 5 labeled (3424 poles)
+[3s] layer 6 labeled (3424 poles)
+[3s] layer 7 labeled (3424 poles)
+[3s] capture layers (8, 9, 10, 11, 12, 13, 14, 15)
+  captured 256/1034 rows
+[4s] layer 8 labeled (3424 poles)
+[4s] layer 9 labeled (3424 poles)
+[4s] layer 10 labeled (3424 poles)
+[4s] layer 11 labeled (3424 poles)
+[5s] layer 12 labeled (3424 poles)
+[5s] layer 13 labeled (3424 poles)
+[5s] layer 14 labeled (3424 poles)
+[5s] layer 15 labeled (3424 poles)
+[5s] capture layers (16, 17, 18, 19)
+  captured 256/1034 rows
+[6s] layer 16 labeled (3424 poles)
+[6s] layer 17 labeled (3424 poles)
+[6s] layer 18 labeled (3424 poles)
+[7s] layer 19 labeled (3424 poles)
+done 6.7 s
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1286.40it/s]
+[1s] capture layers (0, 1, 2, 3, 4, 5, 6, 7)
+  captured 64/620 rows
+[3s] layer 0 labeled (3424 poles)
+[4s] layer 1 labeled (3424 poles)
+[4s] layer 2 labeled (3424 poles)
+[5s] layer 3 labeled (3424 poles)
+[6s] layer 4 labeled (3424 poles)
+[6s] layer 5 labeled (3424 poles)
+[7s] layer 6 labeled (3424 poles)
+[8s] layer 7 labeled (3424 poles)
+[8s] capture layers (8, 9, 10, 11, 12, 13, 14, 15)
+  captured 64/620 rows
+[9s] layer 8 labeled (3424 poles)
+[10s] layer 9 labeled (3424 poles)
+[11s] layer 10 labeled (3424 poles)
+[11s] layer 11 labeled (3424 poles)
+[12s] layer 12 labeled (3424 poles)
+[13s] layer 13 labeled (3424 poles)
+[13s] layer 14 labeled (3424 poles)
+[14s] layer 15 labeled (3424 poles)
+[14s] capture layers (16, 17, 18, 19)
+  captured 64/620 rows
+[16s] layer 16 labeled (3424 poles)
+[16s] layer 17 labeled (3424 poles)
+[17s] layer 18 labeled (3424 poles)
+[18s] layer 19 labeled (3424 poles)
+done 17.9 s
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1757.88it/s]
+[1s] capture layers (0, 1, 2, 3, 4, 5, 6, 7)
+  captured 16/48 rows
+[2s] layer 0 labeled (3424 poles)
+[3s] layer 1 labeled (3424 poles)
+[3s] layer 2 labeled (3424 poles)
+[4s] layer 3 labeled (3424 poles)
+[4s] layer 4 labeled (3424 poles)
+[5s] layer 5 labeled (3424 poles)
+[5s] layer 6 labeled (3424 poles)
+[6s] layer 7 labeled (3424 poles)
+[6s] capture layers (8, 9, 10, 11, 12, 13, 14, 15)
+  captured 16/48 rows
+[7s] layer 8 labeled (3424 poles)
+[8s] layer 9 labeled (3424 poles)
+[8s] layer 10 labeled (3424 poles)
+[9s] layer 11 labeled (3424 poles)
+[9s] layer 12 labeled (3424 poles)
+[10s] layer 13 labeled (3424 poles)
+[10s] layer 14 labeled (3424 poles)
+[11s] layer 15 labeled (3424 poles)
+[11s] capture layers (16, 17, 18, 19)
+  captured 16/48 rows
+[12s] layer 16 labeled (3424 poles)
+[12s] layer 17 labeled (3424 poles)
+[13s] layer 18 labeled (3424 poles)
+[13s] layer 19 labeled (3424 poles)
+done 13.3 s
+123M: 251 poles ({'control': 144, 'labeled': 68, 'complement': 39})
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1802.84it/s]
+[2s] 1/251
+[4s] 21/251
+[6s] 41/251
+[8s] 61/251
+[10s] 81/251
+[12s] 101/251
+[15s] 121/251
+[17s] 141/251
+[20s] 161/251
+[22s] 181/251
+[25s] 201/251
+[27s] 221/251
+[30s] 241/251
+done 31.3
+184 samples built in 266s
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1598.74it/s]
+{'failing': 112, 'reference': 32, 'other': 40}
+done 296.8
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1953.11it/s]
+  heads: 16/3100
+  heads: 656/3100
+  heads: 1296/3100
+  heads: 1936/3100
+  heads: 2576/3100
+[9s] time heads: 400 rows
+done 9.7

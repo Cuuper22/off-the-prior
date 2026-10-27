@@ -1,0 +1,6 @@
+{
+  "id": "timestral-5m",
+  "layers": 8,
+  "displayName": "Timestral 5M",
+  "url": "https://huggingface.co/mistralai/Timestral-5M"
+}

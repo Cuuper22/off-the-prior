@@ -1,0 +1,14 @@
+{
+  "script": "scripts/neurons_export_neuronpedia.py",
+  "git": "e6cc96e",
+  "time_utc": "2026-10-27T03:46:23Z",
+  "host": "vm",
+  "torch": "2.14.1+cpu",
+  "threads": 1,
+  "cuda": false,
+  "size": "5M",
+  "n_poles": 15,
+  "poles": "poles.npz",
+  "corpus": "results/neurons/corpus/main.npz,results/neurons/corpus/mv.npz",
+  "device": "cpu"
+}
