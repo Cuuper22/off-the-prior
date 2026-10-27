@@ -354,10 +354,41 @@ not a generator failure, since the oracle is unaffected.
 
 {{table:search_comparison}}
 
+Without a floor, the largest fitness values run into the hundreds. They are mostly a property of the oracle,
+not of Timestral. Rebuilding the top genomes of every run ({{num:srch_n_checked}} genomes) shows that all
+{{num:srch_n_ge100}} with fitness of 100 or more are nearly noise-free series on which the oracle's MASE is at most
+{{num:srch_ge100_orcsn_max}} of seasonal naive's, while Timestral's own MASE is at most {{num:srch_ge100_tssn_max}} times seasonal naive's
+(below 1 for most of them):
+
+{{table:search_oracle}}
+
+The search found, by itself, the effect of Section 4.2's noise sweep: the less noise, the larger the ratio,
+because the oracle's error goes to zero faster than anybody else's. To compare methods on failures that are not
+just low noise, the right-hand columns keep only genomes whose oracle sCRPS is at least 0.05 of seasonal
+naive's. With that floor, CMA-ES and MAP-Elites reach median best fitness {{num:srch_fbest_med_cmaes}} and
+{{num:srch_fbest_med_map_elites}}, the two gradient variants {{num:srch_fbest_med_gradient}} and {{num:srch_fbest_med_gradient_r12}}; MAP-Elites fills the most
+grid cells with fitness of at least 3 ({{num:srch_fcells_map_elites}} of 40, against {{num:srch_fcells_cmaes}} for CMA-ES and at most
+{{num:srch_fcells_gradient_r12}} for gradient search). Gradient search finds single extreme failures (its 12-start variant has the largest
+unfloored best fitness, from one seed), MAP-Elites the widest spread of failure types; neither is better on
+both counts. CMA-ES seed 0 was resumed from a checkpoint after a lost runtime ({{num:srch_cma0_replayed}} evaluations replayed).
+
 **Transfer.** The top elites of each method are re-scored on 28M, 123M and 209M with fresh seeds, to see whether
 failures found on the smallest model are failures of the family or of one size.
 
 {{table:search_transfer}}
+
+Without a floor, nearly every transferred elite stays above ratio 2 on every size, but the CMA-ES and MAP-Elites
+elites are all nearly noise-free ({{num:srch_tr_floor_n_cma}} of them pass the floor), so for them the transfer says that
+larger models also fall far behind an almost exact oracle. Among the elites that pass the floor (all from
+gradient search), {{num:srch_tr_floor_share_min}}% or more stay above ratio 2 on every size, with medians of
+{{num:srch_tr_floor_med_min}}–{{num:srch_tr_floor_med_max}}.
+
+**Input space.** On in-prior series, a perturbation of the context with a per-step size of {{num:srch_in_rho_5M}} of the context's
+standard deviation (median over 20 series; {{num:srch_in_rho_209M}} at 209M), found by projected gradient ascent, doubles
+Timestral's MASE. Random changes of the same total size do almost nothing: Gaussian noise leaves the MASE at a median
+ratio of {{num:srch_rand_gauss_med}} (at most {{num:srch_rand_gauss_max}}) and smooth random walks at {{num:srch_rand_walk_med}} (95th percentile
+{{num:srch_rand_walk_p95}}) at 5M (`results/search/input_space_random.csv`). The forecast is sensitive to specific directions in the
+input, not to small changes in general; the oracle is unaffected by either.
 
 # 7. Why it fails
 

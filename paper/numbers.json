@@ -1139,6 +1139,216 @@
   "src": "bench/data/lb_manifest.csv",
   "how": "number of configs"
  },
+ "srch_best_med_cmaes": {
+  "value": 68.88721936497711,
+  "text": "69",
+  "src": "results/search/comparison_floored.csv",
+  "how": "CMA-ES: median over 3 seeds of the best fitness (no floor)"
+ },
+ "srch_best_mean_cmaes": {
+  "value": 123.02885443125363,
+  "text": "123",
+  "src": "results/search/comparison_floored.csv",
+  "how": "CMA-ES: mean over 3 seeds of the best fitness (no floor)"
+ },
+ "srch_cells_cmaes": {
+  "value": 19.0,
+  "text": "19.0",
+  "src": "results/search/comparison_floored.csv",
+  "how": "CMA-ES: grid cells (of 40) holding a genome with fitness >= 3, mean over seeds"
+ },
+ "srch_fbest_med_cmaes": {
+  "value": 16.722538537294408,
+  "text": "17",
+  "src": "results/search/comparison_floored.csv",
+  "how": "CMA-ES: median best fitness among genomes with oracle sCRPS >= 0.05 x seasonal naive"
+ },
+ "srch_fcells_cmaes": {
+  "value": 15.333333333333334,
+  "text": "15.3",
+  "src": "results/search/comparison_floored.csv",
+  "how": "CMA-ES: cells >= 3 with the same floor"
+ },
+ "srch_best_med_map_elites": {
+  "value": 200.2749481286725,
+  "text": "200",
+  "src": "results/search/comparison_floored.csv",
+  "how": "MAP-Elites: median over 3 seeds of the best fitness (no floor)"
+ },
+ "srch_best_mean_map_elites": {
+  "value": 217.7781215135351,
+  "text": "218",
+  "src": "results/search/comparison_floored.csv",
+  "how": "MAP-Elites: mean over 3 seeds of the best fitness (no floor)"
+ },
+ "srch_cells_map_elites": {
+  "value": 26.666666666666668,
+  "text": "26.7",
+  "src": "results/search/comparison_floored.csv",
+  "how": "MAP-Elites: grid cells (of 40) holding a genome with fitness >= 3, mean over seeds"
+ },
+ "srch_fbest_med_map_elites": {
+  "value": 13.057505278610677,
+  "text": "13",
+  "src": "results/search/comparison_floored.csv",
+  "how": "MAP-Elites: median best fitness among genomes with oracle sCRPS >= 0.05 x seasonal naive"
+ },
+ "srch_fcells_map_elites": {
+  "value": 21.0,
+  "text": "21.0",
+  "src": "results/search/comparison_floored.csv",
+  "how": "MAP-Elites: cells >= 3 with the same floor"
+ },
+ "srch_best_med_gradient": {
+  "value": 8.87575565801155,
+  "text": "9",
+  "src": "results/search/comparison_floored.csv",
+  "how": "gradient (3 starts): median over 3 seeds of the best fitness (no floor)"
+ },
+ "srch_best_mean_gradient": {
+  "value": 21.17252996855351,
+  "text": "21",
+  "src": "results/search/comparison_floored.csv",
+  "how": "gradient (3 starts): mean over 3 seeds of the best fitness (no floor)"
+ },
+ "srch_cells_gradient": {
+  "value": 1.3333333333333333,
+  "text": "1.3",
+  "src": "results/search/comparison_floored.csv",
+  "how": "gradient (3 starts): grid cells (of 40) holding a genome with fitness >= 3, mean over seeds"
+ },
+ "srch_fbest_med_gradient": {
+  "value": 8.783483752851776,
+  "text": "9",
+  "src": "results/search/comparison_floored.csv",
+  "how": "gradient (3 starts): median best fitness among genomes with oracle sCRPS >= 0.05 x seasonal naive"
+ },
+ "srch_fcells_gradient": {
+  "value": 0.6666666666666666,
+  "text": "0.7",
+  "src": "results/search/comparison_floored.csv",
+  "how": "gradient (3 starts): cells >= 3 with the same floor"
+ },
+ "srch_best_med_gradient_r12": {
+  "value": 33.37368110079491,
+  "text": "33",
+  "src": "results/search/comparison_floored.csv",
+  "how": "gradient (12 starts): median over 3 seeds of the best fitness (no floor)"
+ },
+ "srch_best_mean_gradient_r12": {
+  "value": 471.8478550943714,
+  "text": "472",
+  "src": "results/search/comparison_floored.csv",
+  "how": "gradient (12 starts): mean over 3 seeds of the best fitness (no floor)"
+ },
+ "srch_cells_gradient_r12": {
+  "value": 5.333333333333333,
+  "text": "5.3",
+  "src": "results/search/comparison_floored.csv",
+  "how": "gradient (12 starts): grid cells (of 40) holding a genome with fitness >= 3, mean over seeds"
+ },
+ "srch_fbest_med_gradient_r12": {
+  "value": 11.094731261350704,
+  "text": "11",
+  "src": "results/search/comparison_floored.csv",
+  "how": "gradient (12 starts): median best fitness among genomes with oracle sCRPS >= 0.05 x seasonal naive"
+ },
+ "srch_fcells_gradient_r12": {
+  "value": 4.666666666666667,
+  "text": "4.7",
+  "src": "results/search/comparison_floored.csv",
+  "how": "gradient (12 starts): cells >= 3 with the same floor"
+ },
+ "srch_n_ge100": {
+  "value": 20.0,
+  "text": "20",
+  "src": "results/search/oracle_check.csv",
+  "how": "genomes among the checked top genomes with fitness >= 100"
+ },
+ "srch_ge100_orcsn_max": {
+  "value": 0.0114195397128573,
+  "text": "0.0114",
+  "src": "results/search/oracle_check.csv",
+  "how": "largest oracle MASE / seasonal-naive MASE among them"
+ },
+ "srch_ge100_tssn_max": {
+  "value": 1.325977991141196,
+  "text": "1.33",
+  "src": "results/search/oracle_check.csv",
+  "how": "largest Timestral MASE / seasonal-naive MASE among them"
+ },
+ "srch_n_checked": {
+  "value": 60.0,
+  "text": "60",
+  "src": "results/search/oracle_check.csv",
+  "how": "top genomes checked (5 per run)"
+ },
+ "srch_tr_floor_share_min": {
+  "value": 80.0,
+  "text": "80",
+  "src": "results/search/transfer_floored.csv",
+  "how": "min over gradient methods and sizes of the percent of floored genomes above ratio 2"
+ },
+ "srch_tr_floor_med_min": {
+  "value": 7.498687436762387,
+  "text": "7.5",
+  "src": "results/search/transfer_floored.csv",
+  "how": "min median fitness of floored gradient genomes over sizes"
+ },
+ "srch_tr_floor_med_max": {
+  "value": 9.057162779432309,
+  "text": "9.1",
+  "src": "results/search/transfer_floored.csv",
+  "how": "max of the same"
+ },
+ "srch_tr_floor_n_cma": {
+  "value": 0.0,
+  "text": "0",
+  "src": "results/search/transfer_floored.csv",
+  "how": "CMA-ES and MAP-Elites transferred elites that pass the floor"
+ },
+ "srch_in_rho_5M": {
+  "value": 0.0340211900810728,
+  "text": "0.034",
+  "src": "results/search/input_space_summary.csv",
+  "how": "5M: median per-step RMS perturbation (fraction of context sd) that doubles MASE, optimized"
+ },
+ "srch_in_rho_209M": {
+  "value": 0.0274551196209431,
+  "text": "0.027",
+  "src": "results/search/input_space_summary.csv",
+  "how": "209M: median per-step RMS perturbation (fraction of context sd) that doubles MASE, optimized"
+ },
+ "srch_rand_gauss_med": {
+  "value": 1.0001538343410696,
+  "text": "1.000",
+  "src": "results/search/input_space_random_summary.csv",
+  "how": "5M: median MASE ratio perturbed/clean for random Gaussian changes of the same norm"
+ },
+ "srch_rand_gauss_max": {
+  "value": 1.0395933127112105,
+  "text": "1.04",
+  "src": "results/search/input_space_random_summary.csv",
+  "how": "max of the same"
+ },
+ "srch_rand_walk_med": {
+  "value": 1.0069485285096516,
+  "text": "1.007",
+  "src": "results/search/input_space_random_summary.csv",
+  "how": "5M: median ratio for smooth random-walk changes of the same norm"
+ },
+ "srch_rand_walk_p95": {
+  "value": 1.1694860454140437,
+  "text": "1.17",
+  "src": "results/search/input_space_random_summary.csv",
+  "how": "95th percentile of the same"
+ },
+ "srch_cma0_replayed": {
+  "value": 767.0,
+  "text": "767",
+  "src": "results/search/runs/cmaes_seed0/run.json",
+  "how": "CMA-ES seed 0: evaluations replayed from a checkpoint after a lost runtime"
+ },
  "nn_poles_5M": {
   "value": 8192.0,
   "text": "8,192",
@@ -1668,6 +1878,18 @@
  "table:bench_diag_ft": {
   "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
   "how": "Timestral-209M on OffPrior-Diag by failure type"
+ },
+ "table:search_comparison": {
+  "src": "results/search/comparison_floored.csv",
+  "how": "equal budget per run at 5M; fitness = MASE(Timestral) / MASE(oracle), geometric mean over 3 search seeds; cells = MAP-Elites grid (dominant family x spectral entropy, 40 cells) filled by each method's genomes; floored = only genomes whose oracle sCRPS is at least 0.05 x seasonal naive's"
+ },
+ "table:search_oracle": {
+  "src": "results/search/oracle_check.csv",
+  "how": "the best genome of each search run, rebuilt with the search seeds: absolute MASE of Timestral-5M, the oracle and seasonal naive (geometric means over the 3 seeds)"
+ },
+ "table:search_transfer": {
+  "src": "results/search/transfer_floored.csv",
+  "how": "top elites re-scored with fresh seeds on each size; floored = genomes whose oracle sCRPS is at least 0.05 x seasonal naive's"
  },
  "table:nn_one_job": {
   "src": "results/neurons/scaling.csv",

@@ -1,0 +1,16 @@
+{
+  "script": "scripts/search_input_random.py",
+  "git": "e22f4ca",
+  "time_utc": "2026-10-27T06:15:15Z",
+  "host": "vm",
+  "torch": "2.14.1+cpu",
+  "threads": 2,
+  "cuda": false,
+  "argv": [
+    "scripts/search_input_random.py",
+    "--size",
+    "5M",
+    "--draws",
+    "20"
+  ]
+}

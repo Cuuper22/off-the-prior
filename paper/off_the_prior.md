@@ -454,12 +454,78 @@ three methods are compared on the same metric. A separate input-space study find
 smallest perturbation of the context that doubles Timestral's MASE on a fixed future; it measures sensitivity,
 not a generator failure, since the oracle is unaffected.
 
-*(Results pending: `results/search/comparison.csv` is not in the repository yet.)*
+| method | best (mean of 3 seeds) | best (median) | median of top 20 | cells >= 3 | floored: best (median) | floored: median of top 20 | floored: cells >= 3 |
+|---|---|---|---|---|---|---|---|
+| CMA-ES | 123.0 | 68.9 | 38.2 | 19.0 | 16.7 | 10.0 | 15.3 |
+| MAP-Elites | 217.8 | 200.3 | 101.2 | 26.7 | 13.1 | 9.0 | 21.0 |
+| gradient (3 starts) | 21.2 | 8.9 | 4.0 | 1.3 | 8.8 | 1.8 | 0.7 |
+| gradient (12 starts) | 471.8 | 33.4 | 6.6 | 5.3 | 11.1 | 4.3 | 4.7 |
+
+Without a floor, the largest fitness values run into the hundreds. They are mostly a property of the oracle,
+not of Timestral. Rebuilding the top genomes of every run (60 genomes) shows that all
+20 with fitness of 100 or more are nearly noise-free series on which the oracle's MASE is at most
+0.0114 of seasonal naive's, while Timestral's own MASE is at most 1.33 times seasonal naive's
+(below 1 for most of them):
+
+| run | fitness | MASE Timestral | MASE oracle | MASE seasonal naive | Timestral / seasonal naive | components |
+|---|---|---|---|---|---|---|
+| gradient_r12_seed2 | 1.37e+03 | 0.367 | 0.000267 | 0.64 | 0.574 | season |
+| map_elites_seed2 | 352 | 0.48 | 0.00136 | 0.904 | 0.531 | rossler+season |
+| cmaes_seed0 | 243 | 0.238 | 0.000979 | 1.35 | 0.176 | season |
+| map_elites_seed1 | 200 | 0.22 | 0.0011 | 2.4 | 0.0917 | season |
+| map_elites_seed0 | 101 | 9.94 | 0.0981 | 8.61 | 1.15 | lorenz63 |
+| cmaes_seed1 | 68.9 | 0.913 | 0.0133 | 1.05 | 0.868 | lorenz63+season |
+| cmaes_seed2 | 57.1 | 9.73 | 0.17 | 10.8 | 0.903 | lorenz63+mackey_glass |
+| gradient_seed1 | 47.1 | 0.408 | 0.00867 | 1.86 | 0.22 | season+trend |
+| gradient_r12_seed0 | 33.4 | 0.462 | 0.0138 | 0.047 | 9.83 | mean_jump+season+variance_jump |
+| gradient_seed2 | 8.88 | 5.92 | 0.667 | 5.57 | 1.06 | mean_jump+season+variance_jump |
+| gradient_r12_seed1 | 8.87 | 5.44 | 0.614 | 5.64 | 0.965 | mean_jump+season+trend |
+| gradient_seed0 | 7.52 | 0.338 | 0.045 | 0.977 | 0.346 | season+variance_jump |
+
+The search found, by itself, the effect of Section 4.2's noise sweep: the less noise, the larger the ratio,
+because the oracle's error goes to zero faster than anybody else's. To compare methods on failures that are not
+just low noise, the right-hand columns keep only genomes whose oracle sCRPS is at least 0.05 of seasonal
+naive's. With that floor, CMA-ES and MAP-Elites reach median best fitness 17 and
+13, the two gradient variants 9 and 11; MAP-Elites fills the most
+grid cells with fitness of at least 3 (21.0 of 40, against 15.3 for CMA-ES and at most
+4.7 for gradient search). Gradient search finds single extreme failures (its 12-start variant has the largest
+unfloored best fitness, from one seed), MAP-Elites the widest spread of failure types; neither is better on
+both counts. CMA-ES seed 0 was resumed from a checkpoint after a lost runtime (767 evaluations replayed).
 
 **Transfer.** The top elites of each method are re-scored on 28M, 123M and 209M with fresh seeds, to see whether
 failures found on the smallest model are failures of the family or of one size.
 
-*(Results pending: `results/search/transfer.csv` is not in the repository yet.)*
+| method | size | genomes | share > 2 | median | floored genomes | floored share > 2 | floored median |
+|---|---|---|---|---|---|---|---|
+| CMA-ES | 5M | 20 | 1.00 | 57.66 | 0 | – | – |
+| CMA-ES | 28M | 20 | 1.00 | 51.47 | 0 | – | – |
+| CMA-ES | 123M | 20 | 1.00 | 49.72 | 0 | – | – |
+| CMA-ES | 209M | 20 | 1.00 | 45.91 | 0 | – | – |
+| MAP-Elites | 5M | 20 | 1.00 | 189.24 | 0 | – | – |
+| MAP-Elites | 28M | 20 | 1.00 | 101.58 | 0 | – | – |
+| MAP-Elites | 123M | 20 | 1.00 | 71.38 | 0 | – | – |
+| MAP-Elites | 209M | 20 | 1.00 | 63.15 | 0 | – | – |
+| gradient (3 starts) | 5M | 20 | 1.00 | 8.24 | 10 | 1.00 | 8.45 |
+| gradient (3 starts) | 28M | 20 | 0.85 | 7.69 | 10 | 0.90 | 7.87 |
+| gradient (3 starts) | 123M | 20 | 0.80 | 7.45 | 10 | 0.80 | 7.50 |
+| gradient (3 starts) | 209M | 20 | 0.80 | 8.04 | 10 | 0.80 | 8.47 |
+| gradient (12 starts) | 5M | 20 | 1.00 | 24.92 | 10 | 1.00 | 8.65 |
+| gradient (12 starts) | 28M | 20 | 1.00 | 17.65 | 10 | 1.00 | 9.06 |
+| gradient (12 starts) | 123M | 20 | 1.00 | 11.25 | 10 | 1.00 | 8.90 |
+| gradient (12 starts) | 209M | 20 | 0.95 | 11.71 | 10 | 0.90 | 8.49 |
+
+Without a floor, nearly every transferred elite stays above ratio 2 on every size, but the CMA-ES and MAP-Elites
+elites are all nearly noise-free (0 of them pass the floor), so for them the transfer says that
+larger models also fall far behind an almost exact oracle. Among the elites that pass the floor (all from
+gradient search), 80% or more stay above ratio 2 on every size, with medians of
+7.5–9.1.
+
+**Input space.** On in-prior series, a perturbation of the context with a per-step size of 0.034 of the context's
+standard deviation (median over 20 series; 0.027 at 209M), found by projected gradient ascent, doubles
+Timestral's MASE. Random changes of the same total size do almost nothing: Gaussian noise leaves the MASE at a median
+ratio of 1.000 (at most 1.04) and smooth random walks at 1.007 (95th percentile
+1.17) at 5M (`results/search/input_space_random.csv`). The forecast is sensitive to specific directions in the
+input, not to small changes in general; the oracle is unaffected by either.
 
 # 7. Why it fails
 

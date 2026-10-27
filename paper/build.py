@@ -418,12 +418,66 @@ def generic_table(key, path, how, max_rows=40, cols=None):
 
 
 def search_results():
-    f = "results/search/comparison.csv"
-    if os.path.exists(p(f)):
-        generic_table("search_comparison", f, "per search method, from results/search/comparison.csv")
-    f = "results/search/transfer.csv"
-    if os.path.exists(p(f)):
-        generic_table("search_transfer", f, "elites re-scored on larger sizes, from results/search/transfer.csv")
+    d = "results/search"
+    f = f"{d}/comparison_floored.csv"
+    if not os.path.exists(p(f)):
+        return
+    cf = pd.read_csv(p(f))
+    names = {"cmaes": "CMA-ES", "map_elites": "MAP-Elites", "gradient": "gradient (3 starts)", "gradient_r12": "gradient (12 starts)"}
+    rows = []
+    for m in ("cmaes", "map_elites", "gradient", "gradient_r12"):
+        a0 = cf[(cf.method == m) & (cf.floor == 0.0)].iloc[0]
+        a5 = cf[(cf.method == m) & (cf.floor == 0.05)].iloc[0]
+        rows.append({"method": names[m], "best (mean of 3 seeds)": a0.best_mean, "best (median)": a0.best_median,
+                     "median of top 20": a0.median_top20_mean, "cells >= 3": a0.cells_ge_3_mean,
+                     "floored: best (median)": a5.best_median, "floored: median of top 20": a5.median_top20_mean,
+                     "floored: cells >= 3": a5.cells_ge_3_mean})
+        tag = m
+        num(f"srch_best_med_{tag}", float(a0.best_median), f, f"{names[m]}: median over 3 seeds of the best fitness (no floor)", "{:.0f}")
+        num(f"srch_best_mean_{tag}", float(a0.best_mean), f, f"{names[m]}: mean over 3 seeds of the best fitness (no floor)", "{:.0f}")
+        num(f"srch_cells_{tag}", float(a0.cells_ge_3_mean), f, f"{names[m]}: grid cells (of 40) holding a genome with fitness >= 3, mean over seeds", "{:.1f}")
+        num(f"srch_fbest_med_{tag}", float(a5.best_median), f, f"{names[m]}: median best fitness among genomes with oracle sCRPS >= 0.05 x seasonal naive", "{:.0f}")
+        num(f"srch_fcells_{tag}", float(a5.cells_ge_3_mean), f, f"{names[m]}: cells >= 3 with the same floor", "{:.1f}")
+    table("search_comparison", pd.DataFrame(rows), f, "equal budget per run at 5M; fitness = MASE(Timestral) / MASE(oracle), geometric mean over 3 search seeds; cells = MAP-Elites grid (dominant family x spectral entropy, 40 cells) filled by each method's genomes; floored = only genomes whose oracle sCRPS is at least 0.05 x seasonal naive's", "{:.1f}")
+    oc = pd.read_csv(p(f"{d}/oracle_check.csv"))
+    top = oc.sort_values("fitness_search", ascending=False).drop_duplicates("run")
+    rows = [{"run": r.run, "fitness": r.fitness_search, "MASE Timestral": r.mase_timestral_gm, "MASE oracle": r.mase_oracle_gm,
+             "MASE seasonal naive": r.mase_snaive_gm, "Timestral / seasonal naive": r.timestral_over_snaive, "components": r.signature}
+            for r in top.sort_values("fitness_search", ascending=False).itertuples()]
+    table("search_oracle", pd.DataFrame(rows), f"{d}/oracle_check.csv", "the best genome of each search run, rebuilt with the search seeds: absolute MASE of Timestral-5M, the oracle and seasonal naive (geometric means over the 3 seeds)", "{:.3g}")
+    big = oc[oc.fitness_search >= 100]
+    num("srch_n_ge100", len(big), f"{d}/oracle_check.csv", "genomes among the checked top genomes with fitness >= 100", "{:d}")
+    num("srch_ge100_orcsn_max", float(big.oracle_over_snaive.max()), f"{d}/oracle_check.csv", "largest oracle MASE / seasonal-naive MASE among them", "{:.4f}")
+    num("srch_ge100_tssn_max", float(big.timestral_over_snaive.max()), f"{d}/oracle_check.csv", "largest Timestral MASE / seasonal-naive MASE among them", "{:.2f}")
+    num("srch_n_checked", len(oc), f"{d}/oracle_check.csv", "top genomes checked (5 per run)", "{:d}")
+    tf = pd.read_csv(p(f"{d}/transfer_floored.csv"))
+    t0 = tf[tf.floor == 0.0]
+    t5 = tf[tf.floor == 0.05]
+    rows = []
+    for m in ("cmaes", "map_elites", "gradient", "gradient_r12"):
+        for sz in ("5M", "28M", "123M", "209M"):
+            a = t0[(t0.method == m) & (t0["size"] == sz)]
+            b = t5[(t5.method == m) & (t5["size"] == sz)]
+            rows.append({"method": names[m], "size": sz, "genomes": int(a.n.iloc[0]), "share > 2": float(a.frac_gt_2.iloc[0]),
+                         "median": float(a.median_fitness.iloc[0]), "floored genomes": int(b.n.iloc[0]),
+                         "floored share > 2": float(b.frac_gt_2.iloc[0]), "floored median": float(b.median_fitness.iloc[0])})
+    table("search_transfer", pd.DataFrame(rows), f"{d}/transfer_floored.csv", "top elites re-scored with fresh seeds on each size; floored = genomes whose oracle sCRPS is at least 0.05 x seasonal naive's", "{:.2f}")
+    fl = t5[t5.method.isin(["gradient", "gradient_r12"])]
+    num("srch_tr_floor_share_min", 100 * float(fl.frac_gt_2.min()), f"{d}/transfer_floored.csv", "min over gradient methods and sizes of the percent of floored genomes above ratio 2", "{:.0f}")
+    num("srch_tr_floor_med_min", float(fl.median_fitness.min()), f"{d}/transfer_floored.csv", "min median fitness of floored gradient genomes over sizes", "{:.1f}")
+    num("srch_tr_floor_med_max", float(fl.median_fitness.max()), f"{d}/transfer_floored.csv", "max of the same", "{:.1f}")
+    num("srch_tr_floor_n_cma", int(t5[t5.method.isin(["cmaes", "map_elites"])].n.max()), f"{d}/transfer_floored.csv", "CMA-ES and MAP-Elites transferred elites that pass the floor", "{:d}")
+    ins = pd.read_csv(p(f"{d}/input_space_summary.csv")).set_index("size")
+    for sz in ("5M", "209M"):
+        num(f"srch_in_rho_{sz}", float(ins.loc[sz, "median_rho"]), f"{d}/input_space_summary.csv", f"{sz}: median per-step RMS perturbation (fraction of context sd) that doubles MASE, optimized", "{:.3f}")
+    rr = pd.read_csv(p(f"{d}/input_space_random_summary.csv")).set_index("kind")
+    src = f"{d}/input_space_random_summary.csv"
+    num("srch_rand_gauss_med", float(rr.loc["gauss", "median_ratio"]), src, "5M: median MASE ratio perturbed/clean for random Gaussian changes of the same norm", "{:.3f}")
+    num("srch_rand_gauss_max", float(rr.loc["gauss", "max_ratio"]), src, "max of the same", "{:.2f}")
+    num("srch_rand_walk_med", float(rr.loc["walk", "median_ratio"]), src, "5M: median ratio for smooth random-walk changes of the same norm", "{:.3f}")
+    num("srch_rand_walk_p95", float(rr.loc["walk", "p95_ratio"]), src, "95th percentile of the same", "{:.2f}")
+    run = json.load(open(p(f"{d}/runs/cmaes_seed0/run.json")))
+    num("srch_cma0_replayed", int(run["replayed_from_checkpoint"]), f"{d}/runs/cmaes_seed0/run.json", "CMA-ES seed 0: evaluations replayed from a checkpoint after a lost runtime", "{:d}")
 
 
 def finetune_results():

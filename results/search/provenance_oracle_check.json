@@ -1,0 +1,15 @@
+{
+  "script": "scripts/search_oracle_check.py",
+  "git": "e22f4ca",
+  "time_utc": "2026-10-27T06:14:42Z",
+  "host": "vm",
+  "torch": "2.14.1+cpu",
+  "threads": 2,
+  "cuda": false,
+  "argv": [
+    "scripts/search_oracle_check.py",
+    "--top",
+    "5"
+  ],
+  "n_genomes": 60
+}

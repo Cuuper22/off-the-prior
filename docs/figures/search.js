@@ -16,20 +16,24 @@
       var views = [["curve", "Best so far"]];
       if (d.grid) views.push(["grid", "Failure types found"]);
       if (d.transfer) views.push(["transfer", "Carry over to bigger sizes"]);
-      var st = { view: "curve", method: d.methods[0][0], thr: "1.5" };
+      var st = { view: "curve", method: d.methods[0][0], thr: "1.5", which: "floored" };
+      var pct = Math.round((d.floor || 0) * 100);
       function show() {
         bar2.textContent = "";
         if (st.view === "curve") {
-          var series = [];
+          var series = [], src = st.which === "raw" && d.curves_raw ? d.curves_raw : d.curves;
+          if (d.curves_raw) C.segmented(bar2, [["floored", "referee error at least " + pct + "% of naive's"], ["raw", "all series"]], st.which, function (v) { st.which = v; show(); }, "series kept");
           d.methods.forEach(function (m) {
-            var c = d.curves[m[0]];
+            var c = src[m[0]];
             if (!c) return;
-            series.push({ name: m[1], color: COLORS[m[0]], marker: false, points: c.calls.map(function (x, i) { return [x, c.median[i]]; }),
-                          band: c.calls.map(function (x, i) { return [x, c.lo[i], c.hi[i]]; }), bandOpacity: 0.12 });
+            series.push({ name: m[1], color: COLORS[m[0]], marker: false, points: c.calls.map(function (x, i) { return [x, c.median[i]]; }).filter(function (p) { return p[1] != null; }),
+                          band: c.calls.map(function (x, i) { return [x, c.lo[i], c.hi[i]]; }).filter(function (p) { return p[1] != null && p[2] != null; }), bandOpacity: 0.12 });
           });
           C.line(plot, { series: series, xlog: true, ylog: true, ref1: true, xLabel: "Timestral calls spent", yLabel: "best error ÷ referee's",
                          label: "Best failure found so far against Timestral calls, per search method" });
-          note.textContent = "Line: median over search seeds; band: lowest to highest seed. Above 1 means Timestral is worse than the referee on the best series found.";
+          note.textContent = "Line: median over search seeds; band: lowest to highest seed. Above 1 means Timestral is worse than the referee on the best series found. " +
+            (st.which === "raw" ? "All series: the top scores come from nearly noise-free series where the referee's error is close to zero, so the ratio is large while Timestral's own error is ordinary."
+                                : "Only series whose referee error is at least " + pct + "% of the error of \"repeat last season\" are counted, so a near-zero referee error can't inflate the ratio.");
         } else if (st.view === "grid") {
           C.segmented(bar2, d.methods.filter(function (m) { return d.grid.methods[m[0]]; }).map(function (m) { return [m[0], m[1]]; }), st.method, function (v) { st.method = v; show(); }, "method");
           C.segmented(bar2, [["1.5", "cells at 1.5× or worse"], ["2.0", "2×"], ["3.0", "3×"]], st.thr, function (v) { st.thr = v; show(); }, "threshold");
@@ -44,7 +48,7 @@
               return { step: step, text: d.grid.families[i] + ", entropy bin " + (j + 1) + ": best error ÷ referee's error " + C.fmt(v) + ", reached in " + c[1] + " of " + g.runs + " runs" };
             } });
           Object.keys(g.cells).forEach(function (k) { filled++; if (g.cells[k][0] >= t) hit++; });
-          note.textContent = names[st.method] + ": " + filled + " cells filled by at least one of its " + g.runs + " runs; " + hit + " of them hold a failure at " + t + "× or worse (best over seeds per cell). Families are the dominant piece in the series; each series is placed in one cell.";
+          note.textContent = names[st.method] + ": " + filled + " cells filled by at least one of its " + g.runs + " runs; " + hit + " of them hold a failure at " + t + "× or worse (best over seeds per cell). Families are the dominant piece in the series; each series is placed in one cell. Only series whose referee error is at least " + pct + "% of the error of \"repeat last season\" are counted.";
         } else {
           var T = root.OTPRows(d.transfer), rows = [], sizes = [];
           T.forEach(function (r) { if (sizes.indexOf(r.size) < 0) sizes.push(r.size); });
@@ -58,7 +62,7 @@
           });
           C.dots(plot, { rows: rows, xMin: 0, xMax: 1, xFmt: function (v) { return Math.round(v * 100) + "%"; }, vFmt: function (v) { return Math.round(v * 100) + "%"; },
                          xLabel: "share of the best series found on 5M that still fail on this size", label: "Transfer of failures found on 5M to larger sizes" });
-          note.textContent = "Top series from each method, re-scored with fresh seeds on each size.";
+          note.textContent = "Top series from each method, re-scored with fresh seeds on each size, keeping those whose referee error is at least " + pct + "% of the error of \"repeat last season\". Methods with no such series among their top ones are left out (CMA-ES and MAP-Elites: all of their top series fall below that line).";
         }
       }
       if (views.length > 1) C.segmented(bar, views, st.view, function (v) { st.view = v; show(); }, "view");

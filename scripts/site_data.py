@@ -26,6 +26,7 @@ import glob
 import json
 import os
 import sys
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -432,6 +433,7 @@ SEARCH_LABEL = {"cmaes": "CMA-ES", "map_elites": "MAP-Elites", "gradient": "grad
 SEARCH_ORDER = ["cmaes", "map_elites", "gradient", "gradient_r12"]
 SEARCH_FAMILIES = ["primitive", "chaos", "regime", "tails"]   # scripts/search_report.py: the four dominant families
 SEARCH_BINS = 10                                               # spectral-entropy bins of the same grid
+SEARCH_FLOOR = 0.05                                            # oracle sCRPS / seasonal naive floor used in the paper (section 6)
 
 
 def search():
@@ -446,45 +448,55 @@ def search():
     per = comp[comp.seed != "mean"]
     methods = [m for m in SEARCH_ORDER if m in set(comp.method)]
     out = {"status": "ready", "sources": src, "methods": [[m, SEARCH_LABEL[m]] for m in methods]}
-    # best-so-far against Timestral calls: per method, median and range over the search seeds on a log grid of calls
-    curves = {}
+    # best-so-far against Timestral calls: per method, median and range over the search seeds on a log grid of calls.
+    # "curves" keeps only series whose referee error is at least SEARCH_FLOOR x seasonal naive's (scripts/search_floor_report.py);
+    # "curves_raw" is the search's own best-so-far, which near-noise-free series dominate (results/search/oracle_check.csv).
+    curves, curves_raw, cells_fl = {}, {}, {}
     for m in methods:
-        runs = []
+        runs, runs_raw, per_cell = [], [], {}
         for f in sorted(glob.glob(R.path("runs", f"{m}_seed*", "history.csv"))):
-            h = pd.read_csv(f)
-            if len(h):
-                runs.append((h["calls"].to_numpy(float), h["best_so_far"].to_numpy(float)))
-                src.append(R.name("runs", os.path.basename(os.path.dirname(f)), "history.csv"))
+            h = pd.read_csv(f).sort_values("eval")
+            if not len(h):
+                continue
+            ok = (h.feasible.astype(str) == "True") & (h.orc_sn >= SEARCH_FLOOR)
+            runs_raw.append((h["calls"].to_numpy(float), h["best_so_far"].to_numpy(float)))
+            runs.append((h["calls"].to_numpy(float), h.fitness.where(ok).cummax().ffill().to_numpy(float)))
+            seen = {}
+            for r in h[ok].itertuples(index=False):
+                k = f"{r.family}|{min(int(max(r.spec_entropy, 0.0) * SEARCH_BINS), SEARCH_BINS - 1)}"
+                seen[k] = max(seen.get(k, 0.0), r.fitness)
+            for k, v in seen.items():
+                b, n = per_cell.get(k, (0.0, 0))
+                per_cell[k] = (max(b, v), n + 1)
+            src.append(R.name("runs", os.path.basename(os.path.dirname(f)), "history.csv"))
         if not runs:
             continue
-        lo_c = min(r[0][0] for r in runs)
-        hi_c = min(r[0][-1] for r in runs)
-        grid = np.unique(np.round(np.geomspace(lo_c, hi_c, 90)))
-        vals = np.array([[b[np.searchsorted(c, g, side="right") - 1] if c[0] <= g else np.nan for g in grid] for c, b in runs])
-        curves[m] = {"calls": [int(g) for g in grid], "median": [r4(x) for x in np.nanmedian(vals, 0)],
-                     "lo": [r4(x) for x in np.nanmin(vals, 0)], "hi": [r4(x) for x in np.nanmax(vals, 0)], "runs": len(runs)}
+        for store, rr in ((curves, runs), (curves_raw, runs_raw)):
+            lo_c = min(r[0][0] for r in rr)
+            hi_c = min(r[0][-1] for r in rr)
+            grid = np.unique(np.round(np.geomspace(lo_c, hi_c, 90)))
+            vals = np.array([[b[np.searchsorted(c, g, side="right") - 1] if c[0] <= g else np.nan for g in grid] for c, b in rr])
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                med, lo, hi = np.nanmedian(vals, 0), np.nanmin(vals, 0), np.nanmax(vals, 0)
+            store[m] = {"calls": [int(g) for g in grid], "median": [r4(x) if np.isfinite(x) else None for x in med],
+                        "lo": [r4(x) if np.isfinite(x) else None for x in lo], "hi": [r4(x) if np.isfinite(x) else None for x in hi], "runs": len(rr)}
+        cells_fl[m] = {"cells": {k: [r4(v[0]), int(v[1])] for k, v in per_cell.items()}, "runs": len(runs)}
+    out["floor"] = SEARCH_FLOOR
     out["curves"] = curves
+    out["curves_raw"] = curves_raw
     keep = [c for c in comp.columns if c in ("method", "seed", "evaluations", "calls", "n_feasible", "best_fitness", "median_top20", "calls_to_1.5", "calls_to_2.0", "calls_to_3.0",
                                               "n_runs_reaching_1.5", "n_runs_reaching_2.0", "n_runs_reaching_3.0", "cells_filled", "cells_ge_1.5", "cells_ge_2.0", "cells_ge_3.0",
                                               "signatures_ge_2.0", "families_ge_1.5")]
     out["comparison"] = {"columns": keep, "rows": [[(r4(v) if isinstance(v, (int, float, np.floating, np.integer)) and not isinstance(v, bool) else v) for v in row]
                                                    for row in mean[keep].itertuples(index=False)]}
-    if R.has("map_elites_cells.csv"):
-        cells = pd.read_csv(R.path("map_elites_cells.csv"))
-        src.append(R.name("map_elites_cells.csv"))
-        grid = {}
-        for m in methods:
-            x = cells[cells.method == m]
-            if not len(x):
-                continue
-            g = {}
-            for (fam, b), y in x.groupby(["family", "entropy_bin"]):
-                g[f"{fam}|{int(b)}"] = [r4(y.best_fitness.max()), int(len(y))]
-            grid[m] = {"cells": g, "runs": int(x.seed.nunique())}
-        out["grid"] = {"families": SEARCH_FAMILIES, "bins": SEARCH_BINS, "methods": grid}
-    for name, key in (("transfer_summary.csv", "transfer"), ("transfer_spearman.csv", "spearman"), ("input_space_summary.csv", "input_space")):
+    out["grid"] = {"families": SEARCH_FAMILIES, "bins": SEARCH_BINS, "methods": cells_fl}
+    for name, key in (("transfer_floored.csv", "transfer"), ("transfer_spearman.csv", "spearman"), ("input_space_summary.csv", "input_space"),
+                      ("input_space_random_summary.csv", "input_space_random")):
         if R.has(name):
             t = pd.read_csv(R.path(name))
+            if key == "transfer":
+                t = t[np.isclose(t["floor"], SEARCH_FLOOR) & (t.n > 0)].drop(columns="floor")
             src.append(R.name(name))
             out[key] = {"columns": list(t.columns), "rows": json.loads(t.to_json(orient="values", double_precision=4))}
     write("search.json", out)
