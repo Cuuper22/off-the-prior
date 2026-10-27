@@ -1,0 +1,650 @@
+{
+  "model": "Timestral-5M",
+  "source": "mistralai/Timestral-5M",
+  "dtype": "f16",
+  "file": "timestral5m.f16",
+  "elements": 5208960,
+  "config": {
+    "patch_size": 32,
+    "d_model": 192,
+    "num_heads": 3,
+    "mlp_hidden_dim": 512,
+    "block_schedule": [
+      "time",
+      "time",
+      "time",
+      "time_variate",
+      "time",
+      "time",
+      "time",
+      "time_variate"
+    ],
+    "quantile_knots": [
+      0.01,
+      0.05,
+      0.1,
+      0.15,
+      0.2,
+      0.25,
+      0.3,
+      0.35,
+      0.4,
+      0.45,
+      0.5,
+      0.55,
+      0.6,
+      0.65,
+      0.7,
+      0.75,
+      0.8,
+      0.85,
+      0.9,
+      0.95,
+      0.99
+    ],
+    "block_size": 32,
+    "context_length": 32768,
+    "rope_theta": 10000.0,
+    "rope_partial_factor": 0.5,
+    "norm_eps": 1e-06,
+    "attn_bias": false,
+    "mlp_bias": false,
+    "time_attn_gate": "sdpa_sigmoid",
+    "variate_attn_gate": "sdpa_sigmoid",
+    "minimum_scale": 1e-06,
+    "use_asinh": true,
+    "stabilize_with_global": false,
+    "covariate_enabled": true,
+    "split_context_horizon_attn": true,
+    "attend_missing_patches": true,
+    "quantile_width_factor": 3.0
+  },
+  "tensors": [
+    {
+      "name": "representation.forecast_query",
+      "shape": [
+        192
+      ],
+      "offset": 0
+    },
+    {
+      "name": "representation.patch_proj.hidden_layer.weight",
+      "shape": [
+        768,
+        64
+      ],
+      "offset": 192
+    },
+    {
+      "name": "representation.patch_proj.hidden_layer.bias",
+      "shape": [
+        768
+      ],
+      "offset": 49344
+    },
+    {
+      "name": "representation.patch_proj.output_layer.weight",
+      "shape": [
+        192,
+        768
+      ],
+      "offset": 50112
+    },
+    {
+      "name": "representation.patch_proj.output_layer.bias",
+      "shape": [
+        192
+      ],
+      "offset": 197568
+    },
+    {
+      "name": "representation.patch_proj.residual_layer.weight",
+      "shape": [
+        192,
+        64
+      ],
+      "offset": 197760
+    },
+    {
+      "name": "representation.patch_proj.residual_layer.bias",
+      "shape": [
+        192
+      ],
+      "offset": 210048
+    },
+    {
+      "name": "transformer.layers.0.attn_norms.0.scale",
+      "shape": [
+        192
+      ],
+      "offset": 210240
+    },
+    {
+      "name": "transformer.layers.0.attns.0.wQKV.weight",
+      "shape": [
+        576,
+        192
+      ],
+      "offset": 210432
+    },
+    {
+      "name": "transformer.layers.0.attns.0.wO.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 321024
+    },
+    {
+      "name": "transformer.layers.0.attns.0._gate.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 357888
+    },
+    {
+      "name": "transformer.layers.0.mlp_norm.scale",
+      "shape": [
+        192
+      ],
+      "offset": 394752
+    },
+    {
+      "name": "transformer.layers.0.mlp.w12.weight",
+      "shape": [
+        1024,
+        192
+      ],
+      "offset": 394944
+    },
+    {
+      "name": "transformer.layers.0.mlp.w3.weight",
+      "shape": [
+        192,
+        512
+      ],
+      "offset": 591552
+    },
+    {
+      "name": "transformer.layers.1.attn_norms.0.scale",
+      "shape": [
+        192
+      ],
+      "offset": 689856
+    },
+    {
+      "name": "transformer.layers.1.attns.0.wQKV.weight",
+      "shape": [
+        576,
+        192
+      ],
+      "offset": 690048
+    },
+    {
+      "name": "transformer.layers.1.attns.0.wO.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 800640
+    },
+    {
+      "name": "transformer.layers.1.attns.0._gate.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 837504
+    },
+    {
+      "name": "transformer.layers.1.mlp_norm.scale",
+      "shape": [
+        192
+      ],
+      "offset": 874368
+    },
+    {
+      "name": "transformer.layers.1.mlp.w12.weight",
+      "shape": [
+        1024,
+        192
+      ],
+      "offset": 874560
+    },
+    {
+      "name": "transformer.layers.1.mlp.w3.weight",
+      "shape": [
+        192,
+        512
+      ],
+      "offset": 1071168
+    },
+    {
+      "name": "transformer.layers.2.attn_norms.0.scale",
+      "shape": [
+        192
+      ],
+      "offset": 1169472
+    },
+    {
+      "name": "transformer.layers.2.attns.0.wQKV.weight",
+      "shape": [
+        576,
+        192
+      ],
+      "offset": 1169664
+    },
+    {
+      "name": "transformer.layers.2.attns.0.wO.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 1280256
+    },
+    {
+      "name": "transformer.layers.2.attns.0._gate.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 1317120
+    },
+    {
+      "name": "transformer.layers.2.mlp_norm.scale",
+      "shape": [
+        192
+      ],
+      "offset": 1353984
+    },
+    {
+      "name": "transformer.layers.2.mlp.w12.weight",
+      "shape": [
+        1024,
+        192
+      ],
+      "offset": 1354176
+    },
+    {
+      "name": "transformer.layers.2.mlp.w3.weight",
+      "shape": [
+        192,
+        512
+      ],
+      "offset": 1550784
+    },
+    {
+      "name": "transformer.layers.3.attn_norms.0.scale",
+      "shape": [
+        192
+      ],
+      "offset": 1649088
+    },
+    {
+      "name": "transformer.layers.3.attn_norms.1.scale",
+      "shape": [
+        192
+      ],
+      "offset": 1649280
+    },
+    {
+      "name": "transformer.layers.3.attns.0.wQKV.weight",
+      "shape": [
+        576,
+        192
+      ],
+      "offset": 1649472
+    },
+    {
+      "name": "transformer.layers.3.attns.0.wO.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 1760064
+    },
+    {
+      "name": "transformer.layers.3.attns.0._gate.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 1796928
+    },
+    {
+      "name": "transformer.layers.3.attns.1.wQKV.weight",
+      "shape": [
+        576,
+        192
+      ],
+      "offset": 1833792
+    },
+    {
+      "name": "transformer.layers.3.attns.1.wO.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 1944384
+    },
+    {
+      "name": "transformer.layers.3.attns.1._gate.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 1981248
+    },
+    {
+      "name": "transformer.layers.3.mlp_norm.scale",
+      "shape": [
+        192
+      ],
+      "offset": 2018112
+    },
+    {
+      "name": "transformer.layers.3.mlp.w12.weight",
+      "shape": [
+        1024,
+        192
+      ],
+      "offset": 2018304
+    },
+    {
+      "name": "transformer.layers.3.mlp.w3.weight",
+      "shape": [
+        192,
+        512
+      ],
+      "offset": 2214912
+    },
+    {
+      "name": "transformer.layers.4.attn_norms.0.scale",
+      "shape": [
+        192
+      ],
+      "offset": 2313216
+    },
+    {
+      "name": "transformer.layers.4.attns.0.wQKV.weight",
+      "shape": [
+        576,
+        192
+      ],
+      "offset": 2313408
+    },
+    {
+      "name": "transformer.layers.4.attns.0.wO.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 2424000
+    },
+    {
+      "name": "transformer.layers.4.attns.0._gate.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 2460864
+    },
+    {
+      "name": "transformer.layers.4.mlp_norm.scale",
+      "shape": [
+        192
+      ],
+      "offset": 2497728
+    },
+    {
+      "name": "transformer.layers.4.mlp.w12.weight",
+      "shape": [
+        1024,
+        192
+      ],
+      "offset": 2497920
+    },
+    {
+      "name": "transformer.layers.4.mlp.w3.weight",
+      "shape": [
+        192,
+        512
+      ],
+      "offset": 2694528
+    },
+    {
+      "name": "transformer.layers.5.attn_norms.0.scale",
+      "shape": [
+        192
+      ],
+      "offset": 2792832
+    },
+    {
+      "name": "transformer.layers.5.attns.0.wQKV.weight",
+      "shape": [
+        576,
+        192
+      ],
+      "offset": 2793024
+    },
+    {
+      "name": "transformer.layers.5.attns.0.wO.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 2903616
+    },
+    {
+      "name": "transformer.layers.5.attns.0._gate.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 2940480
+    },
+    {
+      "name": "transformer.layers.5.mlp_norm.scale",
+      "shape": [
+        192
+      ],
+      "offset": 2977344
+    },
+    {
+      "name": "transformer.layers.5.mlp.w12.weight",
+      "shape": [
+        1024,
+        192
+      ],
+      "offset": 2977536
+    },
+    {
+      "name": "transformer.layers.5.mlp.w3.weight",
+      "shape": [
+        192,
+        512
+      ],
+      "offset": 3174144
+    },
+    {
+      "name": "transformer.layers.6.attn_norms.0.scale",
+      "shape": [
+        192
+      ],
+      "offset": 3272448
+    },
+    {
+      "name": "transformer.layers.6.attns.0.wQKV.weight",
+      "shape": [
+        576,
+        192
+      ],
+      "offset": 3272640
+    },
+    {
+      "name": "transformer.layers.6.attns.0.wO.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 3383232
+    },
+    {
+      "name": "transformer.layers.6.attns.0._gate.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 3420096
+    },
+    {
+      "name": "transformer.layers.6.mlp_norm.scale",
+      "shape": [
+        192
+      ],
+      "offset": 3456960
+    },
+    {
+      "name": "transformer.layers.6.mlp.w12.weight",
+      "shape": [
+        1024,
+        192
+      ],
+      "offset": 3457152
+    },
+    {
+      "name": "transformer.layers.6.mlp.w3.weight",
+      "shape": [
+        192,
+        512
+      ],
+      "offset": 3653760
+    },
+    {
+      "name": "transformer.layers.7.attn_norms.0.scale",
+      "shape": [
+        192
+      ],
+      "offset": 3752064
+    },
+    {
+      "name": "transformer.layers.7.attn_norms.1.scale",
+      "shape": [
+        192
+      ],
+      "offset": 3752256
+    },
+    {
+      "name": "transformer.layers.7.attns.0.wQKV.weight",
+      "shape": [
+        576,
+        192
+      ],
+      "offset": 3752448
+    },
+    {
+      "name": "transformer.layers.7.attns.0.wO.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 3863040
+    },
+    {
+      "name": "transformer.layers.7.attns.0._gate.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 3899904
+    },
+    {
+      "name": "transformer.layers.7.attns.1.wQKV.weight",
+      "shape": [
+        576,
+        192
+      ],
+      "offset": 3936768
+    },
+    {
+      "name": "transformer.layers.7.attns.1.wO.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 4047360
+    },
+    {
+      "name": "transformer.layers.7.attns.1._gate.weight",
+      "shape": [
+        192,
+        192
+      ],
+      "offset": 4084224
+    },
+    {
+      "name": "transformer.layers.7.mlp_norm.scale",
+      "shape": [
+        192
+      ],
+      "offset": 4121088
+    },
+    {
+      "name": "transformer.layers.7.mlp.w12.weight",
+      "shape": [
+        1024,
+        192
+      ],
+      "offset": 4121280
+    },
+    {
+      "name": "transformer.layers.7.mlp.w3.weight",
+      "shape": [
+        192,
+        512
+      ],
+      "offset": 4317888
+    },
+    {
+      "name": "transformer.out_norm.scale",
+      "shape": [
+        192
+      ],
+      "offset": 4416192
+    },
+    {
+      "name": "head.projection.hidden_layer.weight",
+      "shape": [
+        768,
+        192
+      ],
+      "offset": 4416384
+    },
+    {
+      "name": "head.projection.output_layer.weight",
+      "shape": [
+        672,
+        768
+      ],
+      "offset": 4563840
+    },
+    {
+      "name": "head.projection.residual_layer.weight",
+      "shape": [
+        672,
+        192
+      ],
+      "offset": 5079936
+    }
+  ],
+  "provenance": {
+    "script": "scripts/export_site_weights.py",
+    "git": "1f44a00",
+    "time_utc": "2026-10-27T04:22:16Z",
+    "host": "vm",
+    "torch": "2.14.1+cpu",
+    "threads": 1,
+    "cuda": false
+  }
+}

@@ -1,0 +1,271 @@
+{
+  "T": 512,
+  "H": 64,
+  "controls": {
+    "season": [
+      0.0,
+      0.7,
+      1.4
+    ],
+    "wild": [
+      "none",
+      "mackey_glass",
+      "kuramoto",
+      "rossler",
+      "lorenz63",
+      "mean_jump",
+      "variance_jump",
+      "stable_ar",
+      "hawkes"
+    ],
+    "strength": [
+      0.7,
+      1.4
+    ],
+    "noise": [
+      0.01,
+      0.1,
+      0.4
+    ]
+  },
+  "ar_noise_weight": 0.3,
+  "pieces": {
+    "season": {
+      "component": "season",
+      "params": {
+        "period": 24,
+        "amplitude": 1.0,
+        "harmonics": 2,
+        "phase_seed": 500000
+      },
+      "pilot": {
+        "mean": -0.0019002425051632005,
+        "sd": 0.63152654274434
+      },
+      "period": 24,
+      "amps": [
+        0.7982064634561161,
+        0.40056609403496357
+      ],
+      "phases": [
+        4.2360643938523745,
+        5.186726054024568
+      ],
+      "warmup_steps": 0
+    },
+    "ar_noise": {
+      "component": "ar_noise",
+      "params": {
+        "rho": 0.693,
+        "sigma": 1.0
+      },
+      "pilot": {
+        "mean": 0.06210324021126578,
+        "sd": 1.396741361824306
+      },
+      "period": 1,
+      "warmup_steps": 0
+    }
+  },
+  "wild": {
+    "mackey_glass": {
+      "component": "mackey_glass",
+      "params": {
+        "tau": 17.0,
+        "beta": 0.2,
+        "gamma": 0.1,
+        "n_exp": 10.0,
+        "h": 0.2,
+        "obs_every": 5,
+        "dyn_rel": 0.0018205642030260805,
+        "obs_rel": 0.01
+      },
+      "pilot": {
+        "mean": 0.9292594722157421,
+        "sd": 0.22561299602000576
+      },
+      "period": 1,
+      "sd_ref": 0.226,
+      "warmup_steps": 2000
+    },
+    "kuramoto": {
+      "component": "kuramoto",
+      "params": {
+        "K": 1.0,
+        "N": 16,
+        "omega0": 1.5,
+        "sigma_w": 1.0,
+        "freq_seed": 300000,
+        "dt": 0.05,
+        "obs_every": 2,
+        "dyn_rel": 0.0018205642030260805,
+        "obs_rel": 0.01
+      },
+      "pilot": {
+        "mean": -0.0016919282683905417,
+        "sd": 0.31933944207800435
+      },
+      "period": 1,
+      "omega": [
+        1.367903750694494,
+        2.659372903061432,
+        2.464684100016987,
+        1.4089536319382507,
+        0.4765345617859513,
+        0.410100704269029,
+        1.1473393485220522,
+        1.0091837340414185,
+        3.503877213770913,
+        0.9407757164399644,
+        1.5161864090054948,
+        1.7081472180322181,
+        1.907114831401158,
+        1.870547300604365,
+        1.4507957440302537,
+        1.968864522421843
+      ],
+      "sd_ref": 0.688,
+      "warmup_steps": 6000
+    },
+    "rossler": {
+      "component": "rossler",
+      "params": {
+        "c": 5.71,
+        "a": 0.2,
+        "b": 0.2,
+        "dt": 0.02,
+        "obs_every": 10,
+        "dyn_rel": 0.0015848931924611136,
+        "obs_rel": 0.01
+      },
+      "pilot": {
+        "mean": 0.1751307488901619,
+        "sd": 5.121581264547361
+      },
+      "period": 1,
+      "sd_ref": 5.13,
+      "warmup_steps": 2500
+    },
+    "lorenz63": {
+      "component": "lorenz63",
+      "params": {
+        "rho": 28.0,
+        "sigma": 10.0,
+        "beta": 2.6666666666666665,
+        "dt": 0.01,
+        "obs_every": 5,
+        "dyn_rel": 0.0018205642030260805,
+        "obs_rel": 0.01
+      },
+      "pilot": {
+        "mean": 0.33630818471559837,
+        "sd": 7.894006615139585
+      },
+      "period": 1,
+      "sd_ref": 7.93,
+      "warmup_steps": 2000
+    },
+    "mean_jump": {
+      "component": "mean_jump",
+      "params": {
+        "level": 0.0,
+        "amplitude": 1.0,
+        "harmonics": 2,
+        "phase_seed": 0,
+        "period": 24,
+        "rho": 0.5,
+        "sigma": 0.25,
+        "placement": "context",
+        "d": 16,
+        "hazard": 0.00390625,
+        "delta": 6.4
+      },
+      "pilot": {
+        "mean": 0.026963563650638258,
+        "sd": 0.7200251975510886
+      },
+      "period": 24,
+      "level_shift": 1.8475208614068028,
+      "sigma_mult": 1.0,
+      "amps": [
+        0.8184808436607272,
+        0.3174466784409676
+      ],
+      "phases": [
+        0.25744424357926954,
+        0.10384619671527331
+      ],
+      "warmup_steps": 0
+    },
+    "variance_jump": {
+      "component": "variance_jump",
+      "params": {
+        "level": 0.0,
+        "amplitude": 1.0,
+        "harmonics": 2,
+        "phase_seed": 0,
+        "period": 24,
+        "rho": 0.5,
+        "sigma": 0.25,
+        "placement": "context",
+        "d": 16,
+        "hazard": 0.00390625,
+        "factor": 6.652532232135314
+      },
+      "pilot": {
+        "mean": 0.00410943705022652,
+        "sd": 0.7307479578233909
+      },
+      "period": 24,
+      "level_shift": 0.0,
+      "sigma_mult": 6.652532232135314,
+      "amps": [
+        0.8184808436607272,
+        0.3174466784409676
+      ],
+      "phases": [
+        0.25744424357926954,
+        0.10384619671527331
+      ],
+      "warmup_steps": 0
+    },
+    "stable_ar": {
+      "component": "stable_ar",
+      "params": {
+        "alpha": 1.298,
+        "rho": 0.95,
+        "sigma": 1.0
+      },
+      "pilot": {
+        "mean": 4.292162587013083,
+        "sd": 26.8200490364985
+      },
+      "period": 1,
+      "warmup_steps": 500
+    },
+    "hawkes": {
+      "component": "hawkes",
+      "params": {
+        "eta": 0.9025,
+        "rate": 5.0,
+        "tau": 4.472135954999579
+      },
+      "pilot": {
+        "mean": 4.93798828125,
+        "sd": 3.000905178523252
+      },
+      "period": 1,
+      "warmup_steps": 2000
+    }
+  },
+  "note": "y = season_w*z_season + 0.3*z_ar + strength*z_wild + noise*e, each z standardized by its pilot mean and sd (otp/generators/mixture.py). Period for scoring follows MixtureProcess.period.",
+  "provenance": {
+    "script": "scripts/export_site_weights.py",
+    "git": "1f44a00",
+    "time_utc": "2026-10-27T04:22:20Z",
+    "host": "vm",
+    "torch": "2.14.1+cpu",
+    "threads": 1,
+    "cuda": false
+  }
+}

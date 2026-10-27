@@ -5,7 +5,7 @@
   var F = root.OTPFigures, C = root.OTPChart;
   var INK = "#1c1d21", TS = "#1c5cab", OR = "#b4531c";
 
-  function draw(host, toy, item, size) {
+  function draw(host, toy, item, size, onDraw) {
     var n = item.context.length, Hh = item.future.length;
     var hist = item.context.map(function (v, i) { return [i - n, v]; });
     var truth = [[-1, item.context[n - 1]]].concat(item.future.map(function (v, i) { return [i, v]; }));
@@ -20,7 +20,7 @@
         { name: "referee (median, 80% band)", color: OR, points: med(o), band: band(o), marker: false, dash: "6 4", bandOpacity: 0.1 },
       ],
       xLabel: "steps (0 = now)", yLabel: "value", height: 280,
-      label: "History, truth, Timestral forecast and referee forecast",
+      label: "History, truth, Timestral forecast and referee forecast", onDraw: onDraw,
     });
   }
   root.OTPFan = { draw: draw };
@@ -31,6 +31,12 @@
     ["s0.0|mean_jump|1.4|n0.01", "Level jumped 16 steps ago"],
   ];
 
+  /* The animation: the history draws in, the truth appears, Timestral's median and its band open out from the median,
+     then the referee's. Every frame is a function of time, so the last frame is the still picture used for reduced motion. */
+  var T_HIST = 1.8, T_TRUTH = 2.4, T_BAND = 4.4, T_REF = 5.6;
+  function clamp01(x) { return Math.max(0, Math.min(1, x)); }
+  function ease(x) { x = clamp01(x); return x * x * (3 - 2 * x); }
+
   F.define("fan", {
     title: "What a forecast looks like",
     label: "A history, what really happened next, and two forecasts drawn as a median line with an 80% band",
@@ -40,19 +46,49 @@
       var plot = C.h("div");
       var note = C.h("p", { class: "otp-note" });
       ctx.el.appendChild(bar); ctx.el.appendChild(plot); ctx.el.appendChild(note);
+      var cur = { handles: null, item: null, bands: null, t: T_REF };
+      function bandPath(res, band, k, med) {
+        var up = band.filter(function (b) { return isFinite(b[1]) && isFinite(b[2]); });
+        function lo(b, i) { return med[i][1] + (b[1] - med[i][1]) * k; }
+        function hi(b, i) { return med[i][1] + (b[2] - med[i][1]) * k; }
+        return up.map(function (b, i) { return (i ? "L" : "M") + res.X(b[0]) + " " + res.Y(hi(b, i)); }).join(" ") + " " +
+          up.slice().reverse().map(function (b, i) { var j = up.length - 1 - i; return "L" + res.X(b[0]) + " " + res.Y(lo(b, j)); }).join(" ") + " Z";
+      }
+      function render(t) {
+        cur.t = t;
+        var res = cur.handles; if (!res || !res.series) return;
+        var S = res.series;                       // [history, truth, timestral, referee]
+        var hist = S[0].path, truth = S[1].path, ts = S[2].path, ref = S[3].path;
+        hist.setAttribute("pathLength", "1"); hist.style.strokeDasharray = "1 1"; hist.style.strokeDashoffset = String(1 - ease(t / T_HIST));
+        truth.style.opacity = String(ease((t - T_HIST) / (T_TRUTH - T_HIST)));
+        var kts = ease((t - T_TRUTH) / (T_BAND - T_TRUTH));
+        ts.style.opacity = String(clamp01((t - T_TRUTH) / 0.5));
+        if (S[2].s.bandEl) { S[2].s.bandEl.setAttribute("d", bandPath(res, cur.bands.ts, kts, cur.bands.tsMed)); S[2].s.bandEl.style.opacity = String(clamp01((t - T_TRUTH) / 0.5)); }
+        var kref = ease((t - T_BAND) / (T_REF - T_BAND));
+        ref.style.opacity = String(clamp01((t - T_BAND) / 0.5));
+        if (S[3].s.bandEl) { S[3].s.bandEl.setAttribute("d", bandPath(res, cur.bands.ref, kref, cur.bands.refMed)); S[3].s.bandEl.style.opacity = String(clamp01((t - T_BAND) / 0.5)); }
+      }
+      var toyData = null, by = {};
+      function show(key, animate) {
+        var it = by[key];
+        cur.item = it;
+        var q = it["q209M"], o = it.oracle;
+        function band(qq) { return qq[1].map(function (_, i) { return [i, qq[0][i], qq[2][i]]; }); }
+        function med(qq) { return qq[1].map(function (v, i) { return [i, v]; }); }
+        cur.bands = { ts: band(q), tsMed: med(q), ref: band(o), refMed: med(o) };
+        draw(plot, toyData, it, "209M", function (res) { cur.handles = res; render(cur.t); });
+        note.textContent = it.ratio209M === null ? "" : "On this one, Timestral-209M's error is " + C.fmt(it.ratio209M) + "× the referee's.";
+        var g = ctx.root.__gsf;
+        if (animate && g && !ctx.reduced) g.replay(); else render(T_REF);
+      }
       root.OTPData.get("toy").then(function (toy) {
-        var by = {};
+        toyData = toy;
         toy.items.forEach(function (it) { by[it.key] = it; });
-        function show(key) {
-          var it = by[key];
-          draw(plot, toy, it, "209M");
-          note.textContent = it.ratio209M === null ? "" :
-            "On this one, Timestral-209M's error is " + C.fmt(it.ratio209M) + "× the referee's.";
-        }
-        C.segmented(bar, EXAMPLES, EXAMPLES[0][0], show, "example");
-        show(EXAMPLES[0][0]);
+        C.segmented(bar, EXAMPLES, EXAMPLES[0][0], function (k) { show(k, true); }, "example");
+        show(EXAMPLES[0][0], false);
+        if (!ctx.reduced) render(ctx.root.__gsf && ctx.root.__gsf.visible ? cur.t : 0);
       });
-      return root.OTPStatic(ctx);
+      return { duration: T_REF + 0.6, still: T_REF + 0.6, render: render, autoplay: true };
     },
   });
 })(window);
