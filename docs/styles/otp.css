@@ -1,0 +1,38 @@
+/* Off the Prior additions on top of the CuperOS styles copied from gpu_stack: charts, tables, controls,
+   slot boxes and the toy window. Colors are the shell's tokens. */
+.otp-chart { width: 100%; height: auto; display: block; background: var(--pane-bright, #fbfbf9); }
+.otp-chart .otp-grid { stroke: var(--chrome-well, #e6e8ec); stroke-width: 1; }
+.otp-chart .otp-axis { stroke: var(--text-soft, #4a4c54); stroke-width: 1; }
+.otp-chart .otp-ref { stroke: var(--text-soft, #4a4c54); stroke-width: 1; stroke-dasharray: 5 4; }
+.otp-chart .otp-tick { font: 12px var(--font-mono); fill: var(--text-soft, #4a4c54); }
+.otp-chart .otp-label { font: 13px var(--font-body); fill: var(--text-dark, #1c1d21); }
+.otp-chart .otp-tipbox { fill: var(--well-dark, #23252c); }
+.otp-chart .otp-tiptext { font: 12px var(--font-mono); fill: var(--text-light, #f4f4f2); }
+.otp-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 8px 4px 2px; font: 13px var(--font-body); color: var(--text-dark); }
+.otp-legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.otp-swatch { width: 18px; height: 0; border-top: 3px solid var(--c); display: inline-block; }
+.otp-swatch.is-dashed { border-top-style: dashed; }
+.otp-controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
+.otp-seg { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.otp-seg-btn { font: 13px var(--font-body); padding: 4px 10px; min-height: 30px; background: var(--button-face); border: 2px outset var(--button-face); cursor: pointer; color: var(--text-dark); }
+.otp-seg-btn[aria-pressed="true"] { border-style: inset; background: var(--chrome-well-bright, #eef0f3); font-weight: 600; }
+.otp-table-wrap { overflow-x: auto; margin: 0 0 12px; }
+.otp-table { border-collapse: collapse; font: 14px var(--font-body); background: var(--pane-bright, #fbfbf9); width: 100%; }
+.otp-table th, .otp-table td { border: 1px solid var(--frame-line, #b5b8bf); padding: 4px 8px; text-align: left; }
+.otp-table td { font-family: var(--font-mono); font-size: 13px; }
+.otp-table td:first-child { font-family: var(--font-body); font-size: 14px; }
+.otp-pending { padding: 14px 16px; background: var(--gold-wash, #fbf1cf); border: 2px dashed var(--gold-line, #b8902b); font: 15px/1.5 var(--font-body); }
+.otp-note { font-size: 14px; color: var(--text-soft); margin: 8px 0; }
+.otp-empty { padding: 12px; color: var(--text-soft); }
+.num { font-family: var(--font-mono); font-size: 0.95em; white-space: nowrap; }
+.toy { padding: 18px 22px 40px; max-width: 900px; font: 16px/1.6 var(--font-body); }
+.toy h2 { margin: 0 0 8px; color: var(--title-bar); }
+.toy-controls { display: grid; gap: 8px; margin: 12px 0; }
+.toy-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.toy-label { min-width: 120px; font-weight: 600; font-size: 14px; }
+.toy-score { margin: 8px 0 10px; font-size: 15px; }
+.toy-big { font: 600 28px var(--font-mono); color: var(--title-bar); }
+.toy-best { color: var(--text-soft); }
+.gsf-stage { padding: 12px; }
+@media (max-width: 760px) { .toy { padding: 14px 16px 40px; } .toy-label { min-width: 100%; } }
+.gsx-visbox[hidden] { display: none !important; }

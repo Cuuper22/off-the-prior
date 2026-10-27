@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Where does a time-series model trained on made-up data stop working? A map of Timestral's failures, why they happen, benchmarks and cheap fixes.">
+  <meta property="og:title" content="Off the Prior">
+  <meta property="og:description" content="Where does a time-series model trained on made-up data stop working?">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#0e7d84">
+  <title>Off the Prior · Where Timestral stops working</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%23008080'/%3E%3Cpath d='M2 11h3l2-6 2 8 2-4h3' fill='none' stroke='%23F4F4F2' stroke-width='1.5'/%3E%3C/svg%3E">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Pixelify+Sans:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/00-foundation.css">
+  <link rel="stylesheet" href="styles/10-desktop.css">
+  <link rel="stylesheet" href="styles/20-story.css">
+  <link rel="stylesheet" href="styles/60-taskbar.css">
+  <link rel="stylesheet" href="styles/70-pixel-icons.css">
+  <link rel="stylesheet" href="styles/figures.css">
+  <link rel="stylesheet" href="styles/explain.css">
+  <link rel="stylesheet" href="styles/otp.css">
+  <script defer src="figures/chart.js"></script>
+  <script defer src="figures/_static.js"></script>
+  <script defer src="figures/_map.js"></script>
+  <script defer src="figures/_slot.js"></script>
+  <script defer src="figures/index.js"></script>
+  <script defer src="figures/fan.js"></script>
+  <script defer src="figures/toy.js"></script>
+  <script defer src="figures/atlas-browser.js"></script>
+  <script defer src="app.js"></script>
+  <script defer src="explain-visuals.js"></script>
+  <script defer src="explain.js" data-manual></script>
+  <script defer src="story-init.js"></script>
+</head>
+<body>
+  <nav class="phone-tabs" aria-label="Sections">
+    <a href="#story" data-open="story" aria-current="page">Story</a>
+    <a href="#toy" data-open="toy">Beat it</a>
+    <a href="#atlas" data-open="atlas">Atlas</a>
+  </nav>
+
+  <div class="desktop">
+    <div class="desktop-icons" aria-label="CuperOS shortcuts">
+      <a class="desktop-icon" href="#story" data-open="story"><span class="icon-image px-icon px-doc"></span><span class="icon-label">Story</span></a>
+      <a class="desktop-icon" href="#toy" data-open="toy"><span class="icon-image px-icon px-chip"></span><span class="icon-label">Beat it</span></a>
+      <a class="desktop-icon" href="#atlas" data-open="atlas"><span class="icon-image px-icon px-graph"></span><span class="icon-label">Atlas</span></a>
+      <a class="desktop-icon" href="paper/off_the_prior.pdf"><span class="icon-image px-icon px-doc"></span><span class="icon-label">Paper</span></a>
+    </div>
+
+    <div class="desktop-logo"><span class="logo-text">CuperOS</span></div>
+
+    <main class="window os-window story-window" id="win-story" data-window="story" aria-label="Story">
+      <div class="title-bar">
+        <div class="title-text"><span class="px-icon px-doc"></span> Off the Prior</div>
+        <div class="window-controls">
+          <button class="window-btn" type="button" data-window-action="min" aria-label="Minimize Story">_</button>
+          <button class="window-btn" type="button" data-window-action="max" aria-label="Maximize Story">□</button>
+          <button class="window-btn" type="button" data-window-action="close" aria-label="Close Story">x</button>
+        </div>
+      </div>
+      <div class="window-content window-scroll" tabindex="0" role="region" aria-label="Story, scrolling page">
+        <article class="story" id="story">
+<!-- STORY START -->
+          <header class="story-head">
+            <h1>Where does a forecaster raised on fake data stop working?</h1>
+            <p class="story-lede">I'm Cúper. In October 2026 Mistral released <span class="term" data-term="timestral">Timestral</span>, a family of forecasting models that learned mostly from <span class="term" data-term="synthetic">made-up series</span>: trends, repeating seasons and noise, mixed together. It still tops the leaderboards built from real data. A model raised on a made-up world carries a picture of what series look like, its <span class="term" data-term="prior">prior</span>. I went looking for the edges of that picture. Hover or tap any underlined word for a quick explanation.</p>
+          </header>
+
+          <section class="story-section" id="s-forecast">
+            <h2>What does Timestral actually do?</h2>
+            <figure class="figure"><div class="figure-slot" data-figure="fan"></div></figure>
+            <p>You hand it the <span class="term" data-term="context">history</span> of a number and it hands back a <span class="term" data-term="forecast">forecast</span>, not as one line but as 21 guesses per future step, its <span class="term" data-term="quantiles">quantiles</span>. The middle one is its best bet; the outer ones say how wrong it might be. A forecaster that is honest about its doubt is worth more than one that is confidently wrong, which is also true of people.</p>
+          </section>
+
+          <section class="story-section" id="s-referee">
+            <h2>How do you tell a failure from bad luck?</h2>
+            <p>A big error is not automatically a failure: some series can't be predicted by anyone. So every test series here comes from a simulator whose exact equations and hidden state I know. Running that simulator forward 500 times from the moment the history ends gives the best forecast anybody could possibly make. I call it the <span class="term" data-term="oracle">referee</span>. A failure is Timestral being much worse than the referee, measured as an <span class="term" data-term="ratio">error ratio</span> using <span class="term" data-term="mase">MASE</span>. I also compare with three <span class="term" data-term="classical">old-school methods</span>.</p>
+            <p>On home turf (series like its training data) every size makes <span class="num" title="results/map/in_prior/summary.csv">0.99</span>–<span class="num" title="results/map/in_prior/summary.csv">1.15</span>× the referee's error up to 128 steps ahead. It knows this world.</p>
+          </section>
+
+          <section class="story-section" id="s-chaos">
+            <h2>Smooth chaos is where it falls off</h2>
+            <figure class="figure"><div class="figure-slot" data-figure="chaos-map"></div></figure>
+            <p>The biggest gaps are on smooth, almost-repeating <span class="term" data-term="chaos">chaotic</span> systems. On the <span class="term" data-term="mackey-glass">Mackey-Glass</span> delay equation at τ = 30, the smallest model makes <span class="num" title="results/map/chaos/summary_all_sizes.csv">21.87</span>× the referee's error and the largest <span class="num" title="results/map/chaos/summary_all_sizes.csv">13.68</span>×. Coupled <span class="term" data-term="kuramoto">Kuramoto</span> oscillators near the edge of syncing: <span class="num" title="results/map/chaos/summary_all_sizes.csv">9.45</span>× at 209M. Bigger models close part of the gap, not most of it.</p>
+            <p>None of this makes Timestral bad at chaos in absolute terms: against the best old-school method its median ratio is <span class="num" title="results/map/chaos/summary_all_sizes.csv">0.36</span> at 209M, so it still wins easily. It just leaves a lot on the table that the equations say is there to take.</p>
+          </section>
+
+          <section class="story-section" id="s-lorenz">
+            <h2>For Lorenz, the gap lives in the first few Lyapunov times</h2>
+            <figure class="figure"><div class="figure-slot" data-figure="lorenz"></div></figure>
+            <p>The famous butterfly system tells a cleaner story. Measure how far ahead a forecast reaches in <span class="term" data-term="lyapunov">Lyapunov times</span> and four different sampling speeds land on one curve: the gap peaks a couple of Lyapunov times out and is gone by about ten, where nobody can forecast anything and the referee is reduced to shrugging.</p>
+          </section>
+
+          <section class="story-section" id="s-noise">
+            <h2>Noise hides the gap</h2>
+            <figure class="figure"><div class="figure-slot" data-figure="noise"></div></figure>
+            <p>Add a little noise and the gap shrinks fast. Mackey-Glass at 0.1% noise: <span class="num" title="results/mechanism/chaos_noise/summary.csv">43.93</span>–<span class="num" title="results/mechanism/chaos_noise/summary.csv">75.47</span>× the referee. At 10% noise: <span class="num" title="results/mechanism/chaos_noise/summary.csv">1.46</span>–<span class="num" title="results/mechanism/chaos_noise/summary.csv">1.81</span>×. Real data is noisy, which may be part of why benchmarks built from it never caught this.</p>
+          </section>
+
+          <section class="story-section" id="s-regime">
+            <h2>Fresh switches get noticed, then ignored</h2>
+            <figure class="figure"><div class="figure-slot" data-figure="regime"></div></figure>
+            <p>When the rules of a series change (a <span class="term" data-term="regime">regime switch</span>), the first steps after the change are the hard part. Sixteen steps after a level jump, the error is <span class="num" title="results/map/regime/summary_all_sizes.csv">3.77</span>× the referee's at 5M and <span class="num" title="results/map/regime/summary_all_sizes.csv">2.43</span>× at 209M. A thousand steps after: <span class="num" title="results/map/regime/summary_all_sizes.csv">1.06</span>× and <span class="num" title="results/map/regime/summary_all_sizes.csv">1.02</span>×, back to normal.</p>
+          </section>
+
+          <section class="story-section" id="s-inside">
+            <h2>It knows, it just doesn't use it</h2>
+            <figure class="figure"><div class="figure-slot" data-figure="readouts"></div></figure>
+            <p>So I looked inside. A <span class="term" data-term="readout">linear readout</span> of the model's own forecast token predicts the new level after a jump with R² <span class="num" title="results/mechanism/readouts/summary.csv">0.956</span>–<span class="num" title="results/mechanism/readouts/summary.csv">0.980</span>, while the forecast itself only gets <span class="num" title="results/mechanism/readouts/summary.csv">0.570</span>–<span class="num" title="results/mechanism/readouts/summary.csv">0.726</span>. Its <span class="term" data-term="attention">attention</span> even piles onto the patches after the change (<span class="num" title="results/mechanism/readouts/summary.csv">15.70</span>–<span class="num" title="results/mechanism/readouts/summary.csv">17.69</span>× their fair share). The information is in there. It doesn't make it out.</p>
+          </section>
+
+          <section class="story-section" id="s-tails">
+            <h2>Wild outliers and long memory stay close</h2>
+            <figure class="figure"><div class="figure-slot" data-figure="tails"></div></figure>
+            <p>I expected <span class="term" data-term="heavy-tails">heavy tails</span> to be a disaster. They weren't: wild jumps, long memory, bursts and multifractal cascades all land at <span class="num" title="results/map/tails/summary_all_sizes.csv">0.94</span>–<span class="num" title="results/map/tails/summary_all_sizes.csv">1.34</span>× the referee. Being surprised in the boring direction still counts as being surprised.</p>
+          </section>
+
+          <section class="story-section" id="s-cov">
+            <h2>Helper series help only when the link is immediate</h2>
+            <figure class="figure"><div class="figure-slot" data-figure="covariates"></div></figure>
+            <p>Timestral accepts <span class="term" data-term="covariate">helper series</span>. When a driver sets the main series after a lag, a perfect user of the driver would cut the error several times over. With the driver's future handed over, 28M's gain falls from <span class="num" title="results/covariates/summary.csv">4.39</span> at lag 0 to <span class="num" title="results/covariates/summary.csv">0.95</span> at lag 512, while the referee's stays at <span class="num" title="results/covariates/summary.csv">5.62</span>–<span class="num" title="results/covariates/summary.csv">7.91</span>. Routing the helper both ways instead of one way barely matters: the joint-versus-one-way ratio stays within 5% in <span class="num" title="results/covariates/summary.csv">95</span>% of cases. The model mostly isn't using the information, whichever way it arrives.</p>
+          </section>
+
+          <section class="story-section" id="s-real">
+            <h2>Does any of this show up on real data?</h2>
+            <figure class="figure"><div class="figure-slot" data-figure="realdata"></div></figure>
+            <p>Real data has no referee, so it can't show a gap to the best possible forecast. What it can show is the pattern against old-school methods. On standard real benchmark series Timestral's error relative to "repeat the last season" is <span class="num" title="results/regression_baseline/summary.csv">0.70</span> at 5M and <span class="num" title="results/regression_baseline/summary.csv">0.65</span> at 209M. On real look-alikes of the failure families (sunspots, lynx, grid frequency, river floods, economic breaks) its lead over old-school methods is smaller than on the synthetic versions.</p>
+          </section>
+
+          <section class="story-section" id="s-fix">
+            <h2>A fix with no training</h2>
+            <figure class="figure"><div class="figure-slot" data-figure="selfval"></div></figure>
+            <p>A nearest-neighbour <span class="term" data-term="analogues">method of analogues</span> (find past moments like now, see what came next) beats every Timestral size on the delay and smooth-chaos systems. So let each series decide: backtest both on the end of its own history and switch only when the analogues win clearly. I froze the rule, then tested it on fresh series: chaos errors drop to <span class="num" title="results/fix/selfval_confirm/frozen_rule_confirmation.csv">0.824</span>× (5M) and <span class="num" title="results/fix/selfval_confirm/frozen_rule_confirmation.csv">0.982</span>× (209M) of before, while home-turf and regime series are untouched and tails move by at most <span class="num" title="results/fix/selfval_confirm/frozen_rule_confirmation.csv">1.003</span>×.</p>
+          </section>
+
+          <section class="story-section" id="s-bench">
+            <h2>The benchmarks</h2>
+            <figure class="figure"><div class="figure-slot" data-figure="bench"></div></figure>
+            <p>All of this is packaged as two <span class="term" data-term="benchmark">benchmarks</span> with the referee's forecast included: a tagged diagnostic set (<span class="num" title="bench/data/diag_manifest.csv">372</span> series, each labelled with why it's hard) and a leaderboard set (<span class="num" title="bench/data/lb_manifest.csv">3,776</span> series). On the diagnostic set Timestral-209M makes <span class="num" title="bench/leaderboard/timestral-209M_diag_all/summary.json">2.00</span>× the referee's error and "repeat last season" makes <span class="num" title="bench/leaderboard/seasonal_naive_diag_all/summary.json">3.68</span>×. One command scores any model.</p>
+          </section>
+
+          <section class="story-section" id="s-search">
+            <h2>Letting a computer hunt for failures</h2>
+            <figure class="figure"><div class="figure-slot" data-figure="search"></div></figure>
+            <p>Instead of me picking hard cases, three <span class="term" data-term="search">search methods</span> tweak a series generator to make Timestral miss as badly as possible, each with the same budget of model calls. This section fills in when those runs finish.</p>
+          </section>
+
+          <section class="story-section" id="s-finetune">
+            <h2>Teaching it the hard cases</h2>
+            <figure class="figure"><div class="figure-slot" data-figure="finetune"></div></figure>
+            <p>The obvious fix is <span class="term" data-term="finetune">fine-tuning</span> on the families it fails, tested on families and settings it never trained on, and checked for damage on normal series. This section fills in when those runs finish.</p>
+          </section>
+
+          <section class="story-section" id="s-atlas">
+            <h2>Inside the neurons</h2>
+            <figure class="figure"><div class="figure-slot" data-figure="atlas"></div></figure>
+            <p>Every <span class="term" data-term="neuron">neuron</span> of every size, tagged with the thing it tracks best. This section fills in when the atlas finishes.</p>
+          </section>
+
+          <section class="story-section" id="s-beat">
+            <h2>Your turn</h2>
+            <p>Mix your own series and see whether Timestral keeps up with the referee. <a href="#toy" data-open="toy">Open "Beat it"</a>.</p>
+          </section>
+
+          <section class="story-section" id="s-how">
+            <h2>How I built it</h2>
+            <p>With AI coding agents, a laptop GPU and rented cloud GPUs. The rule was that every number on this page and in the paper is filled in by a script from a result file that a committed script produced; the paper lists, for each number, the file and how it was computed. Where something couldn't run, the page says so.</p>
+            <p class="go-deeper"><a href="paper/off_the_prior.pdf">Read the paper (PDF)</a></p>
+          </section>
+<!-- STORY END -->
+        </article>
+      </div>
+    </main>
+
+    <section class="window os-window calc-window" id="win-toy" data-window="toy" aria-label="Beat it" hidden>
+      <div class="title-bar">
+        <div class="title-text"><span class="px-icon px-chip"></span> Beat it</div>
+        <div class="window-controls">
+          <button class="window-btn" type="button" data-window-action="min" aria-label="Minimize Beat it">_</button>
+          <button class="window-btn" type="button" data-window-action="max" aria-label="Maximize Beat it">□</button>
+          <button class="window-btn" type="button" data-window-action="close" aria-label="Close Beat it">x</button>
+        </div>
+      </div>
+      <div class="window-content window-scroll" tabindex="0" role="region" aria-label="Beat it"><div id="toy-root"></div></div>
+    </section>
+
+    <section class="window os-window calc-window" id="win-atlas" data-window="atlas" aria-label="Atlas" hidden>
+      <div class="title-bar">
+        <div class="title-text"><span class="px-icon px-graph"></span> Neuron atlas</div>
+        <div class="window-controls">
+          <button class="window-btn" type="button" data-window-action="min" aria-label="Minimize Atlas">_</button>
+          <button class="window-btn" type="button" data-window-action="max" aria-label="Maximize Atlas">□</button>
+          <button class="window-btn" type="button" data-window-action="close" aria-label="Close Atlas">x</button>
+        </div>
+      </div>
+      <div class="window-content window-scroll" tabindex="0" role="region" aria-label="Neuron atlas"><div id="atlas-root"></div></div>
+    </section>
+  </div>
+
+  <footer class="taskbar" aria-label="CuperOS taskbar">
+    <div class="taskbar-left">
+      <a class="start-button" href="https://cuuper22.github.io/"><span class="px-icon px-start"></span> Start</a>
+      <button class="task-button" type="button" data-task="story"><span class="px-icon px-doc"></span> Story</button>
+      <button class="task-button" type="button" data-task="toy"><span class="px-icon px-chip"></span> Beat it</button>
+      <button class="task-button" type="button" data-task="atlas"><span class="px-icon px-graph"></span> Atlas</button>
+    </div>
+    <div class="taskbar-clock" id="clock">12:00 PM</div>
+  </footer>
+</body>
+</html>

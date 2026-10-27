@@ -1,0 +1,163 @@
+/* Story page: a plain scrolling explainer. Readable sans, about 65
+   characters wide, generous spacing. The pixel face is not used here. */
+
+.story {
+  --story-text: 18px;
+  max-width: 65ch;
+  margin: 0 auto;
+  padding: clamp(20px, 4vw, 44px) clamp(18px, 3vw, 32px) 72px;
+  font: 400 var(--story-text) / 1.7 var(--font-body);
+  color: var(--text-dark);
+}
+
+.story h1,
+.story h2 {
+  font-family: var(--font-body);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-wrap: balance;
+  color: var(--text-dark);
+}
+
+.story h1 {
+  margin: 0 0 18px;
+  font-size: clamp(28px, 3.4vw, 40px);
+  line-height: 1.15;
+  color: var(--title-bar);
+}
+
+.story h2 {
+  margin: 0 0 18px;
+  font-size: clamp(23px, 2.4vw, 28px);
+  line-height: 1.25;
+}
+
+.story p {
+  margin: 0 0 1.1em;
+  font-size: var(--story-text);
+  line-height: 1.7;
+}
+
+.story-lede {
+  font-size: 20px;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+
+.story-section {
+  margin-top: 64px;
+  padding-top: 8px;
+}
+
+.story-head + .story-section {
+  margin-top: 48px;
+}
+
+/* Figure slot: an inline <svg> or an <img> fills the box. */
+.figure {
+  margin: 0 0 28px;
+}
+
+.figure-slot {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  padding: 12px;
+  background: var(--pane-bright);
+  border: 2px inset var(--window-chrome);
+}
+
+.figure-slot[data-figure] {
+  display: block;
+  place-items: initial;
+  min-height: 0;
+  padding: 8px;
+}
+
+.figure-slot > svg,
+.figure-slot > img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.figure-slot > svg text {
+  font-family: var(--font-body);
+}
+
+.figure figcaption {
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-soft);
+}
+
+/* Optional link to the Calculator, the Lab, or GitHub. */
+.go-deeper {
+  margin: 24px 0 0;
+}
+
+.story .go-deeper a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 6px 14px;
+  border: 2px outset var(--button-face);
+  background: var(--button-face);
+  color: var(--text-dark);
+  font: 600 16px var(--font-body);
+  text-decoration: none;
+}
+
+.story .go-deeper a:hover {
+  background: var(--button-hover);
+}
+
+.story .go-deeper a:active {
+  border-style: inset;
+}
+
+/* Marks text the author still has to write. Delete the class with the text. */
+.story-placeholder {
+  color: var(--text-soft);
+  background: var(--gold-wash);
+  outline: 2px dashed var(--gold-line);
+  outline-offset: 2px;
+}
+
+/* Calculator window */
+#calculator-root {
+  min-height: 100%;
+  padding: 18px;
+  font-family: var(--font-body);
+  font-size: 16px;
+}
+
+.coming-soon {
+  margin: 0;
+  padding: 40px 12px;
+  text-align: center;
+  font: 600 20px var(--font-body);
+  color: var(--text-soft);
+}
+
+@media (max-width: 760px) {
+  .story {
+    --story-text: 17px;
+    max-width: none;
+    padding: 22px 16px 56px;
+  }
+
+  .story-section {
+    margin-top: 52px;
+  }
+
+  .figure-slot {
+    min-height: 160px;
+  }
+
+  #calculator-root {
+    padding: 16px;
+  }
+}

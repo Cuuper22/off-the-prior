@@ -1,0 +1,258 @@
+/* CuperOS desktop: icons, wordmark, windows. The Story window opens first;
+   the Calculator opens on top of it. Window chrome stays in the pixel face,
+   everything inside a window is the readable sans and mono from
+   00-foundation.css. */
+
+.desktop {
+  position: relative;
+  width: min(100% - 20px, 1400px);
+  height: calc(100vh - 54px);
+  min-height: 560px;
+  margin: 0 auto;
+}
+
+.desktop-icons {
+  position: absolute;
+  top: 22px;
+  left: 0;
+  display: grid;
+  gap: 14px;
+  z-index: 1;
+}
+
+.desktop-icon {
+  width: 96px;
+  min-height: 78px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  align-content: start;
+  gap: 6px;
+  color: var(--text-light);
+  text-decoration: none;
+  text-align: center;
+  text-shadow: 1px 1px 0 var(--pixel-ink);
+  font-size: 13px;
+}
+
+.desktop-icon:hover,
+.desktop-icon:focus-visible {
+  color: var(--text-light);
+}
+
+.desktop-icon:hover .icon-image,
+.desktop-icon:focus-visible .icon-image {
+  transform: translate(-1px, -1px);
+}
+
+.desktop-icon .icon-image {
+  width: 36px;
+  height: 36px;
+  image-rendering: pixelated;
+  transition: transform 120ms ease-out;
+}
+
+.icon-label {
+  padding: 1px 6px;
+  background: var(--icon-label-veil);
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.desktop-logo {
+  position: absolute;
+  top: 18px;
+  right: 0;
+  color: var(--text-light);
+  text-shadow: 2px 2px 0 var(--pixel-ink);
+  user-select: none;
+  z-index: 1;
+}
+
+.logo-text {
+  font-size: clamp(30px, 4vw, 58px);
+  font-weight: 700;
+  line-height: 0.9;
+}
+
+/* Windows */
+.os-window {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
+  background: var(--window-chrome);
+  border: 2px outset var(--button-face);
+  box-shadow: var(--shadow);
+  z-index: 2;
+}
+
+.os-window[hidden] {
+  display: none;
+}
+
+.story-window {
+  top: 14px;
+  left: 116px;
+  width: min(1000px, 100% - 128px);
+  height: calc(100% - 28px);
+}
+
+.calc-window {
+  top: 96px;
+  right: 0;
+  width: min(900px, 100% - 220px);
+  height: calc(100% - 118px);
+}
+
+.os-window.is-max {
+  top: 0 !important;
+  left: 0 !important;
+  right: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.title-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  padding: 5px 7px;
+  background: linear-gradient(90deg, var(--title-bar), var(--title-bar-end));
+  color: var(--text-light);
+  border-bottom: 2px solid var(--inset-dark);
+  user-select: none;
+}
+
+.os-window:not(.is-front) .title-bar {
+  background: linear-gradient(90deg, oklch(0.5 0.03 260), oklch(0.56 0.03 260));
+}
+
+.title-text {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.window-controls {
+  display: flex;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.window-btn {
+  width: 22px;
+  height: 22px;
+  display: inline-grid;
+  place-items: center;
+  border: 2px outset var(--button-face);
+  border-radius: 0;
+  background: var(--button-face);
+  color: var(--text-dark);
+  padding: 0;
+  font: 700 13px var(--font-display);
+  cursor: pointer;
+}
+
+.window-btn:active {
+  border-style: inset;
+}
+
+.window-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 4px;
+  background: var(--window-body);
+  border: 2px inset var(--window-chrome);
+  min-width: 0;
+}
+
+.window-scroll {
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+/* Taskbar buttons that open windows */
+button.task-button {
+  cursor: pointer;
+  font-family: var(--font-display);
+}
+
+.task-button,
+.start-button {
+  color: var(--text-dark);
+  text-decoration: none;
+}
+
+.task-button.is-active {
+  border-style: inset;
+  background: var(--chrome-well);
+}
+
+.task-button:hover,
+.start-button:hover {
+  background: var(--button-hover);
+  color: var(--text-dark);
+}
+
+/* Phones: no desktop. One page, tab bar on top. */
+@media (max-width: 760px) {
+  body {
+    padding-bottom: 0;
+    background: var(--window-body);
+    background-image: none;
+  }
+
+  .desktop-icons,
+  .desktop-logo,
+  body .taskbar,
+  .title-bar {
+    display: none;
+  }
+
+
+  .desktop {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    margin: 0;
+  }
+
+  .os-window,
+  .story-window,
+  .calc-window {
+    position: static;
+    width: 100%;
+    height: auto;
+    border: 0;
+    box-shadow: none;
+    background: var(--window-body);
+  }
+
+  .window-content,
+  .window-scroll {
+    margin: 0;
+    border: 0;
+    overflow: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
