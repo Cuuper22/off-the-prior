@@ -71,6 +71,11 @@ def draw_sample(t: pd.DataFrame, size: str) -> pd.DataFrame:
     return s.merge(t, on=["layer", "neuron", "sign"], how="left")
 
 
+def _jr(j: dict) -> dict:
+    """Judge result without the quantity and the per-scale means; `size` becomes `effect_size`."""
+    return {("effect_size" if k == "size" else k): v for k, v in j.items() if k not in ("quantity", "e")}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--size", required=True)
@@ -119,11 +124,11 @@ def main():
             for qn in ("level", "slope", "spread"):
                 sc_ = float(rng.choice([-1.0, 1.0]))
                 j = St.judge(eff, qn, "+", sc_, seed=ri)
-                res_rows.append({**key, "quantity": qn, "direction": "+", "random_sign": sc_, **{k: v for k, v in j.items() if k != "quantity" and k != "e"},
+                res_rows.append({**key, "quantity": qn, "direction": "+", "random_sign": sc_, **_jr(j),
                                  **{f"e{i}": v for i, v in enumerate(j["e"])}})
         elif pred is not None:
             j = St.judge(eff, pred[0], pred[1], sign_corr, seed=ri)
-            res_rows.append({**key, "quantity": j["quantity"], "predicted": pred[0], "direction": pred[1], **{k: v for k, v in j.items() if k not in ("quantity", "e")},
+            res_rows.append({**key, "quantity": j["quantity"], "predicted": pred[0], "direction": pred[1], **_jr(j),
                              **{f"e{i}": v for i, v in enumerate(j["e"])}})
         else:
             res_rows.append({**key, "quantity": "", "predicted": "", "direction": "", "match": np.nan})
