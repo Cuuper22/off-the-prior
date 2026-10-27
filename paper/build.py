@@ -305,8 +305,37 @@ def regime():
             num(f"adopt_{size}_{d}", v, asrc, f"level adoption at H<=16, all deltas pooled, {size}, switch {d} steps back, T=2048")
 
 
+def bench():
+    import json as _json
+
+    order = ["oracle", "timestral-209M", "timestral-123M", "timestral-28M", "timestral-5M", "ets", "arima", "seasonal_naive"]
+    for set_name in ("diag", "lb"):
+        rows, srcs = [], []
+        for m in order:
+            f = f"bench/leaderboard/{m}_{set_name}_all/summary.json"
+            if not os.path.exists(p(f)):
+                continue
+            o = _json.load(open(p(f)))["overall"]
+            srcs.append(f)
+            rows.append({"model": m, "series": int(o["n"]), "MASE / seasonal naive": o["mase_rel_snaive"],
+                         "sCRPS / seasonal naive": o["scrps_rel_snaive"], "MASE / oracle": o["mase_rel_oracle"],
+                         "80% coverage": o["cov80"]})
+        if rows:
+            table(f"bench_{set_name}", pd.DataFrame(rows), ", ".join(srcs), "bench/eval.py summaries (geometric means over series)", "{:.3f}")
+    f = "bench/leaderboard/timestral-209M_diag_all/summary.json"
+    if os.path.exists(p(f)):
+        ft = _json.load(open(p(f)))["by_failure_type"]
+        rows = [{"failure type": k, "series": int(v["n"]), "209M MASE / oracle": v["mase_rel_oracle"],
+                 "209M MASE / seasonal naive": v["mase_rel_snaive"]} for k, v in sorted(ft.items())]
+        table("bench_diag_ft", pd.DataFrame(rows), f, "Timestral-209M on OffPrior-Diag by failure type", "{:.3f}")
+    for set_name in ("diag", "lb"):
+        mf = f"bench/data/{set_name}_manifest.csv"
+        if os.path.exists(p(mf)):
+            num(f"bench_n_{set_name}", len(pd.read_csv(p(mf))), mf, "number of series", "{:d}")
+
+
 def main():
-    for fn in (in_prior, chaos, tails, long_ctx, symavg, normalization, analog, chaos_noise, readouts, selfval, regime):
+    for fn in (in_prior, chaos, tails, long_ctx, symavg, normalization, analog, chaos_noise, readouts, selfval, regime, bench):
         try:
             fn()
         except FileNotFoundError as e:
