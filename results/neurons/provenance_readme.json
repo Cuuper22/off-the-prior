@@ -1,0 +1,10 @@
+{
+  "script": "scripts/neurons_readme.py",
+  "git": "e6cc96e",
+  "time_utc": "2026-10-27T03:46:33Z",
+  "host": "vm",
+  "torch": "2.14.1+cpu",
+  "threads": 2,
+  "cuda": false,
+  "runs": "results/colab_out"
+}

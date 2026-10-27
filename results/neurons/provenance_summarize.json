@@ -1,0 +1,20 @@
+{
+  "script": "scripts/neurons_summarize.py",
+  "git": "e6cc96e",
+  "time_utc": "2026-10-27T03:45:20Z",
+  "host": "vm",
+  "torch": "2.14.1+cpu",
+  "threads": 2,
+  "cuda": false,
+  "produced": [
+    "steering",
+    "failure_link.csv",
+    "failure_configs.csv",
+    "failure_samples.csv",
+    "scale_match",
+    "transfer",
+    "heads",
+    "squeeze",
+    "upstream columns"
+  ]
+}

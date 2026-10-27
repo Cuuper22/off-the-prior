@@ -1,0 +1,55 @@
+{
+  "variant": "short",
+  "T": 128,
+  "n_series": 1034,
+  "sha256": "e0d6bee8059cc215c19b32b52d344f74b0f6116c7896b943b31132f257835d31",
+  "bytes": 1729719,
+  "recipe": {
+    "version": 1,
+    "context_steps_main": 1024,
+    "forecast_steps": 128,
+    "mix_main": {
+      "in_prior": 700,
+      "controlled": 300,
+      "regime": 600,
+      "chaos": 700,
+      "tails": 700,
+      "mixture": 100
+    },
+    "notes": "in_prior: otp.generators.primitives.in_prior(seed) components stepped separately; controlled: single or paired components with gridded parameters; regime: mean/variance/frequency jump with the switch d = d_frac * T steps before the origin (context placement) and Markov-switching AR; chaos: configs of otp.grids.chaos.param_list; tails: stable AR, fBm, Hawkes, MSM grids of otp.grids.tails; mixture: random genomes of otp.generators.mixture."
+  },
+  "by_generator": {
+    "ctl_ar": 25,
+    "ctl_mix": 25,
+    "ctl_season": 25,
+    "ctl_trend": 25,
+    "fbm": 46,
+    "frequency_jump": 50,
+    "hawkes": 40,
+    "in_prior": 234,
+    "kuramoto": 43,
+    "logistic_map": 48,
+    "lorenz63": 62,
+    "mackey_glass": 37,
+    "markov_ar": 50,
+    "mean_jump": 50,
+    "mixture": 34,
+    "msm_cum": 33,
+    "msm_returns": 34,
+    "rossler": 43,
+    "stable_ar": 80,
+    "variance_jump": 50
+  },
+  "n_label": 831,
+  "n_heldout": 203,
+  "provenance": {
+    "script": "scripts/neurons_corpus.py",
+    "git": "e9f6e0d",
+    "time_utc": "2026-10-27T01:41:10Z",
+    "host": "vm",
+    "torch": "2.14.1+cpu",
+    "threads": 2,
+    "cuda": false,
+    "variant": "short"
+  }
+}

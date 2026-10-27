@@ -1,0 +1,5 @@
+size,n_labeled,n_unmatched,downstream_flagged,downstream_flagged_share,negative_pole_pairs,negative_pole_consistent,negative_pole_share,upstream_checked,upstream_flagged,upstream_flagged_share
+123M,68,68,0,0,15,8,0.53333,62,0,0
+209M,63,63,0,0,15,7,0.46667,57,0,0
+28M,47,47,0,0,13,10,0.76923,40,0,0
+5M,25,25,0,0,6,4,0.66667,13,0,0

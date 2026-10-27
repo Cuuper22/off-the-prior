@@ -1,0 +1,12 @@
+[
+  {
+    "name": "ts5m-mlp-pos",
+    "modelId": "timestral-5m",
+    "description": "Timestral 5M MLP neurons, positive pole (SwiGLU gate*silu(up), input of w3)"
+  },
+  {
+    "name": "ts5m-mlp-neg",
+    "modelId": "timestral-5m",
+    "description": "Timestral 5M MLP neurons, negative pole (SwiGLU gate*silu(up), input of w3)"
+  }
+]

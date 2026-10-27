@@ -1,0 +1,10 @@
+184 samples built in 0s
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  1.69s/it]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  1.69s/it]
+{'failing': 112, 'reference': 32, 'other': 40}
+done 41.0
+184 samples built in 0s
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 2 files: 100%|██████████| 2/2 [00:05<00:00,  2.53s/it]Fetching 2 files: 100%|██████████| 2/2 [00:05<00:00,  2.53s/it]
+{'failing': 88, 'reference': 40, 'other': 56}
+done 80.1
