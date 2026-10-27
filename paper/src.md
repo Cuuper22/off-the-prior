@@ -308,6 +308,8 @@ matched oracle's gain stays at {{num:cov_known_ogain_min}}–{{num:cov_known_oga
 
 {{table:cov_known_lag}}
 
+![Gain from a known-future driver (MASE alone / MASE with the covariate) on LaggedDriver against the lag, for Timestral (solid) and the oracle that reads the same covariate (dashed); context 2,048, horizon 16, 8 seeds.](figures/covariate_lag.png)
+
 When the known covariate is the main series itself, one step late with small noise (LeakyKnown at
 noise ratio 0.05), Timestral's error is several times the oracle's that reads it (MASE over matched-oracle
 MASE):
