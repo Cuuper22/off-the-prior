@@ -6,6 +6,9 @@
  "chaos_curves.png": [
   "results/map/chaos/summary_all_sizes.csv"
  ],
+ "regime_distance.png": [
+  "results/map/regime/summary_all_sizes.csv"
+ ],
  "noise_sweep.png": [
   "results/mechanism/chaos_noise/summary.csv"
  ],
