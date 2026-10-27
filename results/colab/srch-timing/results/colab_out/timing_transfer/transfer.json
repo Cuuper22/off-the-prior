@@ -1,0 +1,45 @@
+{
+  "timings": {
+    "generate_samples_s": 28.995389461517334,
+    "n_samples": 45,
+    "score_209M_s": 7.703201532363892,
+    "score_123M_s": 4.455270290374756,
+    "score_28M_s": 1.9371373653411865,
+    "score_5M_s": 0.24986600875854492,
+    "wall_seconds": 44.46605396270752
+  },
+  "sizes": [
+    "209M",
+    "123M",
+    "28M",
+    "5M"
+  ],
+  "fresh_seeds": [
+    21001,
+    21002,
+    21003
+  ],
+  "n_genomes": 15,
+  "n_samples": 45,
+  "provenance": {
+    "script": "scripts/search_transfer.py",
+    "git": "683c36b",
+    "time_utc": "2026-10-27T00:54:57Z",
+    "host": "6ebc46fb0253",
+    "torch": "2.11.0+cu130",
+    "threads": 4,
+    "cuda": true,
+    "argv": [
+      "--runs",
+      "results/colab_out/timing_*_seed0/elites.json",
+      "--top",
+      "5",
+      "--workers",
+      "11",
+      "--out",
+      "results/colab_out/timing_transfer"
+    ],
+    "wall_seconds": 44.46605396270752,
+    "workers": 11
+  }
+}
