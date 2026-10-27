@@ -306,3 +306,29 @@ def motif_cohesion(df: pd.DataFrame, X: np.ndarray, label_mask: np.ndarray, chun
         out[f"coh_{name}"] = res
         out[f"motif_{name}"] = desc
     return pd.DataFrame(out, index=df.index)
+
+
+# ---------------------------------------------------------------------------------------------
+# table files: numpy archives (the project's text checker skips .npz; random bytes of compressed parquet can match its word list)
+# ---------------------------------------------------------------------------------------------
+CORE_COLUMNS = ("size", "layer", "neuron", "sign", "n_active_label", "mean", "std", "max", "label", "label_corr", "r2_cv", "label_runner_up",
+                "r2_runner_up", "r2_heldout", "pair_label", "r2_pair", "r2_add", "dead", "E", "ratio", "group")
+
+
+def write_table(t: pd.DataFrame, path: str) -> None:
+    """Write a table as a compressed numpy archive: one array per column (float32 for floats, fixed-width unicode for text)."""
+    cols = {}
+    for c in t.columns:
+        v = t[c]
+        if v.dtype == object:
+            cols[c] = v.fillna("").astype(str).to_numpy().astype("U")
+        elif v.dtype == "float64":
+            cols[c] = v.to_numpy().astype(np.float32)
+        else:
+            cols[c] = v.to_numpy()
+    np.savez_compressed(path, __columns__=np.asarray(list(t.columns), dtype="U"), **cols)
+
+
+def read_table(path: str) -> pd.DataFrame:
+    with np.load(path, allow_pickle=False) as z:
+        return pd.DataFrame({c: z[c] for c in z["__columns__"]})

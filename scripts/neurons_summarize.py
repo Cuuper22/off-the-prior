@@ -3,10 +3,10 @@
     python scripts/neurons_summarize.py --runs results/colab_out --out results/neurons
 
 Inputs (whatever exists): `<runs>/nn_steer/steering_{results,effects}_<size>.csv`, `<runs>/nn_failure/*`, `<runs>/nn_match/*`,
-`<runs>/nn_heads_<size>/*`, `<runs>/nn_squeeze_w*_main/scores_partial.csv`, `<out>/<size>/poles.parquet` (from
+`<runs>/nn_heads_<size>/*`, `<runs>/nn_squeeze_w*_main/scores_partial.csv`, `<out>/<size>/poles.npz` (from
 `scripts/neurons_score.py`). Writes steering_results.csv, steering_effects.csv, steering_summary.csv, steering_checks.csv,
 failure_link.csv, failure_configs.csv, failure_samples.csv, transfer.csv, transfer_by_group.csv, scale_match.csv,
-heads_time.csv, heads_variate.csv, heads_summary.csv, squeeze_summary.csv, and adds the `up*` columns to each poles.parquet.
+heads_time.csv, heads_variate.csv, heads_summary.csv, squeeze_summary.csv, and adds the `up*` columns to each poles.npz.
 """
 import argparse
 import glob
@@ -36,7 +36,7 @@ def main():
     a = ap.parse_args()
     o = lambda f: os.path.join(a.out, f)          # noqa: E731
     fk = dict(index=False, float_format="%.5g")
-    poles = {s: pd.read_parquet(o(f"{s}/poles.parquet")) for s in SIZES if os.path.exists(o(f"{s}/poles.parquet"))}
+    poles = {s: Sc.read_table(o(f"{s}/poles.npz")) for s in SIZES if os.path.exists(o(f"{s}/poles.npz"))}
     allp = pd.concat(poles.values(), ignore_index=True)
     done = []
     res = cat(os.path.join(a.runs, "nn_steer", "steering_results_*.csv"))
@@ -84,9 +84,7 @@ def main():
         for s, t in poles.items():
             u = up[up["size"] == s].drop(columns=["label", "group", "r2_cv"])
             t = t.drop(columns=[c for c in t.columns if c.startswith("up")]).merge(u, on=["size", "layer", "sign", "neuron"], how="left")
-            f32 = t.select_dtypes("float64").columns
-            t[f32] = t[f32].astype("float32")
-            t.to_parquet(o(f"{s}/poles.parquet"), index=False, compression="zstd", compression_level=15)
+            Sc.write_table(t, o(f"{s}/poles.npz"))
         done.append("upstream columns")
     write_json(o("provenance_summarize.json"), provenance("scripts/neurons_summarize.py", produced=done))
     print("done:", done)

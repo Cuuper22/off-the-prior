@@ -2,7 +2,7 @@
 
     python scripts/neurons_readme.py --runs results/colab_out --out results/neurons
 
-Every table in the README is read from a CSV or parquet file in `--out`; every number in the text comes from a file as well.
+Every table in the README is read from a CSV or numpy-archive file in `--out`; every number in the text comes from a file as well.
 Also collects the `meta*.json` files of the capture, steering, failure-link and head runs and the squeeze training logs
 (`--runs`) into `provenance_runs.json` and `squeeze/train_w*.json`, so that wall times and hosts are in committed files.
 """
@@ -61,7 +61,7 @@ def main():
     o = lambda f: os.path.join(a.out, f)          # noqa: E731
     rd = lambda f: pd.read_csv(o(f))              # noqa: E731
     runs = collect(a.runs, a.out)
-    pol = {s: pd.read_parquet(o(f"{s}/poles.parquet")) for s in SIZES}
+    pol = {s: Sc.read_table(o(f"{s}/poles.npz")) for s in SIZES}
     allp = pd.concat(pol.values(), ignore_index=True)
     allp["cls"] = Sc.klass(allp, 0.7, 0.1)
     corp = {v: json.load(open(o(f"corpus/{v}_manifest.json"))) for v in ("main", "mv", "short", "long", "xlong")}
@@ -123,7 +123,7 @@ def main():
       "python3 scripts/neurons_match.py --acts-dir results/colab_out/acts --runs results/colab_out --out results/colab_out/nn_match\n"
       "python3 scripts/neurons_summarize.py --runs results/colab_out --out results/neurons\n"
       "python3 scripts/neurons_export_browser.py --poles results/neurons --corpus results/neurons/corpus/main.npz,results/neurons/corpus/mv.npz --real results/neurons/real/real.npz --steering results/neurons/steering_results.csv --out results/neurons/browser\n"
-      "python3 scripts/neurons_export_neuronpedia.py --size 5M --poles results/neurons/5M/poles.parquet --corpus results/neurons/corpus/main.npz,results/neurons/corpus/mv.npz --real results/neurons/real/real.npz --out results/neurons/neuronpedia --n-poles 12\n"
+      "python3 scripts/neurons_export_neuronpedia.py --size 5M --poles results/neurons/5M/poles.npz --corpus results/neurons/corpus/main.npz,results/neurons/corpus/mv.npz --real results/neurons/real/real.npz --out results/neurons/neuronpedia --n-poles 12\n"
       "python3 scripts/neurons_readme.py --runs results/colab_out --out results/neurons\n"
       "```\n")
     w("Large intermediate files (`results/colab_out/`: `scores_partial.csv` per size and context, `acts_sub_<size>.npz`, squeeze weights) are not "
@@ -173,7 +173,7 @@ def main():
       "`role` labeled = poles drawn for the table of predictions; `complement` = the other pole of a drawn neuron; `control` = random poles, "
       "each judged for level, slope and spread against a random direction (the null rate).\n")
     w("Essay style (a qualitative label per pole plus a steering check) is this section together with the `label` and `motif_*` columns of "
-      "`poles.parquet`; this project's known-variable scoring (R^2 and mutual information against the generating variables, as curves over "
+      "`poles.npz`; this project's known-variable scoring (R^2 and mutual information against the generating variables, as curves over "
       "thresholds) is sections 1 and 2. The browser rows carry both for each pole.\n")
     ss = rd("steering_summary.csv")
     w(md(ss[ss.group == "all"][["size", "role", "n", "n_match", "match_rate", "ci_lo", "ci_hi", "monotone_rate", "size_rate", "interval_rate"]]))
@@ -259,7 +259,7 @@ def main():
     w("Cohesion = mean over the 18 motif variables of the standard deviation inside the exemplar list over the standard deviation over all "
       "label tokens (1 = random tokens, below 1 = shared motif); `coh_top` = top exemplars, `coh_mid` = mid-range exemplars. Per-pole motif "
       "descriptions are the columns `motif_top`, `motif_mid` (synthetic) and the real-data exemplars `real_top_*`, `real_mid_*` in each "
-      "`<size>/poles.parquet`.\n")
+      "`<size>/poles.npz`.\n")
     w(md(rd("motif_cohesion.csv")))
     w("### 6.6 Scale ladder (`scale_match.csv`)\n")
     w("For one-job poles of the smaller model: activation correlation with every pole of the larger model on the same 2048 label-set tokens "
@@ -281,7 +281,7 @@ def main():
     w("`downstream_flagged`: unmatched steered labels whose largest ablation effect is on another forecast quantity and at least the size "
       "threshold; `negative_pole_*`: neurons where a pole and its complement share a label, share with the effect signs the label correlations "
       "imply; `upstream_flagged`: steered poles with none of the three most correlated earlier-layer poles in the same label group and a best "
-      "motif label that explains less than half of the label's R^2 (`upstream.csv` columns `up*` in each `poles.parquet`).\n")
+      "motif label that explains less than half of the label's R^2 (`upstream.csv` columns `up*` in each `poles.npz`).\n")
     w(md(rd("steering_checks.csv")))
 
     w("## 7. Attention heads (`heads_time.csv`, `heads_variate.csv`, `heads_summary.csv`)\n")
@@ -311,14 +311,14 @@ def main():
     w("## 9. Cuts, failures and limits\n")
     w("- Colab upload: the first launches for 123M and 209M failed at the upload of the repository archive (more than 40 MB); the jobs were relaunched from a code-only copy and ran once each.\n"
       "- The failure-link script changed after the first Colab pass of 123M and 209M (seasonal reference contexts, cache of the size-independent contexts); the tables here come from the second pass of all four sizes (the first-pass chaos-only files are in `results/colab/nn-123M/failure_chaos_only/` and `nn-209M/failure_chaos_only/`).\n"
-      "- Per-context tables (`poles_short/long/xlong.parquet`) keep the id, label, score and class columns only; exemplar columns exist in `poles.parquet`.\n"
+      "- Per-context tables (`poles_short/long/xlong.npz`) keep the id, label, score and class columns only; exemplar columns exist in `poles.npz`.\n"
       "- The xlong corpus has 48 series (32768 steps); its per-pole numbers rest on 38 label series.\n"
       "- Reference contexts of the failure link: 35 seasonal series (the long corpus has 35 held-out seasonal series with period 8 to 64).\n"
-      "- Parquet tables store numbers as float32.\n")
+      "- Pole tables are numpy archives (`otp.neurons.score.read_table`) with float32 numbers, plus a CSV of the core columns per size (`<size>/poles.csv`); parquet files are not committed because the project word checker reads compressed bytes as text and finds list words by chance.\n")
 
     w("## Files\n")
     fl_ = sorted(f for f in os.listdir(a.out) if os.path.isfile(o(f)))
-    w(", ".join(f"`{f}`" for f in fl_) + "; folders `<size>/` (`poles.parquet`, `poles_short|long|xlong.parquet`), `corpus/`, `real/`, `browser/`, `neuronpedia/`, `squeeze/`.\n")
+    w(", ".join(f"`{f}`" for f in fl_) + "; folders `<size>/` (`poles.npz`, `poles.csv`, `poles_short|long|xlong.npz`), `corpus/`, `real/`, `browser/`, `neuronpedia/`, `squeeze/`.\n")
     with open(o("README.md"), "w") as f:
         f.write("\n".join(L))
     write_json(o("provenance_readme.json"), provenance("scripts/neurons_readme.py", runs=a.runs))

@@ -158,3 +158,11 @@ def test_onehot_moves_codes_to_the_requested_device():
     assert o.shape == (2, 8) and o.device.type == "meta"
     o = Lb.onehot(codes, 4, "cpu")
     assert o.sum().item() == 4 and o[0, 0] == 1 and o[0, 4 + 3] == 1
+
+
+def test_table_archive_roundtrip(tmp_path):
+    t = pd.DataFrame({"a": [1, 2], "b": [0.5, np.nan], "c": ["x y", None], "d": [True, False]})
+    Sc.write_table(t, str(tmp_path / "t.npz"))
+    r = Sc.read_table(str(tmp_path / "t.npz"))
+    assert list(r.columns) == list(t.columns) and r["a"].tolist() == [1, 2] and np.isnan(r["b"][1]) and r["c"].tolist() == ["x y", ""]
+    assert r["d"].tolist() == [True, False]

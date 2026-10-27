@@ -58,7 +58,7 @@ def ex_list(row, key_tok, key_act, vals, T, k):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--poles", default="results/neurons", help="folder with <size>/poles.parquet")
+    ap.add_argument("--poles", default="results/neurons", help="folder with <size>/poles.npz")
     ap.add_argument("--corpus", required=True)
     ap.add_argument("--real", default=None)
     ap.add_argument("--steering", default=None)
@@ -77,10 +77,10 @@ def main():
              "sizes": {}, "provenance": provenance("scripts/neurons_export_browser.py")}
     os.makedirs(a.out, exist_ok=True)
     for size in a.sizes:
-        f = os.path.join(a.poles, size, "poles.parquet")
+        f = os.path.join(a.poles, size, "poles.npz")
         if not os.path.exists(f):
             continue
-        t = pd.read_parquet(f)
+        t = Sc.read_table(f)
         t["cls"] = Sc.klass(t, 0.7, 0.1)
         stm = {}
         if st is not None:

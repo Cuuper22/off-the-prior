@@ -1,6 +1,6 @@
 """Write a sample of the neuron atlas in the closest format Neuronpedia accepts.
 
-    python scripts/neurons_export_neuronpedia.py --size 5M --poles results/neurons/5M/poles.parquet \
+    python scripts/neurons_export_neuronpedia.py --size 5M --poles results/neurons/5M/poles.npz \
         --corpus results/neurons/corpus/main.npz,results/neurons/corpus/mv.npz --real results/neurons/real/real.npz \
         --out results/neurons/neuronpedia --n-poles 12
 
@@ -137,7 +137,7 @@ def main():
     a = ap.parse_args()
     set_threads()
     dev = a.device or default_device()
-    t = pd.read_parquet(a.poles) if a.poles.endswith(".parquet") else pd.read_csv(a.poles)
+    t = Sc.read_table(a.poles) if a.poles.endswith(".npz") else pd.read_csv(a.poles)
     t = t[t["size"] == a.size]
     if "E" not in t.columns:
         t = Sc.add_derived(t)

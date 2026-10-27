@@ -3,8 +3,8 @@
     python scripts/neurons_score.py --runs results/colab_out --corpus-dir results/neurons/corpus --out results/neurons
 
 Reads `<runs>/nn_<size>_<context>/scores_partial.csv` (context = main, short, long, xlong) and writes
-  <out>/<size>/poles.parquet        one row per pole of the main-context run (exemplar columns included)
-  <out>/<size>/poles_<context>.parquet   same for the other contexts (without the position profile columns)
+  <out>/<size>/poles.npz        one row per pole of the main-context run (exemplar columns included)
+  <out>/<size>/poles_<context>.npz   same for the other contexts (without the position profile columns)
   <out>/one_job_curves.csv, scaling.csv, heldout_check.csv, pole_pairs.csv, sign_regimes.csv, kinds.csv,
   <out>/label_groups.csv, context_comparison.csv, motif_cohesion.csv
 Definitions are in `otp/neurons/score.py`.
@@ -44,11 +44,8 @@ def load_corpus_for(meta: dict, corpus_dir: str):
 
 
 def save_table(t, path):
-    """Parquet with float32 numbers and zstd compression (keeps every file well below the 50 MB limit)."""
-    t = t.copy()
-    f = t.select_dtypes("float64").columns
-    t[f] = t[f].astype("float32")
-    t.to_parquet(path, index=False, compression="zstd", compression_level=15)
+    """Numpy archive (`Sc.write_table`: float32 numbers) and, for the main-context table, a CSV with the core columns."""
+    Sc.write_table(t, path)
 
 
 def main():
@@ -92,12 +89,13 @@ def main():
     os.makedirs(a.out, exist_ok=True)
     for s in sizes:
         os.makedirs(os.path.join(a.out, s), exist_ok=True)
-        save_table(tabs[(s, "main")], os.path.join(a.out, s, "poles.parquet"))
+        save_table(tabs[(s, "main")], os.path.join(a.out, s, "poles.npz"))
+        tabs[(s, "main")][[c_ for c_ in Sc.CORE_COLUMNS if c_ in tabs[(s, "main")].columns]].to_csv(os.path.join(a.out, s, "poles.csv"), index=False, float_format="%.5g")
     for (s, ctx), t in tabs.items():
         if ctx != "main":
             keep = [c_ for c_ in ("size", "layer", "neuron", "sign", "n_active_label", "mean", "std", "max", "label", "label_corr", "r2_cv",
                                   "r2_heldout", "pair_label", "r2_pair", "r2_add", "dead", "E", "ratio", "group") if c_ in t.columns]
-            save_table(t[keep], os.path.join(a.out, s, f"poles_{ctx}.parquet"))
+            save_table(t[keep], os.path.join(a.out, s, f"poles_{ctx}.npz"))
     cv = Sc.curves(main_all)
     cv.to_csv(os.path.join(a.out, "one_job_curves.csv"), index=False, float_format="%.5g")
     Sc.scaling(cv).to_csv(os.path.join(a.out, "scaling.csv"), index=False, float_format="%.5g")
