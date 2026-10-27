@@ -16,6 +16,6 @@ for i in $(seq 0 $((N-1))); do
   pids="$pids $!"
 done
 rc=0; for p in $pids; do wait $p || rc=1; done
-find results/colab_out/rd_scores/parts -name "*.csv" -newer parts_have.tar.gz -exec cp {} results/colab_out/rd_scores/ ;
+find results/colab_out/rd_scores/parts -name "*.csv" -newer parts_have.tar.gz -exec cp {} results/colab_out/rd_scores/ \;
 ls results/colab_out/rd_scores | wc -l
 exit $rc
