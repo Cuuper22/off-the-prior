@@ -53,6 +53,8 @@ def main():
                      ("failure_samples_*.csv", "failure_samples.csv")):
         d = cat(os.path.join(a.runs, "nn_failure", src))
         if d is not None:
+            # neurons_failure.py names the share of elevated poles that are not one-job (mixed, unexplained or dead) `share_unexplained_or_dead`
+            d = d.rename(columns={"share_unexplained_or_dead": "share_not_one_job"})
             d.to_csv(o(dst), **fk)
             done.append(dst)
     if mt is not None:
