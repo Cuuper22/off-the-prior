@@ -1,0 +1,1 @@
+lat_outlier,lat_outlier_mag,prev_phase_sin,m_kurt,m_dlevel_prev,m_acf1,x_post_cp,s_trend,s_noise_level,x_hurst

@@ -41,6 +41,10 @@ def main():
     ap.add_argument("--resume", action="store_true")
     ap.add_argument("--max-series", type=int, default=0, help="use only the first n series (tests)")
     ap.add_argument("--device", default=None)
+    ap.add_argument("--subsample", type=int, default=0, help="use a random subset of n series (seeded; for token-count controls)")
+    ap.add_argument("--subsample-seed", type=int, default=0)
+    ap.add_argument("--keep-vars", default=None,
+                    help="file with a comma-separated list of library variables to keep; the others are treated as undefined")
     ap.add_argument("--acts-dir", default=None, help="where acts_sub_<size>.npz goes (default: --out)")
     ap.add_argument("--acts-sub", type=int, default=0,
                     help="also save the signed activations of every neuron on this many fixed tokens (seeded, same for all sizes)")
@@ -55,8 +59,19 @@ def main():
         keep = np.arange(min(a.max_series, len(specs)))
         c = {k: (v[keep] if isinstance(v, np.ndarray) and v.ndim >= 1 and len(v) == len(specs) else v)
              for k, v in c.items()}
+    if a.subsample and a.subsample < len(specs):
+        keep = np.sort(np.random.default_rng(a.subsample_seed).choice(len(specs), a.subsample, replace=False))
+        c = {k: (v[keep] if isinstance(v, np.ndarray) and v.ndim >= 1 and len(v) == len(specs) else v)
+             for k, v in c.items()}
     T = c["T"]
     tab = Lb.token_table(c)
+    if a.keep_vars:
+        from otp.neurons import variables as V
+        keep_names = [x.strip() for x in open(a.keep_vars).read().split(",") if x.strip()]
+        unknown = [x for x in keep_names if x not in V.VAR_INDEX]
+        assert not unknown, f"unknown variables: {unknown}"
+        drop = [i for i, n in enumerate(V.LIBRARY) if n not in set(keep_names)]
+        tab["X"][:, drop] = np.nan
     prep = Lb.prepare(tab, dev)
     real = None
     if a.real:

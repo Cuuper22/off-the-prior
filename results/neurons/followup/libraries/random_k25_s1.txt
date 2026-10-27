@@ -1,0 +1,1 @@
+lat_level,lat_phase_cos,lat_regime_frac,prev_level,prev_slope,prev_phase_sin,prev_phase_cos,prev_regime,m_peak_pos,m_trough_pos,m_monotone,m_dlevel_prev,m_range,m_acf1,s_trend,s_lyap,s_jump_mag,x_noise_level,x_hurst,x_cp_strength,fam_controlled,gen_ctl_mix,gen_markov_ar,gen_stable_ar,gen_hawkes

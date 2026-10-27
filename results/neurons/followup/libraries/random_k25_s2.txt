@@ -1,0 +1,1 @@
+lat_slope,lat_curv,lat_inn_sd,lat_regime_frac,lat_outlier,prev_slope,prev_phase_cos,m_slope,m_resid_sd,m_jump,m_trough_pos,m_monotone,m_dsd_prev,m_roughness,x_since_cp,x_phase_cos,s_switch_pos,x_log2_period,x_noise_level,x_ar1,tok_fc_step,fam_controlled,fam_chaos,gen_mean_jump,gen_markov_ar

@@ -1,0 +1,1 @@
+lat_level,lat_slope,lat_curv,prev_regime,m_dsd_prev,s_log2_period,s_lyap,x_season_strength,fam_chaos,gen_stable_ar
