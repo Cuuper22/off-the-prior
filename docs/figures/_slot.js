@@ -8,7 +8,8 @@
       root.OTPData.get(name).then(function (d) {
         if (!d || d.status !== "ready") return C.pending(ctx.el, d);
         render(ctx, d);
-        ctx.el.appendChild(C.h("p", { class: "otp-note", text: "From: " + (d.sources || []).join(", ") }));
+        var src = d.sources || [], shown = src.slice(0, 3).join(", ");
+        ctx.el.appendChild(C.h("p", { class: "otp-note", text: "From: " + shown + (src.length > 3 ? " and " + (src.length - 3) + " more files" : "") }));
       }).catch(function () { C.pending(ctx.el, null); });
       return root.OTPStatic(ctx);
     };

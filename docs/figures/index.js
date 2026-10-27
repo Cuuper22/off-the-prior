@@ -10,7 +10,7 @@
   var defs = (F.defs = F.defs || {});
   var ALIASES = {};
   var IDS = [
-    "fan", "chaos-map", "lorenz", "noise", "regime", "readouts", "tails", "covariates", "realdata",
+    "fan", "chaos-map", "lorenz", "noise", "regime", "scaling", "readouts", "tails", "covariates", "realdata",
     "selfval", "bench", "search", "finetune", "atlas",
   ];
   var NS = "http://www.w3.org/2000/svg";

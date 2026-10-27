@@ -103,6 +103,12 @@
             <p>When the rules of a series change (a <span class="term" data-term="regime">regime switch</span>), the first steps after the change are the hard part. Sixteen steps after a level jump, the error is {{num:reg_mj4_16_5M}}× the referee's at 5M and {{num:reg_mj4_16_209M}}× at 209M. A thousand steps after: {{num:reg_mj4_1024_5M}}× and {{num:reg_mj4_1024_209M}}×, back to normal.</p>
           </section>
 
+          <section class="story-section" id="s-scale">
+            <h2>Does a bigger model close the gap?</h2>
+            <figure class="figure"><div class="figure-slot" data-figure="scaling"></div></figure>
+            <p>The same ratios against model size, both axes logarithmic. On Mackey-Glass at τ = 30 the ratio goes from {{num:chaos_mg30_5M}}× at 5M to {{num:chaos_mg30_209M}}× at 209M; on Kuramoto near the edge of syncing from {{num:chaos_kur1_5M}}× to {{num:chaos_kur1_209M}}×. Sixteen steps after a level jump it goes from {{num:reg_mj4_16_5M}}× to {{num:reg_mj4_16_209M}}×. Size helps in each of these; switch to the average view to see whether it helps across a generator's whole range of settings.</p>
+          </section>
+
           <section class="story-section" id="s-inside">
             <h2>It knows, it just doesn't use it</h2>
             <figure class="figure"><div class="figure-slot" data-figure="readouts"></div></figure>
@@ -142,20 +148,23 @@
           <section class="story-section" id="s-search">
             <h2>Letting a computer hunt for failures</h2>
             <figure class="figure"><div class="figure-slot" data-figure="search"></div></figure>
-            <p>Instead of me picking hard cases, three <span class="term" data-term="search">search methods</span> tweak a series generator to make Timestral miss as badly as possible, each with the same budget of model calls. This section fills in when those runs finish.</p>
+            <p>Instead of me picking hard cases, three <span class="term" data-term="search">search methods</span> tweak a series generator to make Timestral miss as badly as possible, each with the same budget of model calls. {{text:search|This section fills in when those runs finish.}}</p>
           </section>
 
           <section class="story-section" id="s-finetune">
             <h2>Teaching it the hard cases</h2>
             <figure class="figure"><div class="figure-slot" data-figure="finetune"></div></figure>
-            <p>The obvious fix is <span class="term" data-term="finetune">fine-tuning</span> on the families it fails, tested on families and settings it never trained on, and checked for damage on normal series. This section fills in when those runs finish.</p>
+            <p>The obvious fix is <span class="term" data-term="finetune">fine-tuning</span> on the families it fails, tested on families and settings it never trained on, and checked for damage on normal series. {{text:finetune|This section fills in when those runs finish.}}</p>
           </section>
 
           <section class="story-section" id="s-atlas">
             <h2>Inside the neurons</h2>
             <figure class="figure"><div class="figure-slot" data-figure="atlas"></div></figure>
-            <p>Every <span class="term" data-term="neuron">neuron</span> of every size, tagged with the thing it tracks best. This section fills in when the atlas finishes.</p>
-          </section>
+{{if:atlas}}            <p>Timestral's layers are SwiGLU, so a <span class="term" data-term="neuron">neuron</span>'s value can be positive or negative, and I study each sign as its own entry, a <span class="term" data-term="pole">pole</span>: {{site:nn_poles_5M}} of them at 5M and {{site:nn_poles_209M}} at 209M. Every pole is scored against the variables I know exactly because I generated the series: local level, slope, noise, season phase, steps since a switch, which generator made the series. Against this variable library, few poles are single-variable. At θ = 0.7 the share of poles with one clear job is {{num:nn_onejob_5M}}% at 5M and {{num:nn_onejob_209M}}% at 209M, and most poles are mixed ({{num:nn_mixed_5M}}% and {{num:nn_mixed_209M}}%).</p>
+            <p>That number depends on the corpus as much as on the neurons. Scored the same way on corpora with shorter and longer histories, the one-job share is {{num:nn_ctx_onejob_min}}–{{num:nn_ctx_onejob_max}}%, and only {{num:nn_ctx_agree_min}}–{{num:nn_ctx_agree_max}}% of poles keep the label they had on the main corpus. So I read it as a property of the pair (neurons, variable library), and I don't take it as evidence that the neurons are polysemantic in general; a different set of labels could give a different answer. Among the poles that do have one job, the label group "position" (where the token sits) covers {{site:nn_grp_position_5M}}% at 5M and {{site:nn_grp_position_209M}}% at 209M, and chaos-related labels grow from {{site:nn_grp_chaos_5M}}% to {{site:nn_grp_chaos_209M}}%.</p>
+            <p>I also scaled single poles up and down during the forecast and compared the result with predictions written down beforehand. None of the {{num:nn_steer_n_labeled}} labeled poles matched, but no single pole moved the forecast by more than {{num:nn_steer_max_effect}} standard deviations, below every size threshold I had set, so this test could not have detected a match. Treat it as underpowered, not as a negative result. The same goes for the failure link: zeroing the {{site:nn_abl_elev_n_209M}} periodic poles that are more active on failing chaos systems leaves 209M's MASE on those systems at {{site:nn_abl_elev_after_209M}} (from {{site:nn_abl_elev_before_209M}}), and so does zeroing as many random poles ({{site:nn_abl_rand_after_209M}}). <a href="#atlas" data-open="atlas">Open the neuron browser</a> to look at any pole yourself.</p>
+{{else}}            <p>Every <span class="term" data-term="neuron">neuron</span> of every size, tagged with the thing it tracks best. This section fills in when the atlas finishes.</p>
+{{endif}}          </section>
 
           <section class="story-section" id="s-beat">
             <h2>Your turn</h2>
