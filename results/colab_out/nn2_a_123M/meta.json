@@ -1,0 +1,28 @@
+{
+  "script": "scripts/neurons_followup_a.py",
+  "git": "5337a6a",
+  "time_utc": "2026-10-27T05:19:10Z",
+  "host": "eefca1289c32",
+  "torch": "2.11.0+cu130",
+  "threads": 4,
+  "cuda": true,
+  "size": "123M",
+  "device": "cuda",
+  "wall_s": 678.9,
+  "blocks": {
+    "early": 3,
+    "mid": 10,
+    "late": 19
+  },
+  "n_blocks": 20,
+  "d_hidden": 1712,
+  "n_series": {
+    "mixed": 96,
+    "seasonal": 64,
+    "jump": 30
+  },
+  "n_random_dir": 32,
+  "n_random_group": 16,
+  "n_tasks_run": 201,
+  "only": "all"
+}
