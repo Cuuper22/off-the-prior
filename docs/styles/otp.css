@@ -15,6 +15,10 @@
 .otp-controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
 .otp-seg { display: inline-flex; flex-wrap: wrap; gap: 4px; }
 .otp-seg-btn { font: 13px var(--font-body); padding: 4px 10px; min-height: 30px; background: var(--button-face); border: 2px outset var(--button-face); cursor: pointer; color: var(--text-dark); }
+.otp-btn { font: 13px var(--font-body); padding: 4px 12px; min-height: 30px; background: var(--button-face); border: 2px outset var(--button-face); cursor: pointer; color: var(--text-dark); }
+.otp-btn:active { border-style: inset; }
+.toy-row[hidden] { display: none; }
+.toy-seed { font: 13px var(--font-mono); color: var(--text-soft); }
 .otp-seg-btn[aria-pressed="true"] { border-style: inset; background: var(--chrome-well-bright, #eef0f3); font-weight: 600; }
 .otp-table-wrap { overflow-x: auto; margin: 0 0 12px; }
 .otp-table { border-collapse: collapse; font: 14px var(--font-body); background: var(--pane-bright, #fbfbf9); width: 100%; }

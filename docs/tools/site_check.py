@@ -117,12 +117,24 @@ def run(url, shots, only):
                 r[f"{win}_controls"] = pg.evaluate(CONTROLS_JS)
                 if shots:
                     pg.screenshot(path=os.path.join(shots, f"{name}_{win}.png"))
+                if win == "toy":
+                    # live mode: loads the weights in a worker, makes a series, forecasts it, and says which mode is on
+                    pg.get_by_role("button", name="Live: Timestral-5M in this browser").click()
+                    pg.wait_for_function("() => /Showing: live/.test(document.querySelector('.toy-mode').textContent)", timeout=90000)
+                    r["toy_live_note"] = pg.locator(".toy-mode").inner_text()[:80]
+                    r["toy_live_score"] = pg.locator(".toy-score").inner_text()[:60]
+                    pg.get_by_role("button", name="Draw a new series").click()
+                    pg.wait_for_timeout(2500)
+                    r["toy_live_overflow"] = pg.evaluate(OVERFLOW_JS)
+                    r["toy_live_controls"] = pg.evaluate(CONTROLS_JS)
+                    if shots:
+                        pg.screenshot(path=os.path.join(shots, f"{name}_toy_live.png"))
             # keyboard: Tab from the top reaches the segmented controls of the atlas window
             r["errors"] = errs
             r["failed_requests"] = failed
             ctx.close()
             report[name] = r
-            for k in ("story_overflow", "toy_overflow", "atlas_overflow"):
+            for k in ("story_overflow", "toy_overflow", "toy_live_overflow", "atlas_overflow"):
                 o = r[k]
                 if o["pageScrollWidth"] > o["viewport"] + 1:
                     problems.append(f"{name}: {k} page scrolls sideways ({o['pageScrollWidth']} > {o['viewport']})")
@@ -131,7 +143,7 @@ def run(url, shots, only):
                 for lab, sw, cw in o["windows"]:
                     if sw > cw + 1:
                         problems.append(f"{name}: window '{lab}' scrolls sideways ({sw} > {cw})")
-            for k in ("story_controls", "toy_controls", "atlas_controls"):
+            for k in ("story_controls", "toy_controls", "toy_live_controls", "atlas_controls"):
                 if r[k]["unnamed"]:
                     problems.append(f"{name}: controls without a name in {k}: {r[k]['unnamed'][:5]}")
             if errs:
