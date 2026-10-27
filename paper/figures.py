@@ -175,8 +175,31 @@ def readouts():
     save(fig, "readout_vs_output.png", [src])
 
 
+def covariates():
+    src = "results/covariates/summary.csv"
+    s = pd.read_csv(p(src))
+    g = s[(s.system == "LaggedDriver") & (s["T"] == 2048) & (s.H == 16) & (s.condition == "known_cov")]
+    lags = [0, 8, 32, 128, 512]
+    x = np.arange(len(lags))
+    fig, ax = plt.subplots(figsize=(4.6, 3.0))
+    for size in ("5M", "28M"):
+        fc = f"timestral-{size}"
+        h = g[g["size"] == size].set_index(g[g["size"] == size].knob_value.astype(float)).loc[[float(v) for v in lags]]
+        ax.plot(x, h.covariate_gain_gmean, "o-", ms=4, color=RAMP[fc], label=f"{size}: Timestral")
+        ax.plot(x, h.oracle_gain_gmean, "s--", ms=4, color=RAMP[fc], label=f"{size}: matched oracle")
+    ref1(ax)
+    ax.set_yscale("log")
+    plain_log(ax)
+    ax.set_xticks(x, [str(v) for v in lags])
+    ax.set_xlabel("lag between driver and main series (steps)")
+    ax.set_ylabel("gain from the known covariate")
+    ax.set_title("Known-future driver: gain fades with lag", fontsize=9, color=INK)
+    ax.legend(fontsize=7)
+    save(fig, "covariate_lag.png", [src])
+
+
 def main():
-    for fn in (lyapunov, chaos_curves, regime_distance, noise, readouts):
+    for fn in (lyapunov, chaos_curves, regime_distance, noise, readouts, covariates):
         fn()
     with open(os.path.join(OUT, "sources.json"), "w") as f:
         f.write(json.JSONEncoder(indent=1).encode(SOURCES) + "\n")

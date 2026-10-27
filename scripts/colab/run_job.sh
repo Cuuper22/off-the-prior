@@ -64,7 +64,18 @@ while true; do
   # kernel, so touch the kernel every poll (time-limited, since the exec channel can hang)
   timeout 60 colab exec -s "$S" -f "$ROOT/scripts/colab/remote_status.py" >/dev/null 2>&1 || true
   if timeout 90 colab ls -s "$S" /content 2>/dev/null | grep -q "job.exit"; then break; fi
-  if ! timeout 90 colab sessions 2>/dev/null | grep -q "\[$S\]"; then echo "session $S is gone"; exit 3; fi
+  # the runtime counts as gone only if the session list was read successfully three times in a row
+  # without it (a timed-out or failed `colab sessions` call proves nothing, and exiting here stops
+  # the runtime through the trap)
+  missing=0
+  for k in 1 2 3; do
+    if L=$(timeout 90 colab sessions 2>/dev/null); then
+      if echo "$L" | grep -q "\[$S\]"; then missing=0; break; fi
+      missing=$((missing+1))
+    fi
+    python3 -c "import time; time.sleep(30)"
+  done
+  if [ "$missing" -ge 3 ]; then echo "session $S is gone"; exit 3; fi
   echo "$(date -u +%T) running"
   python3 -c "import time; time.sleep(120)"
 done
