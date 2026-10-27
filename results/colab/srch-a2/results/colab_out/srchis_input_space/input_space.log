@@ -1,0 +1,12 @@
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  6.64it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.68it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.89it/s]
+/content/otp/otp/search/gradient.py:186: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Raised internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  v = float(val)
+input_space 5M: 20 series done
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  7.47it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.04it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.19it/s]
+input_space 28M: 20 series done
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  7.37it/s]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  2.07s/it]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  1.78s/it]
+input_space 123M: 20 series done
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  7.27it/s]Fetching 2 files: 100%|██████████| 2/2 [00:04<00:00,  2.50s/it]Fetching 2 files: 100%|██████████| 2/2 [00:04<00:00,  2.15s/it]
+input_space 209M: 20 series done

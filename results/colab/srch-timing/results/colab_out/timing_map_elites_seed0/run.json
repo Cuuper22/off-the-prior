@@ -1,0 +1,21 @@
+{
+  "method": "map_elites",
+  "seed": 0,
+  "size": "5M",
+  "budget": 360,
+  "calls": 360,
+  "evaluations": 120,
+  "replayed_from_checkpoint": 0,
+  "sample_generations_this_process": 360,
+  "timestral_calls_made_by_objective": 360,
+  "best_fitness": 19.22020414847596,
+  "wall_seconds": 247.17348885536194,
+  "info": {
+    "batches": 11,
+    "cells": 25,
+    "grid": [
+      4,
+      10
+    ]
+  }
+}

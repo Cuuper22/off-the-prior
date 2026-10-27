@@ -1,0 +1,35 @@
+{
+  "method": "gradient_r12",
+  "algorithm": "gradient",
+  "grad_restarts": 12,
+  "grad_draws": 2,
+  "seed": 0,
+  "size": "5M",
+  "budget": 3000,
+  "calls": 2964,
+  "evaluations": 60,
+  "replayed_from_checkpoint": 0,
+  "sample_generations_this_process": 180,
+  "timestral_calls_made_by_objective": 180,
+  "best_fitness": 33.37368110079491,
+  "wall_seconds": 31.30726432800293,
+  "info": {
+    "n_steps": 58,
+    "screened": 12,
+    "starts": 12,
+    "rejected_steps": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+cpu_count 12
+NVIDIA A100-SXM4-40GB
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  5.38it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.79it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.99it/s]
+cmaes seed 0: 120 evals, calls 360, best fitness 54.9506, 214s
+map_elites seed 0: 120 evals, calls 360, best fitness 19.2202, 247s
+gradient search seed 0: 3 starts after screening 3 draws, 26 steps, scoring at steps [0, 6, 13, 20, 26]
+  step 0: calls 9/360, best fitness so far 2.132
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1261.63it/s]
+  step 6: calls 90/360, best fitness so far 6.513
+  step 13: calls 183/360, best fitness so far 7.075
+  step 20: calls 276/360, best fitness so far 7.206
+  step 26: calls 357/360, best fitness so far 7.206
+gradient seed 0: 15 evals, calls 357, best fitness 7.2063, 6s
+{'cmaes': 5, 'gradient': 5, 'map_elites': 5} unique genomes: 15
+samples generated (29s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  5.87it/s]Fetching 2 files: 100%|██████████| 2/2 [00:04<00:00,  2.66s/it]Fetching 2 files: 100%|██████████| 2/2 [00:04<00:00,  2.29s/it]
+209M scored (8s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  7.80it/s]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  1.76s/it]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  1.51s/it]
+123M scored (4s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  7.65it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.23it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.41it/s]
+28M scored (2s)
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1451.57it/s]
+5M scored (0s)
+done

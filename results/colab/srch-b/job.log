@@ -1,0 +1,29 @@
+NVIDIA A100-SXM4-40GB
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  6.86it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.40it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.58it/s]
+map_elites seed 0: 1000 evals, calls 3000, best fitness 101.3177, 2541s
+map_elites seed 1: 1000 evals, calls 3000, best fitness 200.2749, 1936s
+map_elites seed 2: 1000 evals, calls 3000, best fitness 351.7417, 1845s
+gradient search seed 0: 12 starts after screening 12 draws, 58 steps, scoring at steps [0, 14, 29, 44, 58]
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1200.26it/s]
+  step 0: calls 36/3000, best fitness so far 2.132
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1152.60it/s]
+  step 14: calls 744/3000, best fitness so far 7.208
+  step 29: calls 1500/3000, best fitness so far 23.031
+  step 44: calls 2256/3000, best fitness so far 25.063
+  step 58: calls 2964/3000, best fitness so far 33.374
+gradient seed 0: 60 evals, calls 2964, best fitness 33.3737, 31s
+gradient search seed 1: 12 starts after screening 12 draws, 58 steps, scoring at steps [0, 14, 29, 44, 58]
+  step 0: calls 36/3000, best fitness so far 1.638
+  step 14: calls 744/3000, best fitness so far 8.868
+  step 29: calls 1500/3000, best fitness so far 8.868
+  step 44: calls 2256/3000, best fitness so far 8.868
+  step 58: calls 2964/3000, best fitness so far 8.868
+gradient seed 1: 60 evals, calls 2964, best fitness 8.8684, 26s
+gradient search seed 2: 12 starts after screening 13 draws, 58 steps, scoring at steps [0, 14, 29, 44, 58]
+  step 0: calls 36/3000, best fitness so far 2.565
+  step 14: calls 744/3000, best fitness so far 135.943
+  step 29: calls 1500/3000, best fitness so far 1344.593
+  step 44: calls 2256/3000, best fitness so far 1373.009
+  step 58: calls 2964/3000, best fitness so far 1373.301
+gradient seed 2: 60 evals, calls 2964, best fitness 1373.3015, 26s

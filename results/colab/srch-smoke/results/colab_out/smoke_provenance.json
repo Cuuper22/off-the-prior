@@ -1,0 +1,58 @@
+{
+  "invocations": [
+    {
+      "script": "scripts/search.py",
+      "git": "e334b2f",
+      "time_utc": "2026-10-27T00:14:43Z",
+      "host": "9d065717935c",
+      "torch": "2.11.0+cu130",
+      "threads": 4,
+      "cuda": true,
+      "argv": [
+        "--methods",
+        "cmaes",
+        "gradient",
+        "--seeds",
+        "0",
+        "--budget",
+        "120",
+        "--workers",
+        "11",
+        "--out",
+        "results/colab_out",
+        "--flat-prefix",
+        "smoke_"
+      ],
+      "wall_seconds": 68.96489524841309,
+      "budget": 120,
+      "size": "5M",
+      "workers": 11
+    },
+    {
+      "script": "scripts/search.py",
+      "git": "e334b2f",
+      "time_utc": "2026-10-27T00:17:58Z",
+      "host": "9d065717935c",
+      "torch": "2.11.0+cu130",
+      "threads": 4,
+      "cuda": true,
+      "argv": [
+        "--methods",
+        "input_space",
+        "--sizes",
+        "5M",
+        "209M",
+        "--n-series",
+        "2",
+        "--out",
+        "results/colab_out",
+        "--flat-prefix",
+        "smoke_"
+      ],
+      "wall_seconds": 192.65927815437317,
+      "budget": 2400,
+      "size": "5M",
+      "workers": 1
+    }
+  ]
+}

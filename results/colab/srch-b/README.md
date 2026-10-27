@@ -1,0 +1,1 @@
+`results/search/colab_jobs/job_search_b.sh`: MAP-Elites (3 search seeds) and the 12-start gradient variant (3 search seeds), 3000 Timestral calls per run on 5M. Launched from the slim worktree commit described in `../srch-a2/README.md`.

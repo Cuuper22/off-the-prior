@@ -1,0 +1,1 @@
+`results/search/colab_jobs/job_transfer.sh`: re-scoring of the top 20 elites of each method on 209M, 123M, 28M and 5M with fresh seeds. Outputs are copied to `results/search/`. Launched from the slim worktree commit described in `../srch-a2/README.md`.
