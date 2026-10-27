@@ -725,6 +725,420 @@
   "src": "results/map/regime/adoption.csv",
   "how": "level adoption at H<=16, all deltas pooled, 209M, switch 256 steps back, T=2048"
  },
+ "cov_lag32_209M_gain": {
+  "value": 2.411226667790437,
+  "text": "2.41",
+  "src": "results/covariates/summary.csv",
+  "how": "LaggedDriver lag 32, 209M, H=16, past_cov covariate gain"
+ },
+ "cov_lag32_209M_ogain": {
+  "value": 7.952175906818415,
+  "text": "7.95",
+  "src": "results/covariates/summary.csv",
+  "how": "LaggedDriver lag 32, 209M, H=16, matched-oracle gain"
+ },
+ "cov_known_lag0_28M": {
+  "value": 4.394994273171992,
+  "text": "4.39",
+  "src": "results/covariates/summary.csv",
+  "how": "LaggedDriver lag 0, 28M, H=16, known_cov covariate gain"
+ },
+ "cov_known_lag512_28M": {
+  "value": 0.9522846908739164,
+  "text": "0.95",
+  "src": "results/covariates/summary.csv",
+  "how": "LaggedDriver lag 512, 28M, H=16, known_cov covariate gain"
+ },
+ "cov_known_ogain_min": {
+  "value": 5.615963684642914,
+  "text": "5.62",
+  "src": "results/covariates/summary.csv",
+  "how": "min over lags of the matched-oracle gain, LaggedDriver known_cov, 28M, H=16"
+ },
+ "cov_known_ogain_max": {
+  "value": 7.907167800528803,
+  "text": "7.91",
+  "src": "results/covariates/summary.csv",
+  "how": "max of the same"
+ },
+ "cov_jp_FeedbackLinear_min": {
+  "value": 0.9821866909893602,
+  "text": "0.98",
+  "src": "results/covariates/summary.csv",
+  "how": "FeedbackLinear: smallest joint/past_cov (geometric mean) over knobs, sizes, H at T=2048"
+ },
+ "cov_jp_FeedbackLinear_min_lo": {
+  "value": 0.9734614286087168,
+  "text": "0.97",
+  "src": "results/covariates/summary.csv",
+  "how": "its 95% bootstrap lower bound"
+ },
+ "cov_jp_FeedbackLinear_min_hi": {
+  "value": 0.990990159040381,
+  "text": "0.99",
+  "src": "results/covariates/summary.csv",
+  "how": "its 95% bootstrap upper bound"
+ },
+ "cov_jp_FeedbackLinear_max": {
+  "value": 1.0057384443545276,
+  "text": "1.01",
+  "src": "results/covariates/summary.csv",
+  "how": "FeedbackLinear: largest joint/past_cov over knobs, sizes, H at T=2048"
+ },
+ "cov_jp_FeedbackPredPrey_min": {
+  "value": 0.811893218424671,
+  "text": "0.81",
+  "src": "results/covariates/summary.csv",
+  "how": "FeedbackPredPrey: smallest joint/past_cov (geometric mean) over knobs, sizes, H at T=2048"
+ },
+ "cov_jp_FeedbackPredPrey_min_lo": {
+  "value": 0.6872578944533096,
+  "text": "0.69",
+  "src": "results/covariates/summary.csv",
+  "how": "its 95% bootstrap lower bound"
+ },
+ "cov_jp_FeedbackPredPrey_min_hi": {
+  "value": 0.9591313587577168,
+  "text": "0.96",
+  "src": "results/covariates/summary.csv",
+  "how": "its 95% bootstrap upper bound"
+ },
+ "cov_jp_FeedbackPredPrey_max": {
+  "value": 1.0351936629714942,
+  "text": "1.04",
+  "src": "results/covariates/summary.csv",
+  "how": "FeedbackPredPrey: largest joint/past_cov over knobs, sizes, H at T=2048"
+ },
+ "cov_jp_LaggedDriver_min": {
+  "value": 0.8320386043175797,
+  "text": "0.83",
+  "src": "results/covariates/summary.csv",
+  "how": "LaggedDriver: smallest joint/past_cov (geometric mean) over knobs, sizes, H at T=2048"
+ },
+ "cov_jp_LaggedDriver_min_lo": {
+  "value": 0.7166725735792805,
+  "text": "0.72",
+  "src": "results/covariates/summary.csv",
+  "how": "its 95% bootstrap lower bound"
+ },
+ "cov_jp_LaggedDriver_min_hi": {
+  "value": 0.9212055735199612,
+  "text": "0.92",
+  "src": "results/covariates/summary.csv",
+  "how": "its 95% bootstrap upper bound"
+ },
+ "cov_jp_LaggedDriver_max": {
+  "value": 1.012905213033627,
+  "text": "1.01",
+  "src": "results/covariates/summary.csv",
+  "how": "LaggedDriver: largest joint/past_cov over knobs, sizes, H at T=2048"
+ },
+ "cov_jp_share_within": {
+  "value": 94.84126984126983,
+  "text": "95",
+  "src": "results/covariates/summary.csv",
+  "how": "percent of joint rows (all systems, knobs, sizes, H, T=2048) with joint/past_cov in (0.95, 1.05)"
+ },
+ "cov_jp_n": {
+  "value": 252.0,
+  "text": "252",
+  "src": "results/covariates/summary.csv",
+  "how": "number of such rows"
+ },
+ "cov_leaky_5M_16": {
+  "value": 8.469409099460108,
+  "text": "8.47",
+  "src": "results/covariates/summary.csv",
+  "how": "LeakyKnown 0.05, 5M, H=16, ratio to matched oracle"
+ },
+ "cov_leaky_209M_16": {
+  "value": 3.2518604478967195,
+  "text": "3.25",
+  "src": "results/covariates/summary.csv",
+  "how": "LeakyKnown 0.05, 209M, H=16, ratio to matched oracle"
+ },
+ "cov_leaky_5M_1024": {
+  "value": 42.708689265754835,
+  "text": "42.71",
+  "src": "results/covariates/summary.csv",
+  "how": "LeakyKnown 0.05, 5M, H=1024, ratio to matched oracle"
+ },
+ "rd_real_5M": {
+  "value": 0.695741960055045,
+  "text": "0.70",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "real set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, timestral-5M"
+ },
+ "rd_real_209M": {
+  "value": 0.6513448115038518,
+  "text": "0.65",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "real set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, timestral-209M"
+ },
+ "rd_real_ets": {
+  "value": 1.0214910341991446,
+  "text": "1.02",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "real set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, ets"
+ },
+ "rd_real_arima": {
+  "value": 1.2686879782435474,
+  "text": "1.27",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "real set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, arima"
+ },
+ "rd_n_real": {
+  "value": 412.0,
+  "text": "412",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "windows in the real set (common basis)"
+ },
+ "rd_analogues_5M": {
+  "value": 0.7651939385961389,
+  "text": "0.77",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "analogues set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, timestral-5M"
+ },
+ "rd_analogues_209M": {
+  "value": 0.7344667003256086,
+  "text": "0.73",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "analogues set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, timestral-209M"
+ },
+ "rd_analogues_ets": {
+  "value": 1.148875798490402,
+  "text": "1.15",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "analogues set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, ets"
+ },
+ "rd_analogues_arima": {
+  "value": 1.1118408493054763,
+  "text": "1.11",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "analogues set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, arima"
+ },
+ "rd_n_analogues": {
+  "value": 69.0,
+  "text": "69",
+  "src": "results/regression_baseline/summary.csv",
+  "how": "windows in the analogues set (common basis)"
+ },
+ "bench_ft_coupled_oscillators": {
+  "value": 7.941711476813754,
+  "text": "7.94",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "Timestral-209M, OffPrior-Diag, failure type coupled_oscillators: geometric mean of MASE / oracle MASE"
+ },
+ "bench_ft_delay_oscillator": {
+  "value": 6.515203499357727,
+  "text": "6.52",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "Timestral-209M, OffPrior-Diag, failure type delay_oscillator: geometric mean of MASE / oracle MASE"
+ },
+ "bench_ft_chaos_short_reach": {
+  "value": 4.45535301276235,
+  "text": "4.46",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "Timestral-209M, OffPrior-Diag, failure type chaos_short_reach: geometric mean of MASE / oracle MASE"
+ },
+ "bench_ft_smooth_chaos": {
+  "value": 2.8746010470867764,
+  "text": "2.87",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "Timestral-209M, OffPrior-Diag, failure type smooth_chaos: geometric mean of MASE / oracle MASE"
+ },
+ "bench_ft_recent_switch": {
+  "value": 1.807937788123844,
+  "text": "1.81",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "Timestral-209M, OffPrior-Diag, failure type recent_switch: geometric mean of MASE / oracle MASE"
+ },
+ "bench_ft_ctrl_min": {
+  "value": 0.977597899929544,
+  "text": "0.98",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "min over control types and heavy-tail/bursty/multifractal types of 209M MASE / oracle"
+ },
+ "bench_ft_ctrl_max": {
+  "value": 1.0334802490558577,
+  "text": "1.03",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "max of the same"
+ },
+ "bench_diag_5M_oracle": {
+  "value": 2.4174695983720045,
+  "text": "2.42",
+  "src": "bench/leaderboard/timestral-5M_diag_all/summary.json",
+  "how": "timestral-5M on diag: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_diag_5M_snaive": {
+  "value": 0.6555967730509432,
+  "text": "0.66",
+  "src": "bench/leaderboard/timestral-5M_diag_all/summary.json",
+  "how": "timestral-5M on diag: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_diag_209M_oracle": {
+  "value": 2.0019779607655273,
+  "text": "2.00",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "timestral-209M on diag: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_diag_209M_snaive": {
+  "value": 0.5434192431862245,
+  "text": "0.54",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "timestral-209M on diag: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_diag_ets_oracle": {
+  "value": 4.468012495598316,
+  "text": "4.47",
+  "src": "bench/leaderboard/ets_diag_all/summary.json",
+  "how": "ets on diag: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_diag_ets_snaive": {
+  "value": 1.2130693482529074,
+  "text": "1.21",
+  "src": "bench/leaderboard/ets_diag_all/summary.json",
+  "how": "ets on diag: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_diag_arima_oracle": {
+  "value": 4.149753444593514,
+  "text": "4.15",
+  "src": "bench/leaderboard/arima_diag_all/summary.json",
+  "how": "arima on diag: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_diag_arima_snaive": {
+  "value": 1.123371685561535,
+  "text": "1.12",
+  "src": "bench/leaderboard/arima_diag_all/summary.json",
+  "how": "arima on diag: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_diag_seasonal_naive_oracle": {
+  "value": 3.6790050343046206,
+  "text": "3.68",
+  "src": "bench/leaderboard/seasonal_naive_diag_all/summary.json",
+  "how": "seasonal_naive on diag: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_diag_seasonal_naive_snaive": {
+  "value": 1.0,
+  "text": "1.00",
+  "src": "bench/leaderboard/seasonal_naive_diag_all/summary.json",
+  "how": "seasonal_naive on diag: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_lb_5M_oracle": {
+  "value": 1.4457013048027731,
+  "text": "1.45",
+  "src": "bench/leaderboard/timestral-5M_lb_all/summary.json",
+  "how": "timestral-5M on lb: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_lb_5M_snaive": {
+  "value": 0.6693590656575588,
+  "text": "0.67",
+  "src": "bench/leaderboard/timestral-5M_lb_all/summary.json",
+  "how": "timestral-5M on lb: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_lb_209M_oracle": {
+  "value": 1.3139198857310517,
+  "text": "1.31",
+  "src": "bench/leaderboard/timestral-209M_lb_all/summary.json",
+  "how": "timestral-209M on lb: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_lb_209M_snaive": {
+  "value": 0.6083655573366707,
+  "text": "0.61",
+  "src": "bench/leaderboard/timestral-209M_lb_all/summary.json",
+  "how": "timestral-209M on lb: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_lb_ets_oracle": {
+  "value": 2.1721692835968245,
+  "text": "2.17",
+  "src": "bench/leaderboard/ets_lb_all/summary.json",
+  "how": "ets on lb: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_lb_ets_snaive": {
+  "value": 1.0061951263036426,
+  "text": "1.01",
+  "src": "bench/leaderboard/ets_lb_all/summary.json",
+  "how": "ets on lb: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_lb_arima_oracle": {
+  "value": 2.244635359304841,
+  "text": "2.24",
+  "src": "bench/leaderboard/arima_lb_all/summary.json",
+  "how": "arima on lb: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_lb_arima_snaive": {
+  "value": 1.0392851752028824,
+  "text": "1.04",
+  "src": "bench/leaderboard/arima_lb_all/summary.json",
+  "how": "arima on lb: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_lb_seasonal_naive_oracle": {
+  "value": 2.159433246391676,
+  "text": "2.16",
+  "src": "bench/leaderboard/seasonal_naive_lb_all/summary.json",
+  "how": "seasonal_naive on lb: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_lb_seasonal_naive_snaive": {
+  "value": 1.0,
+  "text": "1.00",
+  "src": "bench/leaderboard/seasonal_naive_lb_all/summary.json",
+  "how": "seasonal_naive on lb: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_lb_fam_chaos": {
+  "value": 2.162344085297346,
+  "text": "2.16",
+  "src": "bench/leaderboard/timestral-209M_lb_all/summary.json",
+  "how": "Timestral-209M, OffPrior-LB, family chaos: geometric mean of MASE / oracle MASE"
+ },
+ "bench_lb_fam_mixture": {
+  "value": 1.4709004505824543,
+  "text": "1.47",
+  "src": "bench/leaderboard/timestral-209M_lb_all/summary.json",
+  "how": "Timestral-209M, OffPrior-LB, family mixture: geometric mean of MASE / oracle MASE"
+ },
+ "bench_lb_fam_tails": {
+  "value": 1.0112562976650776,
+  "text": "1.01",
+  "src": "bench/leaderboard/timestral-209M_lb_all/summary.json",
+  "how": "Timestral-209M, OffPrior-LB, family tails: geometric mean of MASE / oracle MASE"
+ },
+ "bench_xp_same": {
+  "value": 25.0,
+  "text": "25",
+  "src": "bench/data/cross_platform_diag.json",
+  "how": "diagnostic configs whose arrays match between the Windows and Linux builds"
+ },
+ "bench_xp_n": {
+  "value": 31.0,
+  "text": "31",
+  "src": "bench/data/cross_platform_diag.json",
+  "how": "diagnostic configs"
+ },
+ "bench_n_diag": {
+  "value": 372.0,
+  "text": "372",
+  "src": "bench/data/diag_manifest.csv",
+  "how": "number of series"
+ },
+ "bench_nconf_diag": {
+  "value": 31.0,
+  "text": "31",
+  "src": "bench/data/diag_manifest.csv",
+  "how": "number of configs"
+ },
+ "bench_n_lb": {
+  "value": 3776.0,
+  "text": "3,776",
+  "src": "bench/data/lb_manifest.csv",
+  "how": "number of series"
+ },
+ "bench_nconf_lb": {
+  "value": 236.0,
+  "text": "236",
+  "src": "bench/data/lb_manifest.csv",
+  "how": "number of configs"
+ },
  "table:inprior": {
   "src": "results/map/in_prior/summary.csv",
   "how": "geometric mean over the 4 in-prior configs of the per-config geometric-mean MASE ratio to oracle, context 2048"
@@ -764,5 +1178,33 @@
  "table:regime": {
   "src": "results/map/regime/summary_all_sizes.csv",
   "how": "geometric mean over 8 seeds of MASE ratio to oracle, context 2048, horizon 128"
+ },
+ "table:cov_past": {
+  "src": "results/covariates/summary.csv",
+  "how": "past_cov rows at T=2048, H=16: covariate gain (MASE(uni)/MASE(past_cov)) / oracle gain (MASE(uni)/MASE(matched oracle)), geometric means over samples"
+ },
+ "table:cov_known_lag": {
+  "src": "results/covariates/summary.csv",
+  "how": "LaggedDriver known_cov, T=2048, H=16: covariate gain and matched-oracle gain (geometric means)"
+ },
+ "table:cov_leaky": {
+  "src": "results/covariates/summary.csv",
+  "how": "LeakyKnown noise ratio 0.05, known_cov, T=2048: MASE / matched-oracle MASE = oracle gain / covariate gain (geometric means over the same samples)"
+ },
+ "table:rd_analogue": {
+  "src": "results/regression_baseline/analogue_vs_synthetic.csv",
+  "how": "Timestral MASE / best classical MASE (geometric mean): real analogue windows vs the synthetic family at T=2048, H=128"
+ },
+ "table:bench_diag": {
+  "src": "bench/leaderboard/oracle_diag_all/summary.json, bench/leaderboard/timestral-209M_diag_all/summary.json, bench/leaderboard/timestral-123M_diag_all/summary.json, bench/leaderboard/timestral-28M_diag_all/summary.json, bench/leaderboard/timestral-5M_diag_all/summary.json, bench/leaderboard/ets_diag_all/summary.json, bench/leaderboard/arima_diag_all/summary.json, bench/leaderboard/seasonal_naive_diag_all/summary.json",
+  "how": "bench/eval.py summaries (geometric means over series)"
+ },
+ "table:bench_lb": {
+  "src": "bench/leaderboard/oracle_lb_all/summary.json, bench/leaderboard/timestral-209M_lb_all/summary.json, bench/leaderboard/timestral-123M_lb_all/summary.json, bench/leaderboard/timestral-28M_lb_all/summary.json, bench/leaderboard/timestral-5M_lb_all/summary.json, bench/leaderboard/ets_lb_all/summary.json, bench/leaderboard/arima_lb_all/summary.json, bench/leaderboard/seasonal_naive_lb_all/summary.json",
+  "how": "bench/eval.py summaries (geometric means over series)"
+ },
+ "table:bench_diag_ft": {
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "Timestral-209M on OffPrior-Diag by failure type"
  }
 }

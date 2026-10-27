@@ -75,11 +75,18 @@ a secret test set.
 ## Run it
 
 ```bash
-python bench/build.py --set diag            # rebuilds bench/data/diag_*.npz (deterministic; checks: diag_SHA256SUMS)
-python bench/build.py --set lb --workers 8  # the leaderboard set (large; not in git)
+# the diagnostic files are in git; the leaderboard files are on the Hugging Face dataset
+huggingface-cli download <user>/off-the-prior-bench --repo-type dataset --include "data/lb_*" --local-dir bench
 python bench/eval.py --set diag --model timestral-5M
 python bench/eval.py --set lb --split public --predictions my_preds/ --name mymodel
 ```
+
+The files can also be rebuilt from the configs (`python bench/build.py --set diag`, `python bench/build.py --set lb
+--workers 8`), but use the published files for scores you report. The published files were built on {ref_platform}.
+A rebuild on {other_platform} matched it array-for-array for {xp_same} of {xp_n} diagnostic configs; in the other
+{xp_diff} ({xp_list}) floating-point differences between platforms change the simulated paths; in some of them the
+paths then diverge (largest difference {xp_max} context standard deviations). Details:
+`data/cross_platform_diag.json`. `*_SHA256SUMS` hold hashes of the array contents of the published files.
 
 `--predictions DIR`: for every data file `bench/data/<set>_<split>_T<T>_H<H>.npz` put a file with the same
 name in DIR holding `quantiles`, an array (N, H, 21) in the data file's series order, at levels
@@ -138,8 +145,11 @@ compared with the best achievable forecast, not only with each other.
 
 Files are NumPy `.npz` archives (load with `numpy.load`; the Hugging Face `datasets` loader is not used).
 Each `.npz` file holds `series_id`, `context` (N, T), `future` (N, H), `oracle_q` (N, H, 21), `period` (N,) and a
-JSON `meta` string per series (generator, parameters, tags, reason). Files are rebuilt bit-for-bit (array contents)
-by `bench/build.py` from the config lists in `bench/configs/`; `*_SHA256SUMS` lists content hashes.
+JSON `meta` string per series (generator, parameters, tags, reason). `bench/build.py` rebuilds the files from the
+config lists in `configs/`; `*_SHA256SUMS` lists content hashes of the published files. The published files were
+built on {ref_platform}; a rebuild on {other_platform} matched array-for-array for {xp_same} of {xp_n} diagnostic
+configs, and in {xp_diff} ({xp_list}) platform floating-point differences change the simulated paths
+(`data/cross_platform_diag.json`). Use these files, not a rebuild, for reported scores.
 
 Evaluation: `python bench/eval.py --set diag --predictions <dir>`; see the repository README.
 
@@ -153,6 +163,11 @@ def main():
     fmt = {"diag_counts": counts("diag"), "lb_counts": counts("lb"), "diag_table": table("diag"), "lb_table": table("lb"),
            "diag_ft": family_table("diag", "timestral-209M", "by_failure_type") or "_not scored yet_",
            "lb_fam": family_table("lb", "timestral-209M") or "_not scored yet_"}
+    xp = json.load(open(os.path.join(B, "data", "cross_platform_diag.json")))
+    fmt.update({"ref_platform": xp["a"].replace(" (published build)", ""), "other_platform": xp["b"],
+                "xp_same": xp["identical_configs"], "xp_n": xp["n_configs"],
+                "xp_diff": xp["n_configs"] - xp["identical_configs"], "xp_list": ", ".join(xp["differing"]),
+                "xp_max": f"{max(xp['max_abs_diff_over_context_std'].values()):.1f}"})
     open(os.path.join(B, "README.md"), "w").write(README.format(**fmt))
     open(os.path.join(B, "dataset_card.md"), "w").write(CARD.format(**fmt))
     print("wrote bench/README.md and bench/dataset_card.md")

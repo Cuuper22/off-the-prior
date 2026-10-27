@@ -1,0 +1,55 @@
+Tesla T4
+[real_extra] timestral-5M: 80/80 windows
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  6.38it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.65it/s]Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.85it/s]
+    chunk 0 (40 windows) done, 4s
+    chunk 1 (40 windows) done, 5s
+    timestral-5M done in 5s this call
+[real_extra] timestral-28M: 80/80 windows
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  9.19it/s]Fetching 2 files: 100%|██████████| 2/2 [00:04<00:00,  2.49s/it]Fetching 2 files: 100%|██████████| 2/2 [00:04<00:00,  2.14s/it]
+    chunk 0 (40 windows) done, 5s
+    chunk 1 (40 windows) done, 5s
+    timestral-28M done in 5s this call
+[real_extra] timestral-123M: 80/80 windows
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  9.05it/s]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  2.29s/it]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  1.97s/it]
+    chunk 0 (40 windows) done, 6s
+    chunk 1 (40 windows) done, 6s
+    timestral-123M done in 6s this call
+[real_extra] timestral-209M: 80/80 windows
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  9.09it/s]Fetching 2 files: 100%|██████████| 2/2 [00:06<00:00,  4.06s/it]Fetching 2 files: 100%|██████████| 2/2 [00:06<00:00,  3.47s/it]
+    chunk 0 (40 windows) done, 10s
+    chunk 1 (40 windows) done, 11s
+    timestral-209M done in 11s this call
+[analogues] timestral-5M: 69/69 windows
+    chunk 0 (40 windows) done, 0s
+    chunk 1 (29 windows) done, 1s
+    timestral-5M done in 1s this call
+[analogues] timestral-28M: 69/69 windows
+    chunk 0 (40 windows) done, 1s
+    chunk 1 (29 windows) done, 1s
+    timestral-28M done in 1s this call
+[analogues] timestral-123M: 69/69 windows
+    chunk 0 (40 windows) done, 1s
+    chunk 1 (29 windows) done, 2s
+    timestral-123M done in 2s this call
+[analogues] timestral-209M: 69/69 windows
+    chunk 0 (40 windows) done, 1s
+    chunk 1 (29 windows) done, 3s
+    timestral-209M done in 3s this call
+analogues__timestral-123M__000.csv
+analogues__timestral-123M__001.csv
+analogues__timestral-209M__000.csv
+analogues__timestral-209M__001.csv
+analogues__timestral-28M__000.csv
+analogues__timestral-28M__001.csv
+analogues__timestral-5M__000.csv
+analogues__timestral-5M__001.csv
+parts
+real_extra__timestral-123M__000.csv
+real_extra__timestral-123M__001.csv
+real_extra__timestral-209M__000.csv
+real_extra__timestral-209M__001.csv
+real_extra__timestral-28M__000.csv
+real_extra__timestral-28M__001.csv
+real_extra__timestral-5M__000.csv
+real_extra__timestral-5M__001.csv

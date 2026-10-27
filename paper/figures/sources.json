@@ -14,5 +14,8 @@
  ],
  "readout_vs_output.png": [
   "results/mechanism/readouts/summary.csv"
+ ],
+ "covariate_lag.png": [
+  "results/covariates/summary.csv"
  ]
 }

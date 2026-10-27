@@ -47,6 +47,12 @@ Timestral against a nearest-neighbour "method of analogues" on the end of the co
 when the analogues win clearly. On fresh test series, chaos errors drop to 0.824× (5M) and
 0.982× (209M) of before, while normal and regime-switching series are untouched.
 
+**The hard cases are packaged as benchmarks.** `bench/` holds a tagged diagnostic set (372
+series, each labelled with why it is hard) and a leaderboard set (3,776 series over three context
+lengths and three horizons), both with the referee's forecast included. On the diagnostic set the largest
+Timestral makes 2.00× the referee's error and seasonal naive
+3.68×; one command scores any model (see `bench/README.md`).
+
 Every number here is filled in by `scripts/make_readme.py` from `paper/numbers.json`, which points each
 one at the result file it came from.
 

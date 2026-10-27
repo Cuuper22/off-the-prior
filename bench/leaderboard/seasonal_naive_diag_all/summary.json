@@ -1,0 +1,173 @@
+{
+  "model": "seasonal_naive",
+  "set": "diag",
+  "split": "all",
+  "overall": {
+    "n": 372,
+    "mase_rel_snaive": 1.0,
+    "scrps_rel_snaive": 1.0,
+    "mase_rel_oracle": 3.6790050343046206,
+    "cov80": 0.8140330981182796
+  },
+  "by_family": {
+    "chaos": {
+      "n": 144,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 16.383123372445592,
+      "cov80": 0.7780490451388888
+    },
+    "in_prior": {
+      "n": 36,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 1.7122819456399987,
+      "cov80": 0.7762586805555556
+    },
+    "regime": {
+      "n": 120,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 1.5710593364259244,
+      "cov80": 0.9016276041666667
+    },
+    "tails": {
+      "n": 72,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 1.146517989052209,
+      "cov80": 0.7588975694444444
+    }
+  },
+  "by_failure_type": {
+    "bursty": {
+      "n": 12,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 1.056675837351151,
+      "cov80": 0.998046875
+    },
+    "chaos_short_reach": {
+      "n": 24,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 6.377518656181258,
+      "cov80": 0.82421875
+    },
+    "control_in_prior": {
+      "n": 60,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 1.4414454498421174,
+      "cov80": 0.808984375
+    },
+    "control_old_switch": {
+      "n": 12,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 1.3636340427346625,
+      "cov80": 0.9440104166666666
+    },
+    "control_unknowable": {
+      "n": 12,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 1.21664125073075,
+      "cov80": 0.7669270833333334
+    },
+    "control_unpredictable": {
+      "n": 12,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 1.3521849738886904,
+      "cov80": 0.998046875
+    },
+    "coupled_oscillators": {
+      "n": 36,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 44.80917939931335,
+      "cov80": 0.7133246527777778
+    },
+    "delay_oscillator": {
+      "n": 36,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 29.213681115176563,
+      "cov80": 0.6065538194444444
+    },
+    "heavy_tail_walk": {
+      "n": 12,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 0.9956908607755319,
+      "cov80": 0.9095052083333334
+    },
+    "long_memory": {
+      "n": 12,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 1.7474636134512482,
+      "cov80": 0.10481770833333333
+    },
+    "multifractal": {
+      "n": 12,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 0.9966566648172163,
+      "cov80": 0.8248697916666666
+    },
+    "periodic_map": {
+      "n": 12,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 25.918627018610028,
+      "cov80": 1.0
+    },
+    "recent_switch": {
+      "n": 84,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 1.6826134491546985,
+      "cov80": 0.9136904761904762
+    },
+    "smooth_chaos": {
+      "n": 24,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 10.620135750973382,
+      "cov80": 0.865234375
+    },
+    "switching": {
+      "n": 12,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 1.4460223854608811,
+      "cov80": 0.9095052083333334
+    }
+  },
+  "provenance": {
+    "script": "bench/eval.py",
+    "git": "d9a1aaa",
+    "time_utc": "2026-10-27T00:10:03Z",
+    "host": "LAPTOP-TTI9OLBG",
+    "torch": "2.6.0+cu124",
+    "threads": 1,
+    "cuda": true,
+    "argv": [
+      "bench\\eval.py",
+      "--set",
+      "diag",
+      "--split",
+      "all",
+      "--model",
+      "seasonal_naive",
+      "--data",
+      "..\\bench_out\\data",
+      "--workers",
+      "14",
+      "--out",
+      "..\\bench_out\\leaderboard"
+    ]
+  }
+}

@@ -305,6 +305,95 @@ def regime():
             num(f"adopt_{size}_{d}", v, asrc, f"level adoption at H<=16, all deltas pooled, {size}, switch {d} steps back, T=2048")
 
 
+def covariates():
+    src = "results/covariates/summary.csv"
+    s = pd.read_csv(p(src))
+    s = s[s["T"] == 2048]
+
+    def row(system, kv, size, H, cond):
+        r = s[(s.system == system) & (s.knob_value.astype(float) == kv) & (s["size"] == size) & (s.H == H) & (s.condition == cond)]
+        assert len(r) == 1, (system, kv, size, H, cond, len(r))
+        return r.iloc[0]
+
+    # Table: past covariate gain vs the gain available to the matched oracle, H = 16
+    cases = [("LaggedDriver", 32.0, "lag 32"), ("NonlinearDriver", 0.5, "nonlinearity 0.5"), ("HiddenDriver", 0.05, "x noise 0.05")]
+    rows = []
+    for system, kv, lab in cases:
+        r = {"system": system, "knob": lab}
+        for size in ("5M", "28M", "123M", "209M"):
+            x = row(system, kv, size, 16, "past_cov")
+            r[size] = f"{x.covariate_gain_gmean:.2f} / {x.oracle_gain_gmean:.2f}"
+        rows.append(r)
+    table("cov_past", pd.DataFrame(rows), src, "past_cov rows at T=2048, H=16: covariate gain (MASE(uni)/MASE(past_cov)) / oracle gain (MASE(uni)/MASE(matched oracle)), geometric means over samples")
+    lag = row("LaggedDriver", 32.0, "209M", 16, "past_cov")
+    num("cov_lag32_209M_gain", lag.covariate_gain_gmean, src, "LaggedDriver lag 32, 209M, H=16, past_cov covariate gain")
+    num("cov_lag32_209M_ogain", lag.oracle_gain_gmean, src, "LaggedDriver lag 32, 209M, H=16, matched-oracle gain")
+    # known-future covariate on LaggedDriver: gain decays with lag
+    rows = []
+    for kv in (0.0, 8.0, 32.0, 128.0, 512.0):
+        r = {"lag": int(kv)}
+        for size in ("5M", "28M"):
+            x = row("LaggedDriver", kv, size, 16, "known_cov")
+            r[f"{size} gain"] = x.covariate_gain_gmean
+            r[f"{size} oracle gain"] = x.oracle_gain_gmean
+        rows.append(r)
+    table("cov_known_lag", pd.DataFrame(rows), src, "LaggedDriver known_cov, T=2048, H=16: covariate gain and matched-oracle gain (geometric means)")
+    for kv in (0.0, 512.0):
+        num(f"cov_known_lag{int(kv)}_28M", row("LaggedDriver", kv, "28M", 16, "known_cov").covariate_gain_gmean, src, f"LaggedDriver lag {int(kv)}, 28M, H=16, known_cov covariate gain")
+    og = [row("LaggedDriver", kv, "28M", 16, "known_cov").oracle_gain_gmean for kv in (0.0, 8.0, 32.0, 128.0, 512.0)]
+    num("cov_known_ogain_min", min(og), src, "min over lags of the matched-oracle gain, LaggedDriver known_cov, 28M, H=16")
+    num("cov_known_ogain_max", max(og), src, "max of the same")
+    # joint vs past_cov (two-way vs one-way routing of the same information)
+    jv = s[s.condition == "joint"].dropna(subset=["joint_vs_past_gmean"])
+    for system in ("FeedbackLinear", "FeedbackPredPrey", "LaggedDriver"):
+        g = jv[jv.system == system]
+        lo = g.loc[g.joint_vs_past_gmean.idxmin()]
+        num(f"cov_jp_{system}_min", lo.joint_vs_past_gmean, src, f"{system}: smallest joint/past_cov (geometric mean) over knobs, sizes, H at T=2048")
+        num(f"cov_jp_{system}_min_lo", lo.joint_vs_past_lo95, src, "its 95% bootstrap lower bound")
+        num(f"cov_jp_{system}_min_hi", lo.joint_vs_past_hi95, src, "its 95% bootstrap upper bound")
+        num(f"cov_jp_{system}_max", g.joint_vs_past_gmean.max(), src, f"{system}: largest joint/past_cov over knobs, sizes, H at T=2048")
+    jall = jv.joint_vs_past_gmean
+    num("cov_jp_share_within", 100 * float(((jall > 0.95) & (jall < 1.05)).mean()), src, "percent of joint rows (all systems, knobs, sizes, H, T=2048) with joint/past_cov in (0.95, 1.05)", "{:.0f}")
+    num("cov_jp_n", len(jall), src, "number of such rows", "{:d}")
+    # LeakyKnown: ratio to the matched oracle = oracle gain / covariate gain (exact for geometric means over the same samples)
+    rows = []
+    for size in ("5M", "28M", "123M", "209M"):
+        r = {"size": size}
+        for H in (16, 128, 1024):
+            q = s[(s.system == "LeakyKnown") & (s.knob_value.astype(float) == 0.05) & (s["size"] == size) & (s.H == H) & (s.condition == "known_cov")]
+            r[f"H={H}"] = float(q.oracle_gain_gmean.iloc[0] / q.covariate_gain_gmean.iloc[0]) if len(q) else float("nan")
+        rows.append(r)
+    table("cov_leaky", pd.DataFrame(rows), src, "LeakyKnown noise ratio 0.05, known_cov, T=2048: MASE / matched-oracle MASE = oracle gain / covariate gain (geometric means over the same samples)")
+    lk = pd.DataFrame(rows).set_index("size")
+    num("cov_leaky_5M_16", lk.loc["5M", "H=16"], src, "LeakyKnown 0.05, 5M, H=16, ratio to matched oracle")
+    num("cov_leaky_209M_16", lk.loc["209M", "H=16"], src, "LeakyKnown 0.05, 209M, H=16, ratio to matched oracle")
+    num("cov_leaky_5M_1024", lk.loc["5M", "H=1024"], src, "LeakyKnown 0.05, 5M, H=1024, ratio to matched oracle")
+
+
+def realdata():
+    src = "results/regression_baseline/summary.csv"
+    s = pd.read_csv(p(src))
+    a = s[(s.group == "ALL") & (s.basis == "common")]
+    for st in ("real", "analogues"):
+        for fc in ("timestral-5M", "timestral-209M", "ets", "arima"):
+            v = float(a[(a.set == st) & (a.forecaster == fc)].mase_rel_snaive.iloc[0])
+            num(f"rd_{st}_{fc.replace('timestral-', '')}", v, src, f"{st} set, common windows: geometric mean over groups of mean MASE / seasonal-naive mean MASE, {fc}")
+        num(f"rd_n_{st}", int(a[a.set == st].n.iloc[0]), src, f"windows in the {st} set (common basis)", "{:d}")
+    asrc = "results/regression_baseline/analogue_vs_synthetic.csv"
+    d = pd.read_csv(p(asrc))
+    d = d[(d.level == "family") & (d.metric == "mase")]
+    names = {"delay_feedback": "delay feedback", "coupled_oscillators": "coupled oscillators", "heavy_tails": "heavy tails", "regime_switches": "regime switches"}
+    rows = []
+    for fam, lab in names.items():
+        r = {"family": lab, "real windows": int(d[d.family_analogue == fam].n_windows.iloc[0])}
+        for size in ("5M", "209M"):
+            q = d[(d.family_analogue == fam) & (d.forecaster == f"timestral-{size}")].iloc[0]
+            r[f"real {size}"] = q.real_ratio_to_best_classical_gmean
+            r[f"synthetic {size}"] = q.synthetic_T2048_H128
+        rows.append(r)
+    table("rd_analogue", pd.DataFrame(rows), asrc, "Timestral MASE / best classical MASE (geometric mean): real analogue windows vs the synthetic family at T=2048, H=128")
+
+
 def bench():
     import json as _json
 
@@ -328,14 +417,39 @@ def bench():
         rows = [{"failure type": k, "series": int(v["n"]), "209M MASE / oracle": v["mase_rel_oracle"],
                  "209M MASE / seasonal naive": v["mase_rel_snaive"]} for k, v in sorted(ft.items())]
         table("bench_diag_ft", pd.DataFrame(rows), f, "Timestral-209M on OffPrior-Diag by failure type", "{:.3f}")
+        for k in ("coupled_oscillators", "delay_oscillator", "chaos_short_reach", "smooth_chaos", "recent_switch"):
+            num(f"bench_ft_{k}", ft[k]["mase_rel_oracle"], f, f"Timestral-209M, OffPrior-Diag, failure type {k}: geometric mean of MASE / oracle MASE", "{:.2f}")
+        ctrl = [v["mase_rel_oracle"] for k, v in ft.items() if k.startswith("control_") or k in ("heavy_tail_walk", "bursty", "multifractal")]
+        num("bench_ft_ctrl_min", min(ctrl), f, "min over control types and heavy-tail/bursty/multifractal types of 209M MASE / oracle", "{:.2f}")
+        num("bench_ft_ctrl_max", max(ctrl), f, "max of the same", "{:.2f}")
+    for set_name in ("diag", "lb"):
+        for m in ("timestral-5M", "timestral-209M", "ets", "arima", "seasonal_naive"):
+            f = f"bench/leaderboard/{m}_{set_name}_all/summary.json"
+            if os.path.exists(p(f)):
+                o = _json.load(open(p(f)))["overall"]
+                tag = m.replace("timestral-", "")
+                num(f"bench_{set_name}_{tag}_oracle", o["mase_rel_oracle"], f, f"{m} on {set_name}: geometric mean over series of MASE / oracle MASE", "{:.2f}")
+                num(f"bench_{set_name}_{tag}_snaive", o["mase_rel_snaive"], f, f"{m} on {set_name}: geometric mean over series of MASE / seasonal-naive MASE", "{:.2f}")
+    f = "bench/leaderboard/timestral-209M_lb_all/summary.json"
+    if os.path.exists(p(f)):
+        fam = _json.load(open(p(f)))["by_family"]
+        for k in ("chaos", "mixture", "tails"):
+            num(f"bench_lb_fam_{k}", fam[k]["mase_rel_oracle"], f, f"Timestral-209M, OffPrior-LB, family {k}: geometric mean of MASE / oracle MASE", "{:.2f}")
+    xf = "bench/data/cross_platform_diag.json"
+    if os.path.exists(p(xf)):
+        xp = _json.load(open(p(xf)))
+        num("bench_xp_same", xp["identical_configs"], xf, "diagnostic configs whose arrays match between the Windows and Linux builds", "{:d}")
+        num("bench_xp_n", xp["n_configs"], xf, "diagnostic configs", "{:d}")
     for set_name in ("diag", "lb"):
         mf = f"bench/data/{set_name}_manifest.csv"
         if os.path.exists(p(mf)):
-            num(f"bench_n_{set_name}", len(pd.read_csv(p(mf))), mf, "number of series", "{:d}")
+            m = pd.read_csv(p(mf))
+            num(f"bench_n_{set_name}", len(m), mf, "number of series", "{:,d}")
+            num(f"bench_nconf_{set_name}", m.config_id.nunique(), mf, "number of configs", "{:d}")
 
 
 def main():
-    for fn in (in_prior, chaos, tails, long_ctx, symavg, normalization, analog, chaos_noise, readouts, selfval, regime, bench):
+    for fn in (in_prior, chaos, tails, long_ctx, symavg, normalization, analog, chaos_noise, readouts, selfval, regime, covariates, realdata, bench):
         try:
             fn()
         except FileNotFoundError as e:

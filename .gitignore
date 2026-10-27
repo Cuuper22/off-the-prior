@@ -14,3 +14,6 @@ paper/*.fdb_latexmk
 # internal worker specs live outside the repo (/home/claude/off-the-prior-tasks)
 /tasks/
 paper/build/
+
+# leaderboard data files are large; published on the Hugging Face dataset, rebuilt by bench/build.py --set lb
+bench/data/lb_*.npz

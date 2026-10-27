@@ -3,7 +3,24 @@ title: "Off the Prior: Mapping Where a Synthetic-Prior Time-Series Foundation Mo
 author: "Yousef Anas (Cúper)"
 date: "October 2026"
 abstract: |
-  RESULTS-PENDING: the abstract is written last, from the result files.
+  Timestral (Mistral, October 2026; 5M to 209M parameters) is a time-series foundation model
+  pretrained mostly on synthetic trend + season + noise series. We map where its forecasts fall
+  behind the best achievable forecast, using simulators whose true state is known: a Monte Carlo
+  continuation from that state serves as an oracle, so a large error counts as a failure only when
+  the oracle does better. On series like the pretraining data, all four sizes stay at
+  0.99–1.15× the oracle's MASE up to horizon 128; heavy tails, long
+  memory, bursts and multifractal cascades stay at 0.94–1.34×. The gaps are on
+  smooth, nearly deterministic dynamics (Mackey-Glass at τ = 30: 21.87× at 5M,
+  13.68× at 209M; for Lorenz the gap is confined to the first Lyapunov times) and on
+  recent regime switches (3.77× at 5M and 2.43× at 209M sixteen steps after a
+  level jump). Linear readouts of the forecast tokens recover the new level after a jump with
+  R² 0.956–0.980 while the forecast reaches 0.570–0.726: the change
+  is represented but not used. A nearest-neighbour forecaster built from the context beats every size
+  on the delay and smooth-chaos systems, and a training-free switch that backtests the two on the
+  context lowers chaos errors to 0.824× (5M) and 0.982× (209M) of Timestral's on fresh
+  samples, with in-prior and regime series unchanged and tails at most 1.003×. We release two benchmarks with oracle quantiles
+  (372 tagged diagnostic series; 3,776 leaderboard series), on which Timestral-209M
+  is at 2.00× and 1.31× the oracle's MASE.
 ---
 
 <!--
@@ -319,9 +336,97 @@ which gets slightly worse at 32,768 steps. 2 samples
 (Rössler, c = 5.7) had oracle paths that left the attractor at long horizons; their oracle
 ratios are excluded.
 
+## 4.6 Real series that stand in for the families
+
+Real data has no oracle, so it cannot show a gap to the best achievable forecast; it can show whether
+the families' pattern against classical models carries over. We gathered open-license series
+(sources, licenses and hashes in `bench/regression/sources.csv`; windows whose license does not allow
+redistribution are kept out of git and rebuilt by `scripts/fetch_realdata.py`). On 412 windows
+from GIFT-Eval and fev-bench datasets, Timestral's MASE relative to seasonal naive is 0.70 at 5M
+and 0.65 at 209M (ETS 1.02, ARIMA 1.27; GIFT-Eval-style geometric mean over
+dataset groups). These datasets may overlap Timestral's pretraining data.
+
+A separate subset of 69 windows was picked as real analogues of the failure families:
+sunspot numbers, lynx and hormone series and El Niño indices for delay feedback; grid frequency,
+pedestrian counts and activity recordings for coupled oscillators; river discharge, earthquake counts,
+financial and crypto series for heavy tails; macro and energy series with documented breaks, traffic
+and COVID-19 cases for regime switches. The table compares Timestral's ratio to the best classical
+model on these windows with the same ratio on the synthetic family (context 2,048, horizon 128):
+
+| family | real windows | real 5M | synthetic 5M | real 209M | synthetic 209M |
+|---|---|---|---|---|---|
+| delay feedback | 12 | 0.92 | 0.39 | 0.73 | 0.26 |
+| coupled oscillators | 19 | 0.79 | 0.44 | 0.78 | 0.20 |
+| heavy tails | 15 | 0.90 | 1.02 | 0.87 | 1.01 |
+| regime switches | 23 | 1.03 | 1.02 | 0.98 | 0.96 |
+
+On the synthetic delay and oscillator systems Timestral beats the classical models by a wide margin
+while staying far from the oracle (Section 4.2); on the real analogues its margin over classical models
+is smaller. Heavy tails and regime switches sit near 1 on both. With no oracle on the real side, these
+numbers do not say how far Timestral is from the best achievable forecast there.
+
 # 5. Covariates and one-way attention
 
-RESULTS-PENDING.
+Timestral reads covariates as conditioning rows: the main series reads them, they never read the
+main series. Several main rows given together read each other both ways. We built six coupled
+systems with known equations (`otp/generators/coupled.py`): an exogenous driver whose past sets the
+main series after a lag (LaggedDriver), the same through a nonlinearity (NonlinearDriver), linear and
+predator-prey feedback loops, a hidden driver seen through a noisy proxy (HiddenDriver), and a
+known-future covariate that is a noisy copy of the main series shifted by one step (LeakyKnown). The
+main series is forecast four ways: alone, with the other channel as a past-only covariate, as a
+known-future covariate where that makes sense, and as a second main row ("joint"). The oracle is
+matched to the information each condition gives. Sizes 5M and 28M ran on the full grid (5 knob values,
+8 seeds, horizons 16 / 128 / 1,024); 123M and 209M on a reduced grid (3 knob values, 4 seeds, horizons
+16 / 128), so the oracle gains below differ slightly between the two pairs of sizes. Details and all
+tables: `results/covariates/README.md`.
+
+**Past covariates are used partly, and more with size.** When the driver's past determines the main
+series over the whole horizon, a forecaster that used it fully would cut the error several-fold. Each
+cell below gives Timestral's covariate gain (MASE alone / MASE with the past covariate) and the matched
+oracle's gain, at context 2,048 and horizon 16:
+
+| system | knob | 5M | 28M | 123M | 209M |
+|---|---|---|---|---|---|
+| LaggedDriver | lag 32 | 1.07 / 8.26 | 1.66 / 7.86 | 2.10 / 7.92 | 2.41 / 7.95 |
+| NonlinearDriver | nonlinearity 0.5 | 1.09 / 6.73 | 1.62 / 6.48 | 1.81 / 5.23 | 2.04 / 4.92 |
+| HiddenDriver | x noise 0.05 | 1.03 / 5.53 | 1.20 / 5.31 | 1.78 / 4.35 | 1.77 / 4.35 |
+
+At lag 32, 209M reaches a gain of 2.41 out of 7.95 available.
+
+**Known-future covariates help only when the relation is immediate.** With the driver's future given,
+the 28M gain on LaggedDriver falls from 4.39 at lag 0 to 0.95 at lag 512, while the
+matched oracle's gain stays at 5.62–7.91 (horizon 16):
+
+| lag | 5M gain | 5M oracle gain | 28M gain | 28M oracle gain |
+|---|---|---|---|---|
+| 0 | 2.55 | 5.50 | 4.39 | 5.62 |
+| 8 | 1.59 | 5.97 | 2.59 | 5.98 |
+| 32 | 1.15 | 8.31 | 1.55 | 7.91 |
+| 128 | 0.96 | 7.19 | 1.01 | 7.75 |
+| 512 | 1.00 | 6.32 | 0.95 | 6.13 |
+
+![Gain from a known-future driver (MASE alone / MASE with the covariate) on LaggedDriver against the lag, for Timestral (solid) and the oracle that reads the same covariate (dashed); context 2,048, horizon 16, 8 seeds.](figures/covariate_lag.png)
+
+When the known covariate is the main series itself, one step late with small noise (LeakyKnown at
+noise ratio 0.05), Timestral's error is several times the oracle's that reads it (MASE over matched-oracle
+MASE):
+
+| size | H=16 | H=128 | H=1024 |
+|---|---|---|---|
+| 5M | 8.47 | 20.92 | 42.71 |
+| 28M | 3.81 | 9.94 | 38.41 |
+| 123M | 3.04 | 3.70 | – |
+| 209M | 3.25 | 2.89 | – |
+
+**One-way routing is not the bottleneck.** Giving the same channel as a second main row (two-way
+attention) instead of a past covariate (one-way) changes the error little: joint/past-covariate MASE is
+within 0.95–1.05 in 95% of the 252 system × knob × size × horizon cells.
+Among the cells whose 95% interval lies below 1, two-way routing gains most on NonlinearDriver
+with the nonlinearity off (123M; `results/covariates/summary.csv`), the predator-prey loop
+(0.81, 95% interval 0.69–0.96) and
+LaggedDriver (0.83, 0.72–0.92); on the linear feedback loop
+the ratio stays within 0.98–1.01. The gap to the oracle comes from how much
+of the covariate's information is used at all, not from which way it is routed.
 
 # 6. Searching for failures
 
@@ -431,7 +536,82 @@ continuation of the context more than the oracle's forecast does
 
 # 8. Benchmarks
 
-RESULTS-PENDING.
+The failure map is released as two benchmark sets built from the same simulators (code and data in
+`bench/`). Each series comes with the oracle's 21 quantiles, so a model is scored against the best
+achievable forecast as well as against seasonal naive, the GIFT-Eval convention.
+
+**OffPrior-Diag** has 372 series: 31 configs with 12 seeds each, at
+context 2,048 and horizon 128. Every config was picked to cover one failure type from Sections 4 and 7,
+or to serve as a control (inside the prior, an old switch, a switch inside the horizon that nobody can
+see coming, a map nobody can forecast); each series carries its failure type and a one-line reason.
+**OffPrior-LB** has 3,776 series: every config of the chaos, regime, tails and in-prior
+grids, 40 fixed random mixture genomes and four more in-prior periods (236 configs), 16 seeds per config spread
+over contexts 512 / 2,048 / 8,192 and horizons 16 / 128 / 1,024, split into public and held-out halves by
+seed parity. The seeds and code are public, so the held-out half is a convenience, not a secret test set.
+`bench/eval.py` scores one model in one command; the summary is the geometric mean over series of MASE
+and sCRPS divided by seasonal naive's, and of MASE divided by the oracle's.
+
+| model | series | MASE / seasonal naive | sCRPS / seasonal naive | MASE / oracle | 80% coverage |
+|---|---|---|---|---|---|
+| oracle | 372 | 0.272 | 0.209 | 1.000 | 0.789 |
+| timestral-209M | 372 | 0.543 | 0.427 | 2.002 | 0.781 |
+| timestral-123M | 372 | 0.550 | 0.435 | 2.028 | 0.771 |
+| timestral-28M | 372 | 0.607 | 0.478 | 2.239 | 0.751 |
+| timestral-5M | 372 | 0.656 | 0.515 | 2.417 | 0.705 |
+| ets | 372 | 1.213 | 1.190 | 4.468 | 0.875 |
+| arima | 372 | 1.123 | 0.872 | 4.150 | 0.738 |
+| seasonal_naive | 372 | 1.000 | 1.000 | 3.679 | 0.814 |
+
+| model | series | MASE / seasonal naive | sCRPS / seasonal naive | MASE / oracle | 80% coverage |
+|---|---|---|---|---|---|
+| oracle | 3776 | 0.463 | 0.286 | 1.000 | 0.798 |
+| timestral-209M | 3776 | 0.608 | 0.385 | 1.314 | 0.793 |
+| timestral-123M | 3776 | 0.615 | 0.389 | 1.329 | 0.791 |
+| timestral-28M | 3776 | 0.637 | 0.402 | 1.375 | 0.783 |
+| timestral-5M | 3776 | 0.669 | 0.425 | 1.446 | 0.779 |
+| ets | 3776 | 1.006 | 0.926 | 2.172 | 0.889 |
+| arima | 3776 | 1.039 | 0.663 | 2.245 | 0.770 |
+| seasonal_naive | 3776 | 1.000 | 1.000 | 2.159 | 0.882 |
+
+On OffPrior-Diag, Timestral's MASE is 2.00× the oracle's at 209M and
+2.42× at 5M, against 4.47× for ETS,
+4.15× for ARIMA and 3.68× for seasonal naive.
+On OffPrior-LB the same ratios are 1.31× and 1.45× for Timestral,
+and 2.17×, 2.24× and
+2.16× for the classical models. By family on OffPrior-LB, 209M is at
+2.16× the oracle on chaos, 1.47× on the mixture genomes and
+1.01× on tails.
+
+| failure type | series | 209M MASE / oracle | 209M MASE / seasonal naive |
+|---|---|---|---|
+| bursty | 12 | 0.991 | 0.938 |
+| chaos_short_reach | 24 | 4.455 | 0.699 |
+| control_in_prior | 60 | 1.007 | 0.699 |
+| control_old_switch | 12 | 1.016 | 0.745 |
+| control_unknowable | 12 | 0.978 | 0.804 |
+| control_unpredictable | 12 | 1.033 | 0.764 |
+| coupled_oscillators | 36 | 7.942 | 0.177 |
+| delay_oscillator | 36 | 6.515 | 0.223 |
+| heavy_tail_walk | 12 | 1.006 | 1.011 |
+| long_memory | 12 | 1.123 | 0.643 |
+| multifractal | 12 | 1.033 | 1.037 |
+| periodic_map | 12 | 1.187 | 0.046 |
+| recent_switch | 84 | 1.808 | 1.074 |
+| smooth_chaos | 24 | 2.875 | 0.273 |
+| switching | 12 | 1.090 | 0.753 |
+
+By failure type, the diagnostic set reproduces the map at 209M: coupled oscillators
+(7.94×), delay oscillators (6.52×), chaos within the
+first Lyapunov times (4.46×), smooth chaos (2.87×) and
+recent switches (1.81×), while the controls and the heavy-tailed, bursty and
+multifractal types stay at 0.98–1.03×.
+
+The published files were built on a Windows laptop. A rebuild on Linux with newer NumPy matched them
+array-for-array for 25 of 31 diagnostic configs; in the others
+(Mackey-Glass, Kuramoto near synchronization, and one fractional Brownian motion setting) platform
+floating-point differences change the simulated paths, and the chaotic ones diverge. Scores should
+therefore be reported on the published files (`bench/data/cross_platform_diag.json` has the per-config
+comparison).
 
 # 9. Fixing it
 
