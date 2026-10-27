@@ -282,3 +282,18 @@ def test_built_analogues_and_license_split():
     # restricted sources never appear in committed files
     assert not (man[(man.set != "in_prior") & ~man.redistributable].sample_id.isin(
         {s.meta["sample_id"] for n in ("real", "real_extra", "analogues") for s in R.load_real(os.path.join(BENCH, f"{n}.npz"))})).any()
+
+
+def test_subset_chunks_have_their_own_file_names():
+    """A subset run must not write files that a later full run would pick up as its own chunks."""
+    import importlib.util
+    import os
+
+    spec = importlib.util.spec_from_file_location("score_regression", os.path.join(os.path.dirname(__file__), "..", "scripts", "score_regression.py"))
+    sr = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(sr)
+    full = sr.part_path("out", "real", "arima", 3)
+    sub = sr.part_path("out", "real", "arima", 3, "sub100s0_")
+    assert full != sub
+    assert os.path.basename(full) == "real__arima__003.csv"
+    assert os.path.basename(sub) == "real__arima__sub100s0_003.csv"

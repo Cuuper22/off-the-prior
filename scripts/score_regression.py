@@ -86,14 +86,20 @@ def subset_indices(samples, n: int | None, seed: int) -> list[int]:
     return sorted(keep)
 
 
+def part_path(out_dir: str, set_name: str, forecaster: str, k: int, tag: str = "") -> str:
+    """Cache file of chunk `k`. A forecaster run on a subset carries a tag (`sub<N>s<seed>_`) in the chunk
+    part of the name, so subset chunks and full-set chunks can never be mistaken for each other on a resume."""
+    return os.path.join(out_dir, "parts", f"{set_name}__{forecaster}__{tag}{k:03d}.csv")
+
+
 def run_scores(set_name: str, forecaster: str, samples, ids: list[int], out_dir: str, chunk: int = 40,
-               worker: tuple[int, int] = (0, 1)) -> float:
+               worker: tuple[int, int] = (0, 1), tag: str = "") -> float:
     """Score one forecaster on the chosen windows in chunks; each chunk is cached under `out_dir/parts`
     so an interrupted run resumes where it stopped. `worker=(i, n)` runs only the chunks whose number is i modulo n,
-    so n processes can share one set without repeating work. Returns the seconds spent in this call."""
+    so n processes can share one set without repeating work. `tag` goes into the chunk file names (see `part_path`). Returns the seconds spent in this call."""
     t0 = time.time()
     for k in range(0, len(ids), chunk):
-        part = os.path.join(out_dir, "parts", f"{set_name}__{forecaster}__{k // chunk:03d}.csv")
+        part = part_path(out_dir, set_name, forecaster, k // chunk, tag)
         if (k // chunk) % worker[1] != worker[0] or os.path.exists(part):
             continue
         cid = ids[k:k + chunk]
@@ -305,13 +311,17 @@ def main():
                     continue
                 ids = subset_indices(samples, sub_n.get(f), a.seed)
                 print(f"[{set_name}] {f}: {len(ids)}/{len(samples)} windows", flush=True)
-                dt = run_scores(set_name, f, samples, ids, a.out, worker=worker)
+                tag = f"sub{sub_n[f]}s{a.seed}_" if f in sub_n and len(ids) < len(samples) else ""
+                dt = run_scores(set_name, f, samples, ids, a.out, worker=worker, tag=tag)
                 print(f"    {f} done in {dt:.0f}s this call", flush=True)
     if a.parts_only:
         return
     pdir = os.path.join(a.out, "parts")
     parts = sorted(os.listdir(pdir)) if os.path.isdir(pdir) else []
     scores = pd.concat([pd.read_csv(os.path.join(pdir, p)) for p in parts if p.endswith(".csv")], ignore_index=True)
+    dup = scores.duplicated(["set", "forecaster", "window_index", "variate"], keep=False)
+    if dup.any():
+        raise SystemExit(f"{int(dup.sum())} rows repeat a (set, forecaster, window, variate): stale or overlapping chunk files in {pdir}")
     scores["set"] = pd.Categorical(scores["set"], list(SETS))
     scores = scores.sort_values(["set", "window_index", "forecaster"]).reset_index(drop=True)
     scores["set"] = scores["set"].astype(str)
@@ -331,11 +341,29 @@ def main():
     if lines:
         notes = ("\nSubsets. Forecasters not run on every window were run on a seeded subset stratified by group "
                  "(seed " + str(a.seed) + ", `--subset` in provenance.json):\n\n" + "\n".join(lines) + "\n")
+    for s_name, d in scores[scores.forecaster == "seasonal_naive"].groupby("set", sort=False):
+        w = d["wql"].astype(float)
+        top = d.loc[w.idxmax()]
+        if w.max() > 100 * w.median():
+            notes += (f"\nWQL note, {s_name} set: the raw WQL columns are means over windows. For seasonal naive the median window WQL is "
+                      f"{w.median():.4g} and the largest is {w.max():.4g} (window `{top['sample_id']}`, MASE {top['mase']:.4g}), so the mean WQL "
+                      "is set by a few windows with a near-zero or zero in-sample scale; MASE, sCRPS and the relative scores are the columns to compare.\n")
+    plat = os.path.join(a.out, "chunk_platforms.csv")
+    if os.path.exists(plat):
+        pl = pd.read_csv(plat)
+        notes += ("\nPlatforms. Chunks of 40 windows were scored on different machines (`chunk_platforms.csv` lists set, forecaster, "
+                  "chunk numbers and platform). Seasonal naive and the oracle are deterministic. ETS is fitted by a numerical optimizer and "
+                  "is not bit-identical across platforms: a cross-check of one ETS chunk between the laptop and the VM found small "
+                  "differences in per-window scores, while ARIMA agreed more closely. So the ETS rows of the real set mix 3 laptop chunks "
+                  "(Windows) with 8 VM chunks (Linux), and those of the in-prior set mix 2 laptop chunks with 11 VM chunks. Timestral "
+                  "was run on CPU (VM) for the real and in-prior sets and on a Colab T4 GPU for the extra real and analogue sets.\n\n"
+                  + md_table(pl, list(pl.columns)) + "\n")
     write_readme(a.out, summ, notes)
     comp = {f"{s}/{f}": float(d.groupby("window_index")["sec_per_sample"].first().sum())
             for (s, f), d in scores.groupby(["set", "forecaster"])}
     prov = provenance("scripts/score_regression.py", argv=sys.argv[1:], sets=a.sets, sizes=a.sizes, subset=sub_n,
-                      seed=a.seed, wall_seconds_this_invocation=time.time() - t_start, compute_seconds=comp,
+                      seed=a.seed, chunk_platforms_file="results/regression_baseline/chunk_platforms.csv",
+                      wall_seconds_this_invocation=time.time() - t_start, compute_seconds=comp,
                       compute_seconds_total=float(sum(comp.values())),
                       windows_scored={f"{s}/{f}": int(n) for (s, f), n in nwin.items()})
     write_json(os.path.join(a.out, "provenance.json"), prov)

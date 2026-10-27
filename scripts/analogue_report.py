@@ -9,6 +9,10 @@ Synthetic side: `mase_ratio_classical_gmean` / `scrps_ratio_classical_gmean` row
 `results/map/<grid>/summary_all_sizes.csv` at context T = 2048, for the generators mapped to each family, taken at
 horizon 16 and at horizon 128 (geometric mean over generators and knob values).
 
+Output: `analogue_vs_synthetic.csv` (family and family/dataset rows) and a section "Analogues versus synthetic
+families" written into `results/regression_baseline/README.md` between two marker lines (replaced on each run).
+Run `scripts/score_regression.py --summarize-only` first (it writes scores.csv and the README).
+
 python scripts/analogue_report.py [--scores results/regression_baseline/scores.csv] [--out results/regression_baseline/analogue_vs_synthetic.csv]
 """
 
@@ -77,6 +81,56 @@ def synthetic_side(map_dir: str) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+BEGIN = "<!-- analogue-report:begin -->"
+END = "<!-- analogue-report:end -->"
+SIZE_ORDER = ["timestral-5M", "timestral-28M", "timestral-123M", "timestral-209M"]
+FAMILY_ORDER = list(SYNTHETIC)
+
+
+def _md(df: pd.DataFrame) -> str:
+    cols = list(df.columns)
+    out = ["| " + " | ".join(cols) + " |", "|" + "---|" * len(cols)]
+    for _, r in df.iterrows():
+        out.append("| " + " | ".join("" if (isinstance(v, float) and not np.isfinite(v)) else (format(v, ".3f") if isinstance(v, float) else str(v))
+                                     for v in r) + " |")
+    return "\n".join(out)
+
+
+def readme_section(out: pd.DataFrame) -> str:
+    fam = out[out.level == "family"].copy()
+    fam["_f"] = fam.family_analogue.map({f: i for i, f in enumerate(FAMILY_ORDER)})
+    fam["_s"] = fam.forecaster.map({f: i for i, f in enumerate(SIZE_ORDER)})
+    text = [BEGIN, "## Analogues versus synthetic families",
+            "",
+            "Real analogue windows (the `analogues` set; no oracle exists for them) against the synthetic failure family each stands in for. "
+            "For every window, the ratio is a Timestral size's MASE (or sCRPS) divided by the lowest of seasonal naive, ETS and ARIMA on that "
+            "window; the table gives the geometric mean of the ratio over the family's windows (below 1: Timestral is lower than the best "
+            "classical model). The synthetic columns are the same quantity (`*_ratio_classical_gmean`, geometric mean over the generators listed "
+            "and their knob values) read from `results/map/<chaos|tails|regime>/summary_all_sizes.csv` at context 2048 and horizon 16 or 128. "
+            "The pairing of families to generators is: delay_feedback to mackey_glass, coupled_oscillators to kuramoto, heavy_tails to "
+            "fbm, hawkes, msm_cascade and stable_ar, regime_switches to frequency_jump, markov_ar, mean_jump and variance_jump. "
+            "The real windows have their own horizons and periods (see `bench/regression/manifest.csv`), so the columns are placed side by "
+            "side, not matched window to window. Per-dataset rows are in `analogue_vs_synthetic.csv`.", ""]
+    for m, lab in (("mase", "MASE"), ("scrps", "sCRPS")):
+        t = fam[fam.metric == m].sort_values(["_f", "_s"])
+        t = t[["family_analogue", "forecaster", "n_windows", "real_ratio_to_best_classical_gmean", "synthetic_T2048_H16", "synthetic_T2048_H128"]]
+        t.columns = ["family_analogue", "forecaster", "real windows", f"real {lab} ratio", f"synthetic {lab} ratio, H16", f"synthetic {lab} ratio, H128"]
+        text += [f"### {lab} ratio to the best classical model", "", _md(t), ""]
+    text.append(END)
+    return "\n".join(text) + "\n"
+
+
+def write_section(readme_path: str, section: str) -> None:
+    txt = open(readme_path).read() if os.path.exists(readme_path) else ""
+    if BEGIN in txt and END in txt:
+        a, b = txt.index(BEGIN), txt.index(END) + len(END)
+        txt = txt[:a] + section.rstrip("\n") + txt[b:]
+    else:
+        txt = txt.rstrip("\n") + "\n\n" + section
+    with open(readme_path, "w") as f:
+        f.write(txt)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--scores", default="results/regression_baseline/scores.csv")
@@ -92,6 +146,9 @@ def main():
     out = real.merge(wide, on=["family_analogue", "forecaster", "metric"], how="left")
     out.to_csv(a.out, index=False)
     print(f"wrote {len(out)} rows to {a.out}")
+    readme = os.path.join(os.path.dirname(a.out), "README.md")
+    write_section(readme, readme_section(out))
+    print(f"wrote analogue section into {readme}")
 
 
 if __name__ == "__main__":
