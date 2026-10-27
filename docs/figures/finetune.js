@@ -4,10 +4,10 @@
   "use strict";
   var F = root.OTPFigures, C = root.OTPChart;
   var MC = { full: "#1c5cab", lora: "#b4531c" };
-  function variant(r) { return (r.method === "lora" ? "LoRA" : "full") + (r.replay > 0 ? " + replay" : ""); }
+  function variant(r) { return (r.method === "lora" ? "LoRA" : "full") + (r.replay > 0 ? " + " + Math.round(r.replay * 100) + "% replay" : ""); }
   var FAMS = { chaos: "chaos", regime: "regime switches", tails: "heavy tails", mixture: "mixtures" };
   var PROTO = [["lofo", "Family left out"], ["knob", "Difficulty range left out"]];
-  var VARIANTS = ["full", "full + replay", "LoRA", "LoRA + replay"];
+  var VARIANTS = ["full", "full + 30% replay", "full + 50% replay", "LoRA", "LoRA + 30% replay", "LoRA + 50% replay"];
   F.define("finetune", {
     title: "Teaching it the hard cases",
     label: "Charts of fine-tuning results: error change on held-out failure families, gain against cost, and change on normal series",

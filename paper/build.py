@@ -499,9 +499,69 @@ def finetune_results():
             rows = [{"run": r.run_id, "set": r.eval_set, "n": int(r.n), "paired MASE after/before": r.paired_mase_ft_over_pre,
                      "95% low": r.paired_mase_lo95, "95% high": r.paired_mase_hi95} for r in q.itertuples()]
             table("ft_local_regression", pd.DataFrame(rows), f, "regression sets: paired MASE ratio fine-tuned / pretrained", "{:.3f}")
-    f = "results/finetune/colab/summary.csv"
+    f = "results/finetune/colab/run1/summary.csv"
     if os.path.exists(p(f)):
-        generic_table("ft_colab", f, "GPU runs, from results/finetune/colab/summary.csv")
+        s = pd.read_csv(p(f))
+        s["label"] = [r.method + (f"+mix{r.replay_frac:g}" if r.replay_frac > 0 else "") for r in s.itertuples()]
+        s["better"] = s.paired_mase_hi95 < 1
+        s["worse"] = s.paired_mase_lo95 > 1
+        t = s[s.role == "test"]
+        names = {"lofo": "leave one family out", "knob": "held-out knob range"}
+        rows = []
+        for proto in ("lofo", "knob"):
+            for size in ("5M", "28M", "123M", "209M"):
+                q = t[(t.protocol == proto) & (t["size"] == size)]
+                b = q.loc[q.paired_mase_ft_over_pre.idxmin()]
+                rows.append({"protocol": names[proto], "size": size, "runs": len(q), "better (95%)": int(q.better.sum()),
+                             "worse (95%)": int(q.worse.sum()), "median paired ratio": float(q.paired_mase_ft_over_pre.median()),
+                             "best paired ratio": float(b.paired_mase_ft_over_pre), "best run": f"{b.holdout}, {b.label}",
+                             "its 95% interval": f"{b.paired_mase_lo95:.3f}–{b.paired_mase_hi95:.3f}",
+                             "pretrained ratio to oracle there": float(b.pre_mase_ratio)})
+        table("ft_colab_heldout", pd.DataFrame(rows), f, "held-out test sets, 32 samples each: paired MASE ratio fine-tuned / pretrained over the 24 runs (4 held-out sets x 6 methods) per size and protocol; better/worse = 95% interval entirely below/above 1", "{:.3f}")
+        for proto in ("lofo", "knob"):
+            q = t[t.protocol == proto]
+            num(f"ft_{proto}_runs", len(q), f, f"{proto}: runs scored on held-out sets", "{:d}")
+            num(f"ft_{proto}_better", int(q.better.sum()), f, f"{proto}: runs whose paired-ratio 95% interval is below 1", "{:d}")
+            num(f"ft_{proto}_worse", int(q.worse.sum()), f, f"{proto}: runs whose paired-ratio 95% interval is above 1", "{:d}")
+        b = t.loc[t.paired_mase_ft_over_pre.idxmin()]
+        num("ft_best", float(b.paired_mase_ft_over_pre), f, f"best paired ratio on any held-out set ({b.run_id}, {b.eval_set})", "{:.3f}")
+        num("ft_best_lo", float(b.paired_mase_lo95), f, "its 95% interval, low", "{:.3f}")
+        num("ft_best_hi", float(b.paired_mase_hi95), f, "its 95% interval, high", "{:.3f}")
+        num("ft_best_pre", float(b.pre_mase_ratio), f, "pretrained MASE ratio to oracle on that set", "{:.2f}")
+        num("ft_after_min", float(t.ft_mase_ratio.min()), f, "smallest fine-tuned MASE ratio to oracle on any held-out set", "{:.2f}")
+        num("ft_after_max", float(t.ft_mase_ratio.max()), f, "largest fine-tuned MASE ratio to oracle on any held-out set", "{:.2f}")
+        for fr, key in ((0.0, "nomix"), (0.3, "mix03"), (0.5, "mix05")):
+            num(f"ft_heldout_median_{key}", float(t[t.replay_frac == fr].paired_mase_ft_over_pre.median()), f, f"median held-out paired ratio, replay share {fr}", "{:.3f}")
+        num("ft_median_all", float(t.paired_mase_ft_over_pre.median()), f, "median paired ratio over all held-out runs", "{:.3f}")
+        rows = []
+        r = s[s.role == "regression"]
+        for lab in ("full", "full+mix0.3", "full+mix0.5", "lora", "lora+mix0.3", "lora+mix0.5"):
+            a = r[(r.label == lab) & (r.eval_set == "regression/in_prior")]
+            c = r[(r.label == lab) & (r.eval_set == "regression/real")]
+            rows.append({"method": lab, "runs": len(a), "in-prior worse (95%)": int(a.worse.sum()), "in-prior median": float(a.paired_mase_ft_over_pre.median()),
+                         "in-prior max": float(a.paired_mase_ft_over_pre.max()), "real worse (95%)": int(c.worse.sum()),
+                         "real median": float(c.paired_mase_ft_over_pre.median()), "real max": float(c.paired_mase_ft_over_pre.max())})
+        table("ft_colab_regression", pd.DataFrame(rows), f, "regression sets (in-prior: 500 series with oracle; real: 40 windows, no oracle): paired MASE ratio fine-tuned / pretrained over the 32 runs per method (4 sizes x 2 protocols x 4 held-out sets); worse = 95% interval above 1", "{:.3f}")
+        a = r[r.eval_set == "regression/in_prior"]
+        nomix, mix = a[a.replay_frac == 0], a[a.replay_frac > 0]
+        num("ft_reg_nomix_runs", len(nomix), f, "runs without mixing scored on the in-prior set", "{:d}")
+        num("ft_reg_nomix_worse", int(nomix.worse.sum()), f, "of those, worse than pretrained at 95%", "{:d}")
+        num("ft_reg_nomix_max", float(nomix.paired_mase_ft_over_pre.max()), f, "largest in-prior paired ratio without mixing", "{:.3f}")
+        num("ft_reg_mix_runs", len(mix), f, "runs with mixing scored on the in-prior set", "{:d}")
+        num("ft_reg_mix_worse", int(mix.worse.sum()), f, "of those, worse than pretrained at 95%", "{:d}")
+        num("ft_reg_mix_max", float(mix.paired_mase_ft_over_pre.max()), f, "largest in-prior paired ratio with mixing", "{:.3f}")
+        c = r[r.eval_set == "regression/real"]
+        num("ft_real_max", float(c.paired_mase_ft_over_pre.max()), f, "largest paired ratio on the real windows", "{:.3f}")
+        num("ft_real_worse", int(c.worse.sum()), f, "runs worse than pretrained on the real windows at 95%", "{:d}")
+        num("ft_real_nomix_worse", int(c[c.replay_frac == 0].worse.sum()), f, "real windows: runs without mixing worse at 95%", "{:d}")
+        num("ft_real_nomix_runs", int((c.replay_frac == 0).sum()), f, "real windows: runs without mixing", "{:d}")
+        num("ft_real_mix_worse", int(c[c.replay_frac > 0].worse.sum()), f, "real windows: runs with mixing worse at 95%", "{:d}")
+        num("ft_real_mix_runs", int((c.replay_frac > 0).sum()), f, "real windows: runs with mixing", "{:d}")
+        num("ft_real_runs", len(c), f, "runs scored on the real windows", "{:d}")
+        steps = pd.read_csv(p("results/finetune/colab/run1/costs.csv"))
+        num("ft_steps_min", int(steps.steps.min()), "results/finetune/colab/run1/costs.csv", "fewest training steps per run", "{:d}")
+        num("ft_wall_max", float(steps.wall_sec.max()), "results/finetune/colab/run1/costs.csv", "longest training wall time of any run, seconds (A100)", "{:.0f}")
+        num("ft_steps_max", int(steps.steps.max()), "results/finetune/colab/run1/costs.csv", "most training steps per run", "{:d}")
 
 
 def label_group_share(lg, size, grp):

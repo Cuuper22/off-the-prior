@@ -103,6 +103,11 @@ def num(key, value, text, src, how):
     return NUM[key]
 
 
+def _paper_has(key):
+    f = os.path.join(ROOT, "paper", "numbers.json")
+    return os.path.exists(f) and key in json.load(open(f))
+
+
 def span(text, src):
     return f'<span class="num" title="{src}">{text}</span>'
 
@@ -529,19 +534,21 @@ def search():
 # ------------------------------------------------------------------------------------------------ fine-tuning
 def finetune():
     R = Root("OTP_FINETUNE_ROOT", "results/finetune")
-    found = sorted(glob.glob(R.path("local", "summary.csv")) + glob.glob(R.path("colab", "summary.csv")))   # the two lanes; smoke runs are left out
+    colab = sorted(glob.glob(R.path("colab", "summary.csv")) + glob.glob(R.path("colab", "*", "summary.csv")))
+    # the GPU runs supersede the CPU pipeline check (same 5M configurations, shorter budget); smoke runs are left out
+    found = colab or sorted(glob.glob(R.path("local", "summary.csv")))
     if not found:
         READY["finetune"] = False
         return pending("finetune.json", "results/finetune/<local|colab>/summary.csv", "fine-tuning gain and cost per method and protocol")
     src, frames = [], []
     for f in found:
-        lane = os.path.basename(os.path.dirname(f))
+        lane = os.path.relpath(os.path.dirname(f), R.path())
         s = pd.read_csv(f)
-        src.append(R.name(lane, "summary.csv"))
+        src.append(R.name(*lane.split(os.sep), "summary.csv"))
         cf = os.path.join(os.path.dirname(f), "costs.csv")
         if os.path.exists(cf):
             c = pd.read_csv(cf)
-            src.append(R.name(lane, "costs.csv"))
+            src.append(R.name(*lane.split(os.sep), "costs.csv"))
             s = s.merge(c[["run_id", "trainable_params", "steps", "time_steps_seen", "wall_sec"]], on="run_id", how="left")
         s["lane"] = lane
         frames.append(s)
@@ -565,6 +572,17 @@ def finetune():
                                                       for r in g.itertuples(index=False)]}}
     write("finetune.json", out)
     s0 = src[0]
+    if colab and _paper_has("ft_lofo_better"):
+        n = lambda k: span(num(k, 0, "", s0, "")["text"], NUM[k]["src"])
+        parts = [f"Each run trains for {n('ft_steps_min')}–{n('ft_steps_max')} steps, at most {n('ft_wall_max')} seconds on one GPU, so this tests cheap fine-tuning.",
+                 f"It barely moves the error on what it never saw: with a family left out, {n('ft_lofo_better')} of {n('ft_lofo_runs')} runs get reliably better and {n('ft_lofo_worse')} worse;",
+                 f"with a difficulty range left out, {n('ft_knob_better')} better and {n('ft_knob_worse')} worse, about what chance alone gives.",
+                 f"The best single run, 209M with LoRA tested on chaos, gets to {n('ft_best')}× the original error, and every held-out set stays at {n('ft_after_min')}–{n('ft_after_max')}× the referee.",
+                 f"Replay is what protects normal series: without it {n('ft_reg_nomix_worse')} of {n('ft_reg_nomix_runs')} runs get worse on the 500 in-prior series (up to {n('ft_reg_nomix_max')}×); with it {n('ft_reg_mix_worse')} of {n('ft_reg_mix_runs')} do."]
+        TEXT["finetune"] = " ".join(parts)
+        SRCS.extend(src)
+        READY["finetune"] = True
+        return
     parts = [f"Sizes with results: {', '.join(sizes)}. Each run trained one model on some failure families and was scored on 32 held-out series per family against the referee."]
     for proto, what in (("lofo", "a family left out of training"), ("knob", "a range of the difficulty setting left out of training")):
         x = t[t.protocol == proto].paired_mase_ft_over_pre.dropna()

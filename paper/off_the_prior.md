@@ -20,7 +20,11 @@ abstract: |
   context lowers chaos errors to 0.824× (5M) and 0.982× (209M) of Timestral's on fresh
   samples, with in-prior and regime series unchanged and tails at most 1.003×. We release two benchmarks with oracle quantiles
   (372 tagged diagnostic series; 3,776 leaderboard series), on which Timestral-209M
-  is at 2.00× and 1.31× the oracle's MASE.
+  is at 2.00× and 1.31× the oracle's MASE. Cheap fine-tuning
+  (full or LoRA, 300–500 steps) does not carry over to held-out families or knob ranges
+  (7 and 1 of 96 runs better at 95%), while mixing in-prior series into
+  training keeps normal series from getting worse (0 of 128 runs worse, against
+  57 of 64 without mixing).
 ---
 
 <!--
@@ -952,17 +956,160 @@ pretrained model of the same size. Gain is reported as the paired MASE ratio fin
 held-out samples (500-path oracle), with 95% intervals, next to cost (trainable parameters, steps, series
 seen, wall time).
 
+The main runs cover all four sizes on one GPU: 24 runs per size and protocol (4 held-out sets × full or LoRA
+× no mixing, 30% or 50% mixing), each trained for 300–500 steps, at most
+50 s of training per run on an A100. This is a test of cheap fine-tuning, not of training to convergence.
+
+**On held-out failures, cheap fine-tuning barely moves the error.** Across the 96
+leave-one-family-out runs, 7 beat the pretrained model with a 95% interval below 1 and
+0 are worse. Across the 96 held-out-knob runs the counts are
+1 and 2. With 96 runs per protocol and 95% intervals, about 2.4 runs
+in each direction would clear the bar by chance (96 × 0.025), so the knob protocol is at chance level, and the
+leave-one-family-out protocol is only modestly above it. The median paired ratio over all held-out runs is
+0.997. The best single run is 209M LoRA tested on chaos after training on the other three
+families: 0.927 (0.858–0.992), on a set where the pretrained model sits at
+1.75× the oracle. That run is the best of 192, so the selection inflates it. After fine-tuning,
+the held-out sets stay at 1.01–3.52× the oracle's MASE.
+
+| protocol | size | runs | better (95%) | worse (95%) | median paired ratio | best paired ratio | best run | its 95% interval | pretrained ratio to oracle there |
+|---|---|---|---|---|---|---|---|---|---|
+| leave one family out | 5M | 24 | 2 | 0 | 0.997 | 0.984 | tails, full+mix0.3 | 0.964–1.005 | 1.066 |
+| leave one family out | 28M | 24 | 2 | 0 | 0.996 | 0.975 | chaos, lora+mix0.5 | 0.939–1.013 | 2.031 |
+| leave one family out | 123M | 24 | 0 | 0 | 1.000 | 0.975 | regime, lora+mix0.5 | 0.928–1.006 | 1.115 |
+| leave one family out | 209M | 24 | 3 | 0 | 0.994 | 0.927 | chaos, lora | 0.858–0.992 | 1.754 |
+| held-out knob range | 5M | 24 | 0 | 0 | 0.994 | 0.965 | regime, lora+mix0.3 | 0.916–1.010 | 1.729 |
+| held-out knob range | 28M | 24 | 0 | 1 | 0.998 | 0.989 | chaos, full+mix0.5 | 0.969–1.008 | 3.150 |
+| held-out knob range | 123M | 24 | 1 | 0 | 0.997 | 0.984 | chaos, lora | 0.948–1.019 | 2.928 |
+| held-out knob range | 209M | 24 | 0 | 1 | 0.998 | 0.967 | regime, lora+mix0.5 | 0.920–1.009 | 1.486 |
+
+**Mixing is what keeps normal series safe.** Without mixing, 57 of
+64 runs are worse than the pretrained model on the 500 in-prior series, by up to
+1.069×. With 30% or 50% mixing, 0 of 128 are
+worse, and the largest ratio is 1.004. On the 40 real windows the effects are smaller: 17 of 64 runs
+without mixing and 4 of 128 with mixing are worse at 95%, with ratios no larger
+than 1.023.
+
+| method | runs | in-prior worse (95%) | in-prior median | in-prior max | real worse (95%) | real median | real max |
+|---|---|---|---|---|---|---|---|
+| full | 32 | 30 | 1.021 | 1.069 | 13 | 1.007 | 1.017 |
+| full+mix0.3 | 32 | 0 | 0.998 | 1.004 | 4 | 1.002 | 1.008 |
+| full+mix0.5 | 32 | 0 | 0.996 | 0.999 | 0 | 1.000 | 1.006 |
+| lora | 32 | 27 | 1.006 | 1.022 | 4 | 1.005 | 1.023 |
+| lora+mix0.3 | 32 | 0 | 0.996 | 0.997 | 0 | 1.003 | 1.013 |
+| lora+mix0.5 | 32 | 0 | 0.992 | 0.996 | 0 | 1.002 | 1.012 |
+
+Read together: at these budgets, training on three failure families or one knob range does not carry over
+to an unseen family or range. Mixing costs nothing on held-out failures (median paired ratio 0.999 without mixing,
+0.996 and 0.995 with 30% and 50%) and prevents most of the forgetting
+that plain fine-tuning causes. Whether longer training, or training on the held-out family itself, closes the gaps
+is not tested here.
+
 A first pass on the 5M model ran on CPU with a short budget, to validate the pipeline end to end:
 
-*(Results pending: `results/finetune/local/summary.csv` is not in the repository yet.)*
+| held out | method | n | ratio to oracle before | after | paired MASE after/before | 95% low | 95% high |
+|---|---|---|---|---|---|---|---|
+| chaos | full | 32 | 2.197 | 2.201 | 1.002 | 0.984 | 1.021 |
+| chaos | full+mix0.3 | 32 | 2.197 | 2.203 | 1.003 | 0.982 | 1.027 |
+| chaos | lora | 32 | 2.197 | 2.213 | 1.008 | 0.954 | 1.068 |
+| chaos | lora+mix0.3 | 32 | 2.197 | 2.214 | 1.008 | 0.959 | 1.067 |
+| mixture | full | 32 | 1.273 | 1.284 | 1.008 | 0.990 | 1.034 |
+| mixture | full+mix0.3 | 32 | 1.273 | 1.283 | 1.008 | 0.991 | 1.031 |
+| mixture | lora | 32 | 1.273 | 1.305 | 1.025 | 0.986 | 1.084 |
+| mixture | lora+mix0.3 | 32 | 1.273 | 1.309 | 1.028 | 0.992 | 1.082 |
+| regime | full | 32 | 1.171 | 1.169 | 0.999 | 0.994 | 1.004 |
+| regime | full+mix0.3 | 32 | 1.171 | 1.171 | 1.000 | 0.995 | 1.007 |
+| regime | lora | 32 | 1.171 | 1.160 | 0.991 | 0.978 | 1.002 |
+| regime | lora+mix0.3 | 32 | 1.171 | 1.167 | 0.997 | 0.987 | 1.009 |
+| tails | full | 32 | 1.066 | 1.060 | 0.994 | 0.975 | 1.010 |
+| tails | full+mix0.3 | 32 | 1.066 | 1.059 | 0.994 | 0.976 | 1.012 |
+| tails | lora | 32 | 1.066 | 1.063 | 0.997 | 0.969 | 1.024 |
+| tails | lora+mix0.3 | 32 | 1.066 | 1.058 | 0.993 | 0.968 | 1.020 |
 
-*(Results pending: `results/finetune/local/summary.csv` is not in the repository yet.)*
+| held out | method | n | ratio to oracle before | after | paired MASE after/before | 95% low | 95% high |
+|---|---|---|---|---|---|---|---|
+| chaos | full | 32 | 3.423 | 3.564 | 1.041 | 0.997 | 1.102 |
+| chaos | full+mix0.3 | 32 | 3.423 | 3.413 | 0.997 | 0.950 | 1.052 |
+| chaos | lora | 32 | 3.423 | 3.569 | 1.043 | 0.997 | 1.109 |
+| chaos | lora+mix0.3 | 32 | 3.423 | 3.577 | 1.045 | 0.988 | 1.134 |
+| mixture | full | 32 | 1.388 | 1.390 | 1.002 | 0.993 | 1.011 |
+| mixture | full+mix0.3 | 32 | 1.388 | 1.393 | 1.004 | 0.995 | 1.013 |
+| mixture | lora | 32 | 1.388 | 1.383 | 0.996 | 0.983 | 1.011 |
+| mixture | lora+mix0.3 | 32 | 1.388 | 1.393 | 1.004 | 0.992 | 1.018 |
+| regime | full | 32 | 1.729 | 1.737 | 1.005 | 0.997 | 1.013 |
+| regime | full+mix0.3 | 32 | 1.729 | 1.750 | 1.012 | 1.001 | 1.024 |
+| regime | lora | 32 | 1.729 | 1.742 | 1.007 | 0.993 | 1.021 |
+| regime | lora+mix0.3 | 32 | 1.729 | 1.785 | 1.032 | 1.013 | 1.056 |
+| tails | full | 32 | 1.033 | 1.056 | 1.023 | 1.009 | 1.041 |
+| tails | full+mix0.3 | 32 | 1.033 | 1.059 | 1.025 | 1.005 | 1.050 |
+| tails | lora | 32 | 1.033 | 1.094 | 1.059 | 1.014 | 1.125 |
+| tails | lora+mix0.3 | 32 | 1.033 | 1.142 | 1.106 | 1.017 | 1.264 |
 
-*(Results pending: `results/finetune/local/summary.csv` is not in the repository yet.)*
-
-The full-budget runs on all four sizes ran on GPUs:
-
-*(Results pending: `results/finetune/colab/summary.csv` is not in the repository yet.)*
+| run | set | n | paired MASE after/before | 95% low | 95% high |
+|---|---|---|---|---|---|
+| 5M__knob-chaos__full__mix0.3 | regression/in_prior | 500 | 1.000 | 0.995 | 1.004 |
+| 5M__knob-chaos__full__nomix | regression/in_prior | 500 | 1.017 | 1.011 | 1.022 |
+| 5M__knob-chaos__lora__mix0.3 | regression/in_prior | 500 | 0.993 | 0.990 | 0.997 |
+| 5M__knob-chaos__lora__nomix | regression/in_prior | 500 | 1.025 | 1.018 | 1.032 |
+| 5M__knob-mixture__full__mix0.3 | regression/in_prior | 500 | 1.000 | 0.995 | 1.004 |
+| 5M__knob-mixture__full__nomix | regression/in_prior | 500 | 1.017 | 1.011 | 1.022 |
+| 5M__knob-mixture__lora__mix0.3 | regression/in_prior | 500 | 0.993 | 0.990 | 0.997 |
+| 5M__knob-mixture__lora__nomix | regression/in_prior | 500 | 1.025 | 1.018 | 1.032 |
+| 5M__knob-regime__full__mix0.3 | regression/in_prior | 500 | 1.000 | 0.995 | 1.004 |
+| 5M__knob-regime__full__nomix | regression/in_prior | 500 | 1.017 | 1.011 | 1.022 |
+| 5M__knob-regime__lora__mix0.3 | regression/in_prior | 500 | 0.993 | 0.990 | 0.997 |
+| 5M__knob-regime__lora__nomix | regression/in_prior | 500 | 1.025 | 1.018 | 1.032 |
+| 5M__knob-tails__full__mix0.3 | regression/in_prior | 500 | 1.000 | 0.995 | 1.004 |
+| 5M__knob-tails__full__nomix | regression/in_prior | 500 | 1.017 | 1.011 | 1.022 |
+| 5M__knob-tails__lora__mix0.3 | regression/in_prior | 500 | 0.993 | 0.990 | 0.997 |
+| 5M__knob-tails__lora__nomix | regression/in_prior | 500 | 1.025 | 1.018 | 1.032 |
+| 5M__lofo-chaos__full__mix0.3 | regression/in_prior | 500 | 1.010 | 1.006 | 1.013 |
+| 5M__lofo-chaos__full__nomix | regression/in_prior | 500 | 1.050 | 1.040 | 1.060 |
+| 5M__lofo-chaos__lora__mix0.3 | regression/in_prior | 500 | 1.011 | 1.007 | 1.015 |
+| 5M__lofo-chaos__lora__nomix | regression/in_prior | 500 | 1.055 | 1.046 | 1.064 |
+| 5M__lofo-mixture__full__mix0.3 | regression/in_prior | 500 | 1.010 | 1.007 | 1.013 |
+| 5M__lofo-mixture__full__nomix | regression/in_prior | 500 | 1.033 | 1.027 | 1.040 |
+| 5M__lofo-mixture__lora__mix0.3 | regression/in_prior | 500 | 1.019 | 1.014 | 1.024 |
+| 5M__lofo-mixture__lora__nomix | regression/in_prior | 500 | 1.070 | 1.058 | 1.082 |
+| 5M__lofo-regime__full__mix0.3 | regression/in_prior | 500 | 1.007 | 1.004 | 1.010 |
+| 5M__lofo-regime__full__nomix | regression/in_prior | 500 | 1.039 | 1.031 | 1.047 |
+| 5M__lofo-regime__lora__mix0.3 | regression/in_prior | 500 | 1.014 | 1.009 | 1.019 |
+| 5M__lofo-regime__lora__nomix | regression/in_prior | 500 | 1.053 | 1.044 | 1.063 |
+| 5M__lofo-tails__full__mix0.3 | regression/in_prior | 500 | 1.001 | 0.998 | 1.004 |
+| 5M__lofo-tails__full__nomix | regression/in_prior | 500 | 1.019 | 1.014 | 1.024 |
+| 5M__lofo-tails__lora__mix0.3 | regression/in_prior | 500 | 0.999 | 0.996 | 1.003 |
+| 5M__lofo-tails__lora__nomix | regression/in_prior | 500 | 1.040 | 1.031 | 1.049 |
+| 5M__knob-chaos__full__mix0.3 | regression/real | 40 | 1.009 | 1.000 | 1.019 |
+| 5M__knob-chaos__full__nomix | regression/real | 40 | 1.012 | 1.003 | 1.025 |
+| 5M__knob-chaos__lora__mix0.3 | regression/real | 40 | 1.005 | 0.989 | 1.021 |
+| 5M__knob-chaos__lora__nomix | regression/real | 40 | 1.006 | 0.989 | 1.025 |
+| 5M__knob-mixture__full__mix0.3 | regression/real | 40 | 1.009 | 1.000 | 1.019 |
+| 5M__knob-mixture__full__nomix | regression/real | 40 | 1.012 | 1.003 | 1.025 |
+| 5M__knob-mixture__lora__mix0.3 | regression/real | 40 | 1.005 | 0.989 | 1.021 |
+| 5M__knob-mixture__lora__nomix | regression/real | 40 | 1.006 | 0.989 | 1.025 |
+| 5M__knob-regime__full__mix0.3 | regression/real | 40 | 1.009 | 1.000 | 1.019 |
+| 5M__knob-regime__full__nomix | regression/real | 40 | 1.012 | 1.003 | 1.025 |
+| 5M__knob-regime__lora__mix0.3 | regression/real | 40 | 1.005 | 0.989 | 1.021 |
+| 5M__knob-regime__lora__nomix | regression/real | 40 | 1.006 | 0.989 | 1.025 |
+| 5M__knob-tails__full__mix0.3 | regression/real | 40 | 1.009 | 1.000 | 1.019 |
+| 5M__knob-tails__full__nomix | regression/real | 40 | 1.012 | 1.003 | 1.025 |
+| 5M__knob-tails__lora__mix0.3 | regression/real | 40 | 1.005 | 0.989 | 1.021 |
+| 5M__knob-tails__lora__nomix | regression/real | 40 | 1.006 | 0.989 | 1.025 |
+| 5M__lofo-chaos__full__mix0.3 | regression/real | 40 | 0.994 | 0.984 | 1.004 |
+| 5M__lofo-chaos__full__nomix | regression/real | 40 | 0.999 | 0.989 | 1.009 |
+| 5M__lofo-chaos__lora__mix0.3 | regression/real | 40 | 0.997 | 0.983 | 1.012 |
+| 5M__lofo-chaos__lora__nomix | regression/real | 40 | 1.001 | 0.986 | 1.017 |
+| 5M__lofo-mixture__full__mix0.3 | regression/real | 40 | 0.998 | 0.989 | 1.006 |
+| 5M__lofo-mixture__full__nomix | regression/real | 40 | 0.999 | 0.990 | 1.008 |
+| 5M__lofo-mixture__lora__mix0.3 | regression/real | 40 | 1.006 | 0.994 | 1.020 |
+| 5M__lofo-mixture__lora__nomix | regression/real | 40 | 1.014 | 1.000 | 1.027 |
+| 5M__lofo-regime__full__mix0.3 | regression/real | 40 | 1.001 | 0.995 | 1.007 |
+| 5M__lofo-regime__full__nomix | regression/real | 40 | 1.004 | 0.998 | 1.010 |
+| 5M__lofo-regime__lora__mix0.3 | regression/real | 40 | 1.009 | 0.999 | 1.021 |
+| 5M__lofo-regime__lora__nomix | regression/real | 40 | 1.004 | 0.994 | 1.016 |
+| 5M__lofo-tails__full__mix0.3 | regression/real | 40 | 1.000 | 0.991 | 1.009 |
+| 5M__lofo-tails__full__nomix | regression/real | 40 | 0.998 | 0.987 | 1.009 |
+| 5M__lofo-tails__lora__mix0.3 | regression/real | 40 | 1.004 | 0.992 | 1.018 |
+| 5M__lofo-tails__lora__nomix | regression/real | 40 | 1.012 | 0.997 | 1.029 |
 
 # 11. Limitations
 

@@ -20,7 +20,11 @@ abstract: |
   context lowers chaos errors to {{num:sv_chaos_5M}}× (5M) and {{num:sv_chaos_209M}}× (209M) of Timestral's on fresh
   samples, with in-prior and regime series unchanged and tails at most {{num:sv_tails_max}}×. We release two benchmarks with oracle quantiles
   ({{num:bench_n_diag}} tagged diagnostic series; {{num:bench_n_lb}} leaderboard series), on which Timestral-209M
-  is at {{num:bench_diag_209M_oracle}}× and {{num:bench_lb_209M_oracle}}× the oracle's MASE.
+  is at {{num:bench_diag_209M_oracle}}× and {{num:bench_lb_209M_oracle}}× the oracle's MASE. Cheap fine-tuning
+  (full or LoRA, {{num:ft_steps_min}}–{{num:ft_steps_max}} steps) does not carry over to held-out families or knob ranges
+  ({{num:ft_lofo_better}} and {{num:ft_knob_better}} of 96 runs better at 95%), while mixing in-prior series into
+  training keeps normal series from getting worse ({{num:ft_reg_mix_worse}} of {{num:ft_reg_mix_runs}} runs worse, against
+  {{num:ft_reg_nomix_worse}} of {{num:ft_reg_nomix_runs}} without mixing).
 ---
 
 <!--
@@ -670,6 +674,38 @@ pretrained model of the same size. Gain is reported as the paired MASE ratio fin
 held-out samples (500-path oracle), with 95% intervals, next to cost (trainable parameters, steps, series
 seen, wall time).
 
+The main runs cover all four sizes on one GPU: 24 runs per size and protocol (4 held-out sets × full or LoRA
+× no mixing, 30% or 50% mixing), each trained for {{num:ft_steps_min}}–{{num:ft_steps_max}} steps, at most
+{{num:ft_wall_max}} s of training per run on an A100. This is a test of cheap fine-tuning, not of training to convergence.
+
+**On held-out failures, cheap fine-tuning barely moves the error.** Across the {{num:ft_lofo_runs}}
+leave-one-family-out runs, {{num:ft_lofo_better}} beat the pretrained model with a 95% interval below 1 and
+{{num:ft_lofo_worse}} are worse. Across the {{num:ft_knob_runs}} held-out-knob runs the counts are
+{{num:ft_knob_better}} and {{num:ft_knob_worse}}. With 96 runs per protocol and 95% intervals, about 2.4 runs
+in each direction would clear the bar by chance (96 × 0.025), so the knob protocol is at chance level, and the
+leave-one-family-out protocol is only modestly above it. The median paired ratio over all held-out runs is
+{{num:ft_median_all}}. The best single run is 209M LoRA tested on chaos after training on the other three
+families: {{num:ft_best}} ({{num:ft_best_lo}}–{{num:ft_best_hi}}), on a set where the pretrained model sits at
+{{num:ft_best_pre}}× the oracle. That run is the best of 192, so the selection inflates it. After fine-tuning,
+the held-out sets stay at {{num:ft_after_min}}–{{num:ft_after_max}}× the oracle's MASE.
+
+{{table:ft_colab_heldout}}
+
+**Mixing is what keeps normal series safe.** Without mixing, {{num:ft_reg_nomix_worse}} of
+{{num:ft_reg_nomix_runs}} runs are worse than the pretrained model on the 500 in-prior series, by up to
+{{num:ft_reg_nomix_max}}×. With 30% or 50% mixing, {{num:ft_reg_mix_worse}} of {{num:ft_reg_mix_runs}} are
+worse, and the largest ratio is {{num:ft_reg_mix_max}}. On the 40 real windows the effects are smaller: {{num:ft_real_nomix_worse}} of {{num:ft_real_nomix_runs}} runs
+without mixing and {{num:ft_real_mix_worse}} of {{num:ft_real_mix_runs}} with mixing are worse at 95%, with ratios no larger
+than {{num:ft_real_max}}.
+
+{{table:ft_colab_regression}}
+
+Read together: at these budgets, training on three failure families or one knob range does not carry over
+to an unseen family or range. Mixing costs nothing on held-out failures (median paired ratio {{num:ft_heldout_median_nomix}} without mixing,
+{{num:ft_heldout_median_mix03}} and {{num:ft_heldout_median_mix05}} with 30% and 50%) and prevents most of the forgetting
+that plain fine-tuning causes. Whether longer training, or training on the held-out family itself, closes the gaps
+is not tested here.
+
 A first pass on the 5M model ran on CPU with a short budget, to validate the pipeline end to end:
 
 {{table:ft_local_lofo}}
@@ -677,10 +713,6 @@ A first pass on the 5M model ran on CPU with a short budget, to validate the pip
 {{table:ft_local_knob}}
 
 {{table:ft_local_regression}}
-
-The full-budget runs on all four sizes ran on GPUs:
-
-{{table:ft_colab}}
 
 # 11. Limitations
 

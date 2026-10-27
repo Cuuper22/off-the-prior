@@ -1349,6 +1349,198 @@
   "src": "results/search/runs/cmaes_seed0/run.json",
   "how": "CMA-ES seed 0: evaluations replayed from a checkpoint after a lost runtime"
  },
+ "ft_lofo_runs": {
+  "value": 96.0,
+  "text": "96",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "lofo: runs scored on held-out sets"
+ },
+ "ft_lofo_better": {
+  "value": 7.0,
+  "text": "7",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "lofo: runs whose paired-ratio 95% interval is below 1"
+ },
+ "ft_lofo_worse": {
+  "value": 0.0,
+  "text": "0",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "lofo: runs whose paired-ratio 95% interval is above 1"
+ },
+ "ft_knob_runs": {
+  "value": 96.0,
+  "text": "96",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "knob: runs scored on held-out sets"
+ },
+ "ft_knob_better": {
+  "value": 1.0,
+  "text": "1",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "knob: runs whose paired-ratio 95% interval is below 1"
+ },
+ "ft_knob_worse": {
+  "value": 2.0,
+  "text": "2",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "knob: runs whose paired-ratio 95% interval is above 1"
+ },
+ "ft_best": {
+  "value": 0.926737647538864,
+  "text": "0.927",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "best paired ratio on any held-out set (209M__lofo-chaos__lora__nomix, lofo/chaos)"
+ },
+ "ft_best_lo": {
+  "value": 0.8578724158815196,
+  "text": "0.858",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "its 95% interval, low"
+ },
+ "ft_best_hi": {
+  "value": 0.9924806196386832,
+  "text": "0.992",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "its 95% interval, high"
+ },
+ "ft_best_pre": {
+  "value": 1.753597217282351,
+  "text": "1.75",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "pretrained MASE ratio to oracle on that set"
+ },
+ "ft_after_min": {
+  "value": 1.006892070440054,
+  "text": "1.01",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "smallest fine-tuned MASE ratio to oracle on any held-out set"
+ },
+ "ft_after_max": {
+  "value": 3.515854869686564,
+  "text": "3.52",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "largest fine-tuned MASE ratio to oracle on any held-out set"
+ },
+ "ft_heldout_median_nomix": {
+  "value": 0.9994062820897149,
+  "text": "0.999",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "median held-out paired ratio, replay share 0.0"
+ },
+ "ft_heldout_median_mix03": {
+  "value": 0.9963021166180204,
+  "text": "0.996",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "median held-out paired ratio, replay share 0.3"
+ },
+ "ft_heldout_median_mix05": {
+  "value": 0.9947825959050386,
+  "text": "0.995",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "median held-out paired ratio, replay share 0.5"
+ },
+ "ft_median_all": {
+  "value": 0.9971009809137382,
+  "text": "0.997",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "median paired ratio over all held-out runs"
+ },
+ "ft_reg_nomix_runs": {
+  "value": 64.0,
+  "text": "64",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "runs without mixing scored on the in-prior set"
+ },
+ "ft_reg_nomix_worse": {
+  "value": 57.0,
+  "text": "57",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "of those, worse than pretrained at 95%"
+ },
+ "ft_reg_nomix_max": {
+  "value": 1.0693408998200828,
+  "text": "1.069",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "largest in-prior paired ratio without mixing"
+ },
+ "ft_reg_mix_runs": {
+  "value": 128.0,
+  "text": "128",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "runs with mixing scored on the in-prior set"
+ },
+ "ft_reg_mix_worse": {
+  "value": 0.0,
+  "text": "0",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "of those, worse than pretrained at 95%"
+ },
+ "ft_reg_mix_max": {
+  "value": 1.0036418539709786,
+  "text": "1.004",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "largest in-prior paired ratio with mixing"
+ },
+ "ft_real_max": {
+  "value": 1.0231371761405843,
+  "text": "1.023",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "largest paired ratio on the real windows"
+ },
+ "ft_real_worse": {
+  "value": 21.0,
+  "text": "21",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "runs worse than pretrained on the real windows at 95%"
+ },
+ "ft_real_nomix_worse": {
+  "value": 17.0,
+  "text": "17",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "real windows: runs without mixing worse at 95%"
+ },
+ "ft_real_nomix_runs": {
+  "value": 64.0,
+  "text": "64",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "real windows: runs without mixing"
+ },
+ "ft_real_mix_worse": {
+  "value": 4.0,
+  "text": "4",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "real windows: runs with mixing worse at 95%"
+ },
+ "ft_real_mix_runs": {
+  "value": 128.0,
+  "text": "128",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "real windows: runs with mixing"
+ },
+ "ft_real_runs": {
+  "value": 192.0,
+  "text": "192",
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "runs scored on the real windows"
+ },
+ "ft_steps_min": {
+  "value": 300.0,
+  "text": "300",
+  "src": "results/finetune/colab/run1/costs.csv",
+  "how": "fewest training steps per run"
+ },
+ "ft_wall_max": {
+  "value": 49.8,
+  "text": "50",
+  "src": "results/finetune/colab/run1/costs.csv",
+  "how": "longest training wall time of any run, seconds (A100)"
+ },
+ "ft_steps_max": {
+  "value": 500.0,
+  "text": "500",
+  "src": "results/finetune/colab/run1/costs.csv",
+  "how": "most training steps per run"
+ },
  "nn_poles_5M": {
   "value": 8192.0,
   "text": "8,192",
@@ -1890,6 +2082,26 @@
  "table:search_transfer": {
   "src": "results/search/transfer_floored.csv",
   "how": "top elites re-scored with fresh seeds on each size; floored = genomes whose oracle sCRPS is at least 0.05 x seasonal naive's"
+ },
+ "table:ft_local_lofo": {
+  "src": "results/finetune/local/summary.csv",
+  "how": "5M, protocol lofo, held-out test sets: geometric-mean MASE ratio to oracle before and after, paired ratio with 95% interval"
+ },
+ "table:ft_local_knob": {
+  "src": "results/finetune/local/summary.csv",
+  "how": "5M, protocol knob, held-out test sets: geometric-mean MASE ratio to oracle before and after, paired ratio with 95% interval"
+ },
+ "table:ft_local_regression": {
+  "src": "results/finetune/local/summary.csv",
+  "how": "regression sets: paired MASE ratio fine-tuned / pretrained"
+ },
+ "table:ft_colab_heldout": {
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "held-out test sets, 32 samples each: paired MASE ratio fine-tuned / pretrained over the 24 runs (4 held-out sets x 6 methods) per size and protocol; better/worse = 95% interval entirely below/above 1"
+ },
+ "table:ft_colab_regression": {
+  "src": "results/finetune/colab/run1/summary.csv",
+  "how": "regression sets (in-prior: 500 series with oracle; real: 40 windows, no oracle): paired MASE ratio fine-tuned / pretrained over the 32 runs per method (4 sizes x 2 protocols x 4 held-out sets); worse = 95% interval above 1"
  },
  "table:nn_one_job": {
   "src": "results/neurons/scaling.csv",
