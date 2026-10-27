@@ -8,11 +8,12 @@ CORP=results/neurons/corpus
 OUT=results/colab_out
 for S in $NN_SIZES; do
   python3 scripts/neurons_run.py --size $S --corpus $CORP/main.npz,$CORP/mv.npz --real results/neurons/real/real.npz \
-    --out $OUT/nn_${S}_main --acts-sub 2048 --acts-dir $OUT/acts --layers-per-chunk 4 --batch 64 --resume
-  python3 scripts/neurons_run.py --size $S --corpus $CORP/short.npz --out $OUT/nn_${S}_short --layers-per-chunk 4 --batch 64 --resume
-  python3 scripts/neurons_run.py --size $S --corpus $CORP/long.npz --out $OUT/nn_${S}_long --layers-per-chunk 4 --batch 16 --resume
-  python3 scripts/neurons_run.py --size $S --corpus $CORP/xlong.npz --out $OUT/nn_${S}_xlong --layers-per-chunk 4 --batch 4 --resume
-  python3 scripts/neurons_steer.py --size $S --runs $OUT --corpus $CORP/main.npz --out $OUT/nn_steer
-  python3 scripts/neurons_failure.py --size $S --runs $OUT --out $OUT/nn_failure
-  python3 scripts/neurons_heads.py --size $S --corpus $CORP/main.npz --mv $CORP/mv.npz --out $OUT/nn_heads_$S
+    --out $OUT/nn_${S}_main --acts-sub 2048 --acts-dir $OUT/acts --layers-per-chunk 8 --batch 256 --resume
+  python3 scripts/neurons_run.py --size $S --corpus $CORP/short.npz --out $OUT/nn_${S}_short --layers-per-chunk 8 --batch 256 --resume
+  python3 scripts/neurons_run.py --size $S --corpus $CORP/long.npz --out $OUT/nn_${S}_long --layers-per-chunk 8 --batch 64 --resume
+  python3 scripts/neurons_run.py --size $S --corpus $CORP/xlong.npz --out $OUT/nn_${S}_xlong --layers-per-chunk 8 --batch 16 --resume
+  # the steps below do not stop the job when one fails (their inputs, the label tables above, are already written)
+  python3 scripts/neurons_steer.py --size $S --runs $OUT --corpus $CORP/main.npz --out $OUT/nn_steer || echo STEP_FAILED steer
+  python3 scripts/neurons_failure.py --size $S --runs $OUT --out $OUT/nn_failure || echo STEP_FAILED failure
+  python3 scripts/neurons_heads.py --size $S --corpus $CORP/main.npz --mv $CORP/mv.npz --out $OUT/nn_heads_$S || echo STEP_FAILED heads
 done
