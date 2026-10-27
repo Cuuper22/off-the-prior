@@ -450,6 +450,20 @@ def finetune_results():
         generic_table("ft_colab", f, "GPU runs, from results/finetune/colab/summary.csv")
 
 
+def label_group_share(lg, size, grp):
+    """Share of a size's one-job poles whose label is in group `grp` (label_groups.csv layout, see scripts/neurons_summarize.py)."""
+    q = lg[lg["size"] == size]
+    for share_col in ("share_of_one_job", "share", "frac"):
+        if share_col in q.columns and "group" in q.columns:
+            r = q[q.group == grp]
+            return float(r[share_col].iloc[0]) if len(r) else None
+    if "group" in q.columns and "n_one_job" in q.columns:
+        tot = q.n_one_job.sum()
+        r = q[q.group == grp]
+        return float(r.n_one_job.iloc[0] / tot) if len(r) and tot else None
+    return None
+
+
 def neuron_results():
     d = "results/neurons"
     f = f"{d}/scaling.csv"
@@ -459,8 +473,18 @@ def neuron_results():
                  "one job, held-out series": r.one_job_heldout, "mixed": r.mixed, "unexplained": r.unexplained} for sz, r in sc.iterrows()]
         table("nn_one_job", pd.DataFrame(rows), f, "share of live poles per class at theta 0.7, floor 0.1 (main corpus, all layers, both poles); interval: bootstrap over poles", "{:.3f}")
         for sz in ("5M", "209M"):
+            num(f"nn_poles_{sz}", int(sc.loc[sz, "n_poles"]), f, f"{sz}: poles (two per neuron)", "{:,d}")
+            num(f"nn_unexpl_{sz}", 100 * float(sc.loc[sz, "unexplained"]), f, f"{sz}: percent of live poles unexplained at floor 0.1", "{:.0f}")
             num(f"nn_onejob_{sz}", 100 * float(sc.loc[sz, "one_job"]), f, f"{sz}: percent of live poles that are one-job at theta 0.7, floor 0.1", "{:.1f}")
             num(f"nn_mixed_{sz}", 100 * float(sc.loc[sz, "mixed"]), f, f"{sz}: percent mixed at theta 0.7, floor 0.1", "{:.0f}")
+    f = f"{d}/label_groups.csv"
+    if os.path.exists(p(f)):
+        lg = pd.read_csv(p(f))
+        for sz in ("5M", "209M"):
+            for grp in ("position", "chaos"):
+                v = label_group_share(lg, sz, grp)
+                if v is not None:
+                    num(f"nn_grp_{grp}_{sz}", 100 * v, f, f"percent of {sz}'s one-job poles whose label is in the {grp} group", "{:.0f}")
     f = f"{d}/context_comparison.csv"
     if os.path.exists(p(f)):
         c = pd.read_csv(p(f))
@@ -496,6 +520,21 @@ def neuron_results():
             q = b[(b.role == "series_count") & (b["size"] == "5M") & (b.n_series == n)]
             num(f"nnb_sub{n}_5M_min", 100 * q.one_job.min(), f, f"5M, main corpus subsampled to {n} series: min over 3 seeds of the one-job percent", "{:.0f}")
             num(f"nnb_sub{n}_5M_max", 100 * q.one_job.max(), f, f"5M, main corpus subsampled to {n} series: max over 3 seeds", "{:.0f}")
+        for c in ("short", "long", "xlong"):
+            q = b[(b.role == "common_library") & (b["size"] == "5M") & (b.corpus == c)]
+            if len(q):
+                num(f"nnb_{c}_common_5M", 100 * float(q.one_job.iloc[0]), f, f"5M, {c} corpus, common library: one-job percent", "{:.0f}")
+                num(f"nnb_{c}_n", int(q.n_series.iloc[0]), f, f"series in the {c} corpus", "{:,d}")
+        q = b[(b.role == "series_count") & (b["size"] == "5M") & (b.n_series == 620)]
+        num("nnb_sub620_5M_min", 100 * q.one_job.min(), f, "5M, main corpus subsampled to 620 series: min over 3 seeds of the one-job percent", "{:.0f}")
+        num("nnb_sub620_5M_max", 100 * q.one_job.max(), f, "max of the same", "{:.0f}")
+        sub = b[(b.role == "series_count")]
+        num("nnb_n_main", int(b[b.role == "reference"].n_series.max()), f, "series in the main corpus", "{:,d}")
+        num("nnb_n_mid", int(sub.n_series.max()), f, "largest subsample of the main corpus", "{:,d}")
+        num("nnb_n_small", int(sub.n_series.min()), f, "smallest subsample of the main corpus", "{:,d}")
+        ks = sorted(int(x.replace("random", "")) for x in b[b.role == "library_size"].library.unique())
+        num("nnb_k_lo", ks[0], f, "smallest random library size", "{:d}")
+        num("nnb_k_hi", ks[-1], f, "largest random library size", "{:d}")
         lib = b[(b.role == "library_size") & (b["size"] == "5M")]
         num("nnb_lib_min", 100 * lib.one_job.min(), f, "5M, main corpus, random libraries of 10, 25 or 50 variables: min one-job percent over 9 runs", "{:.1f}")
         num("nnb_lib_max", 100 * lib.one_job.max(), f, "max of the same", "{:.1f}")
@@ -506,6 +545,9 @@ def neuron_results():
         rows = [{"size": r.size, "poles": r.role, "n": int(r.n), "matched": int(r.n_match), "match rate": r.match_rate, "95% high": r.ci_hi,
                  "monotone share": r.monotone_rate} for r in s2.itertuples()]
         table("nn_steering", pd.DataFrame(rows), f, "single-pole steering (scales 0, 0.5, 2, 4) judged against the pre-registered predictions; controls are random poles with a random predicted direction", "{:.3f}")
+        num("nn_steer_matches", int(s2[s2.role == "labeled"].n_match.sum()), f, "labeled poles whose steering matched the pre-registered prediction, all sizes", "{:d}")
+        num("nn_steer_control_n", int(s2[s2.role == "control"].n.sum()), f, "random control poles steered, all sizes", "{:,d}")
+        num("nn_steer_control_matches", int(s2[s2.role == "control"].n_match.sum()), f, "control poles that met the match criterion, all sizes", "{:d}")
         sr = pd.read_csv(p(f"{d}/steering_results.csv"))
         lab = sr[(sr.role == "labeled") & sr.predicted.astype(bool)] if "predicted" in sr else sr[sr.role == "labeled"]
         num("nn_steer_max_effect", float(lab.effect_size.abs().max()), f"{d}/steering_results.csv", "largest |effect(scale 4) - effect(scale 0)| over steered labeled poles, in context standard deviations", "{:.3f}")
@@ -523,6 +565,14 @@ def neuron_results():
                          "MASE ratio before": float(ab.mase_before.iloc[0]) if len(ab) else float("nan"),
                          "after ablating periodic poles": float(ab.mase_after.iloc[0]) if len(ab) else float("nan"),
                          "after ablating random poles": float(rnd.mase_after.iloc[0]) if len(rnd) else float("nan")})
+        g = fl[fl["size"] == "209M"]
+        for set_name, tag in (("periodic_elevated", "elev"), ("random_same_layers", "rand")):
+            q = g[(g.analysis == "ablate") & (g.set == set_name) & (g.scale == 0.0)]
+            if len(q):
+                num(f"nn_abl_{tag}_before_209M", float(q.mase_before.iloc[0]), f, "209M: MASE ratio to oracle on failing contexts before ablation")
+                num(f"nn_abl_{tag}_after_209M", float(q.mase_after.iloc[0]), f, f"209M: MASE ratio after setting the {set_name} poles to zero")
+                if "n_poles" in q and q.n_poles.notna().any():
+                    num(f"nn_abl_{tag}_n_209M", int(q.n_poles.iloc[0]), f, f"209M: number of poles set to zero ({set_name})", "{:d}")
         table("nn_failure_link", pd.DataFrame(rows), f, "failing chaos contexts: enrichment of chaos-labeled poles among poles elevated on failing vs reference contexts, and the forecast's MASE ratio to the oracle before and after ablating the elevated periodic-label poles (or as many random poles in the same layers)", "{:.3f}")
 
 

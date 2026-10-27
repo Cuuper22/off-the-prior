@@ -84,8 +84,21 @@ TEXT = {}
 SRCS = []
 
 
+_PAPER_NUMS = None
+
+
 def num(key, value, text, src, how):
-    NUM[key] = {"text": text, "src": src, "how": how, "value": r4(value)}
+    """A number for the story. Keys that paper/build.py defines are taken from paper/numbers.json (one definition
+    for paper and site); the value computed here is only a fallback for keys the paper does not have."""
+    global _PAPER_NUMS
+    if _PAPER_NUMS is None:
+        f = os.path.join(ROOT, "paper", "numbers.json")
+        _PAPER_NUMS = json.load(open(f)) if os.path.exists(f) else {}
+    pv = _PAPER_NUMS.get(key)
+    if pv and "text" in pv:
+        NUM[key] = {"text": pv["text"], "src": pv["src"], "how": pv["how"], "value": r4(pv.get("value", value))}
+    else:
+        NUM[key] = {"text": text, "src": src, "how": how, "value": r4(value)}
     return NUM[key]
 
 

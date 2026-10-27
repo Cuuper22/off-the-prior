@@ -1139,6 +1139,18 @@
   "src": "bench/data/lb_manifest.csv",
   "how": "number of configs"
  },
+ "nn_poles_5M": {
+  "value": 8192.0,
+  "text": "8,192",
+  "src": "results/neurons/scaling.csv",
+  "how": "5M: poles (two per neuron)"
+ },
+ "nn_unexpl_5M": {
+  "value": 12.054,
+  "text": "12",
+  "src": "results/neurons/scaling.csv",
+  "how": "5M: percent of live poles unexplained at floor 0.1"
+ },
  "nn_onejob_5M": {
   "value": 4.531000000000001,
   "text": "4.5",
@@ -1151,6 +1163,18 @@
   "src": "results/neurons/scaling.csv",
   "how": "5M: percent mixed at theta 0.7, floor 0.1"
  },
+ "nn_poles_209M": {
+  "value": 98304.0,
+  "text": "98,304",
+  "src": "results/neurons/scaling.csv",
+  "how": "209M: poles (two per neuron)"
+ },
+ "nn_unexpl_209M": {
+  "value": 16.529,
+  "text": "17",
+  "src": "results/neurons/scaling.csv",
+  "how": "209M: percent of live poles unexplained at floor 0.1"
+ },
  "nn_onejob_209M": {
   "value": 2.3352999999999997,
   "text": "2.3",
@@ -1162,6 +1186,30 @@
   "text": "81",
   "src": "results/neurons/scaling.csv",
   "how": "209M: percent mixed at theta 0.7, floor 0.1"
+ },
+ "nn_grp_position_5M": {
+  "value": 58.76,
+  "text": "59",
+  "src": "results/neurons/label_groups.csv",
+  "how": "percent of 5M's one-job poles whose label is in the position group"
+ },
+ "nn_grp_chaos_5M": {
+  "value": 1.3477,
+  "text": "1",
+  "src": "results/neurons/label_groups.csv",
+  "how": "percent of 5M's one-job poles whose label is in the chaos group"
+ },
+ "nn_grp_position_209M": {
+  "value": 23.180999999999997,
+  "text": "23",
+  "src": "results/neurons/label_groups.csv",
+  "how": "percent of 209M's one-job poles whose label is in the position group"
+ },
+ "nn_grp_chaos_209M": {
+  "value": 29.107,
+  "text": "29",
+  "src": "results/neurons/label_groups.csv",
+  "how": "percent of 209M's one-job poles whose label is in the chaos group"
  },
  "nn_ctx_onejob_min": {
   "value": 24.186,
@@ -1223,6 +1271,84 @@
   "src": "results/neurons/followup/corpus_library_control.csv",
   "how": "5M, main corpus subsampled to 48 series: max over 3 seeds"
  },
+ "nnb_short_common_5M": {
+  "value": 40.80859899841211,
+  "text": "41",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "5M, short corpus, common library: one-job percent"
+ },
+ "nnb_short_n": {
+  "value": 1034.0,
+  "text": "1,034",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "series in the short corpus"
+ },
+ "nnb_long_common_5M": {
+  "value": 22.58182706399609,
+  "text": "23",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "5M, long corpus, common library: one-job percent"
+ },
+ "nnb_long_n": {
+  "value": 620.0,
+  "text": "620",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "series in the long corpus"
+ },
+ "nnb_xlong_common_5M": {
+  "value": 47.39156994502138,
+  "text": "47",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "5M, xlong corpus, common library: one-job percent"
+ },
+ "nnb_xlong_n": {
+  "value": 48.0,
+  "text": "48",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "series in the xlong corpus"
+ },
+ "nnb_sub620_5M_min": {
+  "value": 26.1724474841231,
+  "text": "26",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "5M, main corpus subsampled to 620 series: min over 3 seeds of the one-job percent"
+ },
+ "nnb_sub620_5M_max": {
+  "value": 26.5876893014167,
+  "text": "27",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "max of the same"
+ },
+ "nnb_n_main": {
+  "value": 3100.0,
+  "text": "3,100",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "series in the main corpus"
+ },
+ "nnb_n_mid": {
+  "value": 1034.0,
+  "text": "1,034",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "largest subsample of the main corpus"
+ },
+ "nnb_n_small": {
+  "value": 48.0,
+  "text": "48",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "smallest subsample of the main corpus"
+ },
+ "nnb_k_lo": {
+  "value": 10.0,
+  "text": "10",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "smallest random library size"
+ },
+ "nnb_k_hi": {
+  "value": 50.0,
+  "text": "50",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "largest random library size"
+ },
  "nnb_lib_min": {
   "value": 3.18759159745969,
   "text": "3.2",
@@ -1235,6 +1361,24 @@
   "src": "results/neurons/followup/corpus_library_control.csv",
   "how": "max of the same"
  },
+ "nn_steer_matches": {
+  "value": 0.0,
+  "text": "0",
+  "src": "results/neurons/steering_summary.csv",
+  "how": "labeled poles whose steering matched the pre-registered prediction, all sizes"
+ },
+ "nn_steer_control_n": {
+  "value": 1728.0,
+  "text": "1,728",
+  "src": "results/neurons/steering_summary.csv",
+  "how": "random control poles steered, all sizes"
+ },
+ "nn_steer_control_matches": {
+  "value": 5.0,
+  "text": "5",
+  "src": "results/neurons/steering_summary.csv",
+  "how": "control poles that met the match criterion, all sizes"
+ },
  "nn_steer_max_effect": {
   "value": 0.041151,
   "text": "0.041",
@@ -1246,6 +1390,42 @@
   "text": "203",
   "src": "results/neurons/steering_summary.csv",
   "how": "steered labeled poles over all sizes"
+ },
+ "nn_abl_elev_before_209M": {
+  "value": 2.05,
+  "text": "2.05",
+  "src": "results/neurons/failure_link.csv",
+  "how": "209M: MASE ratio to oracle on failing contexts before ablation"
+ },
+ "nn_abl_elev_after_209M": {
+  "value": 2.0504,
+  "text": "2.05",
+  "src": "results/neurons/failure_link.csv",
+  "how": "209M: MASE ratio after setting the periodic_elevated poles to zero"
+ },
+ "nn_abl_elev_n_209M": {
+  "value": 24.0,
+  "text": "24",
+  "src": "results/neurons/failure_link.csv",
+  "how": "209M: number of poles set to zero (periodic_elevated)"
+ },
+ "nn_abl_rand_before_209M": {
+  "value": 2.05,
+  "text": "2.05",
+  "src": "results/neurons/failure_link.csv",
+  "how": "209M: MASE ratio to oracle on failing contexts before ablation"
+ },
+ "nn_abl_rand_after_209M": {
+  "value": 2.0525,
+  "text": "2.05",
+  "src": "results/neurons/failure_link.csv",
+  "how": "209M: MASE ratio after setting the random_same_layers poles to zero"
+ },
+ "nn_abl_rand_n_209M": {
+  "value": 24.0,
+  "text": "24",
+  "src": "results/neurons/failure_link.csv",
+  "how": "209M: number of poles set to zero (random_same_layers)"
  },
  "table:inprior": {
   "src": "results/map/in_prior/summary.csv",

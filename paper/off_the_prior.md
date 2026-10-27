@@ -633,10 +633,14 @@ falling and the labels drifting away from the full-corpus ones:
 | 28M | main | 1034 | full | 1 | 0.103 | 0.103 | 0.103 | 0.182 | 0.768 |
 | 28M | main | 48 | full | 1 | 0.303 | 0.303 | 0.303 | 0.116 | 0.231 |
 
-So the share is driven mostly by how many series the scores are estimated from: with fewer series the
-cross-validated ceiling E shrinks and single-variable ratios rise. The main-corpus value is the best estimate
-we have, and it was still falling between 1,034 and 3,100 series, so it is an upper bound on the share a
-larger corpus would give. We report it as "against known generating variables, few poles are single-variable",
+So the number of series raises the share: with fewer series the cross-validated ceiling E shrinks and
+single-variable ratios rise. Series count does not explain all of the corpus differences, though. The short
+corpus (1,034 series of 128 steps) gives 41% against
+11–12% for the main corpus cut to the same number of series, and the long corpus
+(620 series of 4,096 steps) gives 23%, below the 26–27% of the main
+corpus cut to 620 series; history length (tokens per series) and the corpus recipe matter too. Within the main
+corpus the share was still falling between 1,034 and 3,100 series, so the main-corpus value is an upper bound
+on what a larger corpus of the same kind would give. We report it as "against known generating variables, few poles are single-variable",
 and do not report it as evidence that the neurons are polysemantic in general. A label space that is not fixed in advance (for example motif shapes named from
 the exemplars, as interpretability work on language models does) could give a different answer.
 
