@@ -469,9 +469,20 @@ best label they had on the main corpus:
 {{table:nn_context}}
 
 The main corpus has the largest explainable ceiling E (more of each pole's variance is explained by
-combinations of variables), which lowers every single-variable ratio. We therefore read the one-job share as
-a property of the pair (neurons, variable library), and do not report it as evidence that the neurons are
-polysemantic in general. A label space that is not fixed in advance (for example motif shapes named from
+combinations of variables), which lowers every single-variable ratio. A control separates the possible causes
+(`results/neurons/followup/`). On the univariate part of the main corpus (5M: {{num:nnb_ref_5M}}% one-job with the full library), restricting
+the library to the variables defined in all four corpora gives {{num:nnb_common_5M}}%, and random libraries of 10 to 50
+variables give {{num:nnb_lib_min}}–{{num:nnb_lib_max}}%. Subsampling the main corpus to fewer series raises it:
+{{num:nnb_sub1034_5M_min}}–{{num:nnb_sub1034_5M_max}}% with 1,034 series and {{num:nnb_sub48_5M_min}}–{{num:nnb_sub48_5M_max}}% with 48, with E
+falling and the labels drifting away from the full-corpus ones:
+
+{{table:nn_series_control}}
+
+So the share is driven mostly by how many series the scores are estimated from: with fewer series the
+cross-validated ceiling E shrinks and single-variable ratios rise. The main-corpus value is the best estimate
+we have, and it was still falling between 1,034 and 3,100 series, so it is an upper bound on the share a
+larger corpus would give. We report it as "against known generating variables, few poles are single-variable",
+and do not report it as evidence that the neurons are polysemantic in general. A label space that is not fixed in advance (for example motif shapes named from
 the exemplars, as interpretability work on language models does) could give a different answer.
 
 **Checks.** Predictive: on the held-out series, each pole's activation is predicted from its label alone and

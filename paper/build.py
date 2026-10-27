@@ -477,6 +477,28 @@ def neuron_results():
         ag = c[c.context != "main"].same_label_as_main
         num("nn_ctx_agree_min", 100 * float(ag.min()), f, "min over sizes and non-main corpora of the percent of poles whose best label matches the main corpus", "{:.0f}")
         num("nn_ctx_agree_max", 100 * float(ag.max()), f, "max of the same", "{:.0f}")
+    f = f"{d}/followup/corpus_library_control.csv"
+    if os.path.exists(p(f)):
+        b = pd.read_csv(p(f))
+        b = b[(b.theta == 0.7) & (b.floor == 0.1)]
+        g = b.groupby(["size", "role", "corpus", "n_series", "library"]).agg(one_job=("one_job", "mean"), lo=("one_job", "min"),
+                                                                            hi=("one_job", "max"), E=("E_mean", "mean"),
+                                                                            agree=("same_label_as_reference", "mean"), runs=("tag", "count")).reset_index()
+        g = g[g.role.isin(["reference", "common_library", "series_count"])].sort_values(["size", "corpus", "n_series"], ascending=[False, True, False])
+        rows = [{"size": r.size, "corpus": r.corpus, "series": int(r.n_series), "library": r.library, "runs": int(r.runs),
+                 "one job (mean)": r.one_job, "min": r.lo, "max": r.hi, "mean E": r.E, "same label as reference": r.agree} for r in g.itertuples()]
+        table("nn_series_control", pd.DataFrame(rows), f, "theta 0.7, floor 0.1; main corpus subsampled at random to fewer series (3 seeds at 5M), and each corpus scored with the variable library common to all corpora", "{:.3f}")
+        ref = b[(b.role == "reference") & (b["size"] == "5M")].iloc[0]
+        com = b[(b.role == "common_library") & (b["size"] == "5M") & (b.corpus == "main")].iloc[0]
+        num("nnb_ref_5M", 100 * ref.one_job, f, "5M, main corpus, all 3100 series, full library: one-job percent", "{:.1f}")
+        num("nnb_common_5M", 100 * com.one_job, f, "5M, main corpus, common library: one-job percent", "{:.1f}")
+        for n in (1034, 48):
+            q = b[(b.role == "series_count") & (b["size"] == "5M") & (b.n_series == n)]
+            num(f"nnb_sub{n}_5M_min", 100 * q.one_job.min(), f, f"5M, main corpus subsampled to {n} series: min over 3 seeds of the one-job percent", "{:.0f}")
+            num(f"nnb_sub{n}_5M_max", 100 * q.one_job.max(), f, f"5M, main corpus subsampled to {n} series: max over 3 seeds", "{:.0f}")
+        lib = b[(b.role == "library_size") & (b["size"] == "5M")]
+        num("nnb_lib_min", 100 * lib.one_job.min(), f, "5M, main corpus, random libraries of 10, 25 or 50 variables: min one-job percent over 9 runs", "{:.1f}")
+        num("nnb_lib_max", 100 * lib.one_job.max(), f, "max of the same", "{:.1f}")
     f = f"{d}/steering_summary.csv"
     if os.path.exists(p(f)):
         s2 = pd.read_csv(p(f))

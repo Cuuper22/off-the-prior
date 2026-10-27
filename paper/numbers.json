@@ -1187,6 +1187,54 @@
   "src": "results/neurons/context_comparison.csv",
   "how": "max of the same"
  },
+ "nnb_ref_5M": {
+  "value": 4.81191988275525,
+  "text": "4.8",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "5M, main corpus, all 3100 series, full library: one-job percent"
+ },
+ "nnb_common_5M": {
+  "value": 4.7752808988764,
+  "text": "4.8",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "5M, main corpus, common library: one-job percent"
+ },
+ "nnb_sub1034_5M_min": {
+  "value": 11.0771861260381,
+  "text": "11",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "5M, main corpus subsampled to 1034 series: min over 3 seeds of the one-job percent"
+ },
+ "nnb_sub1034_5M_max": {
+  "value": 12.21299462628236,
+  "text": "12",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "5M, main corpus subsampled to 1034 series: max over 3 seeds"
+ },
+ "nnb_sub48_5M_min": {
+  "value": 25.69087796527268,
+  "text": "26",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "5M, main corpus subsampled to 48 series: min over 3 seeds of the one-job percent"
+ },
+ "nnb_sub48_5M_max": {
+  "value": 37.415963818604084,
+  "text": "37",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "5M, main corpus subsampled to 48 series: max over 3 seeds"
+ },
+ "nnb_lib_min": {
+  "value": 3.18759159745969,
+  "text": "3.2",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "5M, main corpus, random libraries of 10, 25 or 50 variables: min one-job percent over 9 runs"
+ },
+ "nnb_lib_max": {
+  "value": 7.18124084025403,
+  "text": "7.2",
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "max of the same"
+ },
  "nn_steer_max_effect": {
   "value": 0.041151,
   "text": "0.041",
@@ -1274,6 +1322,10 @@
  "table:nn_context": {
   "src": "results/neurons/context_comparison.csv",
   "how": "the same scoring on corpora of different context length (theta 0.7, floor 0.1); E = best of single, pair and additive readout R^2"
+ },
+ "table:nn_series_control": {
+  "src": "results/neurons/followup/corpus_library_control.csv",
+  "how": "theta 0.7, floor 0.1; main corpus subsampled at random to fewer series (3 seeds at 5M), and each corpus scored with the variable library common to all corpora"
  },
  "table:nn_steering": {
   "src": "results/neurons/steering_summary.csv",
