@@ -121,7 +121,7 @@ def prereg_markdown() -> str:
               "## Consistency checks (reported next to the match rate)", "",
               "- Downstream: the effect of ablation (scale 0) on each of the five quantities is stored for every steered "
               "pole. A label is flagged as broken by this check when the pole matches no prediction and its largest "
-              "ablation effect, in units of that quantity's size threshold, is on a quantity other than the predicted one.",
+              "ablation effect, in units of that quantity's size threshold, is on a quantity other than the predicted one and is at least 1.",
               "- Negative-pole consistency: for neurons with both poles steered, whose two poles have the same best "
               "label variable, the scale-4 effects of the two poles on the predicted quantity should have opposite "
               "signs when the two label correlations have opposite signs, and equal signs when they have the same sign "

@@ -62,12 +62,16 @@ def draw_sample(t: pd.DataFrame, size: str) -> pd.DataFrame:
                          "cell": f"{third}/{qg}", "k": k})
             if k < St.N_COMPLEMENT:
                 rows.append({"layer": int(r["layer"]), "neuron": int(r["neuron"]), "sign": "neg" if r["sign"] == "pos" else "pos",
-                             "role": "complement", "cell": f"{third}/{qg}", "k": k})
+                             "role": "complement", "cell": f"{third}/{qg}", "k": k, "partner_group": qg,
+                             "partner_label": r["label"], "partner_sign": r["sign"]})
     live = t[t["cls"] != "dead"]
     for j in rng.permutation(len(live))[:St.N_CONTROL]:
         r = live.iloc[j]
         rows.append({"layer": int(r["layer"]), "neuron": int(r["neuron"]), "sign": r["sign"], "role": "control", "cell": "", "k": -1})
     s = pd.DataFrame(rows).drop_duplicates(["layer", "neuron", "sign", "role"])
+    for col in ("partner_group", "partner_label", "partner_sign"):
+        if col not in s:
+            s[col] = np.nan
     return s.merge(t, on=["layer", "neuron", "sign"], how="left")
 
 
@@ -105,7 +109,8 @@ def main():
     for ri, (_, r) in enumerate(samp.iterrows()):
         lab = r["label"]
         pred = St.PREREG.get(lab)
-        seasonal_pole = pred is not None and pred[0] in ("amp", "phase") and r["role"] != "control"
+        seasonal_pole = ((pred is not None and pred[0] in ("amp", "phase") and r["role"] != "control")
+                         or (r["role"] == "complement" and r["partner_group"] in ("amp", "phase")))
         sname = "seasonal" if seasonal_pole else "mixed"
         s = sets[sname]
         sg = 1 if r["sign"] == "pos" else -1
@@ -114,7 +119,8 @@ def main():
         eff = [St.effects(basem[sname], St.measures(s["ctx"], q[i], s["period"])) for i in range(len(SCALES))]
         key = {"size": a.size, "layer": int(r["layer"]), "neuron": int(r["neuron"]), "sign": r["sign"], "role": r["role"],
                "cell": r["cell"], "label": lab, "group": r["group"], "r2_cv": r["r2_cv"], "E": r["E"], "ratio": r["ratio"],
-               "label_corr": r["label_corr"], "test_set": sname, "n_series": len(s["ctx"])}
+               "label_corr": r["label_corr"], "partner_group": r["partner_group"], "partner_label": r["partner_label"],
+               "test_set": sname, "n_series": len(s["ctx"])}
         for sc_i, sc in enumerate(SCALES):
             for qn in eff[sc_i]:
                 eff_rows.append({**key, "scale": sc, "quantity": qn, "mean_effect": float(
