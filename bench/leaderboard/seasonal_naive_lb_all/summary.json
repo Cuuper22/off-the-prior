@@ -1,0 +1,73 @@
+{
+  "model": "seasonal_naive",
+  "set": "lb",
+  "split": "all",
+  "overall": {
+    "n": 3776,
+    "mase_rel_snaive": 1.0,
+    "scrps_rel_snaive": 1.0,
+    "mase_rel_oracle": 2.159433246391676,
+    "cov80": 0.8818051612983315
+  },
+  "by_family": {
+    "chaos": {
+      "n": 688,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 8.892250300439562,
+      "cov80": 0.8423121252725291
+    },
+    "in_prior": {
+      "n": 128,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 2.0587033613824772,
+      "cov80": 0.8229446411132812
+    },
+    "mixture": {
+      "n": 640,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 2.3744986079774226,
+      "cov80": 0.8993698120117187
+    },
+    "regime": {
+      "n": 1760,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 1.4665408116137466,
+      "cov80": 0.8985623446377841
+    },
+    "tails": {
+      "n": 560,
+      "mase_rel_snaive": 1.0,
+      "scrps_rel_snaive": 1.0,
+      "mase_rel_oracle": 1.1671579294780188,
+      "cov80": 0.8710396902901786
+    }
+  },
+  "provenance": {
+    "script": "bench/eval.py",
+    "git": "d9a1aaa",
+    "time_utc": "2026-10-27T00:12:45Z",
+    "host": "LAPTOP-TTI9OLBG",
+    "torch": "2.6.0+cu124",
+    "threads": 1,
+    "cuda": true,
+    "argv": [
+      "bench\\eval.py",
+      "--set",
+      "lb",
+      "--split",
+      "all",
+      "--model",
+      "seasonal_naive",
+      "--data",
+      "..\\bench_out\\data",
+      "--workers",
+      "14",
+      "--out",
+      "..\\bench_out\\leaderboard"
+    ]
+  }
+}
