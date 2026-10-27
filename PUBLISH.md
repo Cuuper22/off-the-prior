@@ -8,11 +8,10 @@ Run them from the repository root after reviewing the content.
 Publish from a fresh clone of `master` only (task branches are internal working branches),
 after the maintainer's pre-publish history cleanup has been run on that clone.
 
-Blocking: `bench/regression/real.npz` contains windows from 13 GIFT-Eval datasets whose redistribution
-rests on the `Salesforce/GiftEval` card's apache-2.0 tag (see `license_evidence` in
-`bench/regression/sources.csv`). Check each dataset's upstream license first; datasets that are not
-verified move to the gitignored restricted file (flag in `otp/realdata_sources.py`), and only the
-re-fetch script and hashes are published for them.
+Real-data windows: `bench/regression/real.npz` holds only GIFT-Eval electricity/H and electricity/D (UCI,
+CC BY 4.0). The other 11 GIFT-Eval datasets have no verified upstream license for redistribution and live in the
+gitignored `real_restricted.npz`; `scripts/fetch_realdata.py` and the recorded hashes rebuild them locally. The older
+256-window `real.npz` is removed from history by the cleanup.
 
 Size: `results/neurons/` adds about 250 MB (per-size `poles*.npz` archives and the browser JSON). No file is
 over 50 MB, so GitHub accepts it, but consider moving `results/neurons/*/poles*.npz` and
@@ -39,18 +38,17 @@ See `bench/PUBLISH.md` for the dataset upload commands (dataset card: `bench/dat
 
 ## 3. Hugging Face models (fine-tuned fixes)
 
-Fine-tuned checkpoints are produced by `notebooks/finetune_colab.ipynb` (not stored in git).
-Model cards: `results/finetune/model_cards/`. Per checkpoint:
+The fine-tuning study kept no checkpoints (each was scored right after training and deleted; see
+`results/finetune/colab/run1/README.md`), and at these budgets none of them closes a gap, so there is nothing to
+publish as a model. To retrain one, run `notebooks/finetune_colab.ipynb`; a published derivative must carry the
+Timestral license (modified MIT) and one of the model cards in `results/finetune/model_cards/`:
 
 ```bash
 huggingface-cli login
 huggingface-cli repo create <name> --type model
-huggingface-cli upload <user>/<name> <checkpoint_dir> . 
-huggingface-cli upload <user>/<name> results/finetune/model_cards/<name>.md README.md
+huggingface-cli upload <user>/<name> <checkpoint_dir> .
+huggingface-cli upload <user>/<name> results/finetune/model_cards/<card>.md README.md
 ```
-
-The Timestral weights are under a modified MIT license; fine-tuned derivatives must carry
-it (copy `LICENSE` from the base model repo into each checkpoint repo).
 
 ## 4. arXiv-style PDF
 
