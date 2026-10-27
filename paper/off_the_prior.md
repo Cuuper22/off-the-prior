@@ -664,12 +664,84 @@ committed, before any steering run (`results/neurons/steering_preregistration.md
 | 5M | complement | 11 | 0 | 0.000 | 0.259 | 0.364 |
 | 5M | control | 432 | 5 | 0.012 | 0.027 | 0.449 |
 
-No labeled pole matched its prediction. This does not show that the labels are not causal: scaling a single
-pole (up to four times, or to zero) moved the forecast by at most 0.041 context standard deviations
-over all 203 steered labeled poles, below every pre-registered size threshold, so the test had no
-power to detect a match. A test with power needs a positive control (steering a direction the model is known
-to use, scaled until the measured effect is clear) and group steering; that follow-up is described in
-`results/neurons/README.md` when it has run.
+No labeled pole matched its prediction, and scaling a single pole (up to four times, or to zero) moved the
+forecast by at most 0.041 context standard deviations over all 203 steered labeled
+poles. Whether that null result says anything depends on whether the test can detect a real effect, so a
+follow-up (pre-registered in `results/neurons/steering_preregistration_followup.md`, results in
+`results/neurons/followup/`) added a positive control. A ridge readout direction for the local level was fitted
+on the residual stream at an early, a middle and a late block, and the stream was pushed along it by a known
+amount; the effect on the forecast was judged with the same quantities and the same criterion as the pole
+steering:
+
+| size | level cells | pre-registered match | calibrated match | largest gain | noise direction, late block: effect | matches |
+|---|---|---|---|---|---|---|
+| 5M | 18 | 3 | 9 | 0.349 | 0.157 | 1 |
+| 28M | 18 | 2 | 11 | 0.101 | 0.056 | 1 |
+| 123M | 18 | 0 | 8 | 0.022 | 0.054 | 1 |
+| 209M | 18 | 0 | 7 | 0.017 | 0.063 | 1 |
+
+At 5M and 28M the positive control is detected (3 and 2 of 18 level cells match;
+largest gains 0.349 and 0.101), so at those sizes the single-pole null result is informative: a
+pole effect of the size the criterion asks for would have been seen. At 123M and 209M no level cell matches
+(largest gains 0.022 and 0.017): pushing the level readout moves the forecast very little,
+and under the pre-registered rule the test is insensitive there, so the single-pole null result at those sizes
+says nothing either way. (The noise direction at the late block does reach the spread threshold at every size,
+by a small margin.) A calibrated criterion, which counts an effect as large when it beats 95% of matched random
+controls, matches 7–11 level cells per size, but at 123M and 209M it fires on effects well below the
+original thresholds; it is only meaningful next to the minimum detectable effects in `followup/mde.csv`.
+
+Steering whole groups (the top 8, 32 or 128 poles of one label, scaled together) moves the forecast more:
+
+| size | k | groups | labeled, pre-registered | random, pre-registered | labeled, calibrated | random, calibrated |
+|---|---|---|---|---|---|---|
+| 123M | 8 | 35 | 0.000 | 0.000 | 0.371 | 0.032 |
+| 123M | 32 | 28 | 0.036 | 0.000 | 0.214 | 0.022 |
+| 123M | 128 | 18 | 0.056 | 0.000 | 0.389 | 0.035 |
+| 209M | 8 | 37 | 0.000 | 0.000 | 0.324 | 0.015 |
+| 209M | 32 | 29 | 0.069 | 0.004 | 0.517 | 0.028 |
+| 209M | 128 | 24 | 0.125 | 0.003 | 0.500 | 0.018 |
+| 28M | 8 | 30 | 0.033 | 0.002 | 0.267 | 0.033 |
+| 28M | 32 | 22 | 0.182 | 0.003 | 0.364 | 0.034 |
+| 28M | 128 | 5 | 0.200 | 0.025 | 0.200 | 0.037 |
+| 5M | 8 | 27 | 0.111 | 0.005 | 0.148 | 0.028 |
+| 5M | 32 | 10 | 0.200 | 0.056 | 0.200 | 0.031 |
+| 5M | 128 | 1 | 0.000 | 0.250 | 0.000 | 0.062 |
+
+At most 20% of labeled groups match the pre-registered criterion at any size and group size. Under the calibrated
+criterion, labeled groups match in 0.15–0.52 of cases against 0.015–0.035 for random
+groups of the same size (cells with at least 10 labeled groups; 2 cells at 5M and 28M with k = 128 rest on
+1 to 5 groups). Groups of same-label poles push the forecast in the labelled direction more often than random
+groups do, mostly by amounts below the original thresholds.
+
+**Motif labels.** As an essay-style comparison without a fixed variable list, each pole's top exemplar
+patches were assigned to 16 shape clusters fitted on all exemplars; a pole is motif-cohesive when most of
+its top exemplars share one cluster. The fixed naming rule calls 12 of the 16 clusters "oscillation", so
+clusters are reported by number. The follow-up pre-registered that the higher one-job share on small corpora
+would come with tighter motifs; the data contradict it:
+
+| size | series | seeds | one job (theta 0.7) | motif-cohesive |
+|---|---|---|---|---|
+| 5M | 3100 | 1 | 0.048 | 0.142 |
+| 5M | 1034 | 3 | 0.115 | 0.117 |
+| 5M | 620 | 3 | 0.264 | 0.107 |
+| 5M | 48 | 3 | 0.326 | 0.068 |
+| 28M | 3100 | 1 | 0.032 | 0.129 |
+| 28M | 1034 | 3 | 0.104 | 0.107 |
+| 28M | 620 | 3 | 0.256 | 0.100 |
+| 28M | 48 | 3 | 0.278 | 0.064 |
+| 123M | 3100 | 1 | 0.030 | 0.108 |
+| 123M | 1034 | 3 | 0.101 | 0.088 |
+| 123M | 620 | 3 | 0.241 | 0.082 |
+| 123M | 48 | 3 | 0.246 | 0.058 |
+| 209M | 3100 | 1 | 0.026 | 0.107 |
+| 209M | 1034 | 3 | 0.093 | 0.088 |
+| 209M | 620 | 3 | 0.229 | 0.082 |
+| 209M | 48 | 3 | 0.238 | 0.060 |
+
+On the full main corpus 0.11–0.14 of poles are motif-cohesive and 0.026–0.048 are one-job; with 48
+series motif cohesion falls to 0.06–0.07 while the one-job share rises to 0.24–0.33. The higher
+one-job share of small corpora is therefore not a sign of more specialised neurons; it is another indication that
+the share is an upper bound set by how the corpus was built.
 
 **Link to the failure map.** Which poles are active on the Mackey-Glass, Rössler and Kuramoto contexts where
 Timestral falls behind the oracle, whether seasonal or periodic-pattern poles are among them, and whether

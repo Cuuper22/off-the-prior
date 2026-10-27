@@ -1361,6 +1361,180 @@
   "src": "results/neurons/followup/corpus_library_control.csv",
   "how": "max of the same"
  },
+ "nnA_cells_5M": {
+  "value": 3.0,
+  "text": "3",
+  "src": "results/neurons/followup/direction_steering.csv",
+  "how": "5M: plain-level direction cells (of 18) matching the pre-registered criterion"
+ },
+ "nnA_gain_5M": {
+  "value": 0.34902,
+  "text": "0.349",
+  "src": "results/neurons/followup/direction_steering.csv",
+  "how": "5M: largest gain (forecast effect / readout move) over the plain-level direction cells"
+ },
+ "nnA_cal_5M": {
+  "value": 9.0,
+  "text": "9",
+  "src": "results/neurons/followup/direction_steering.csv",
+  "how": "5M: plain-level direction cells matching the calibrated criterion"
+ },
+ "nnA_cells_28M": {
+  "value": 2.0,
+  "text": "2",
+  "src": "results/neurons/followup/direction_steering.csv",
+  "how": "28M: plain-level direction cells (of 18) matching the pre-registered criterion"
+ },
+ "nnA_gain_28M": {
+  "value": 0.10086,
+  "text": "0.101",
+  "src": "results/neurons/followup/direction_steering.csv",
+  "how": "28M: largest gain (forecast effect / readout move) over the plain-level direction cells"
+ },
+ "nnA_cal_28M": {
+  "value": 11.0,
+  "text": "11",
+  "src": "results/neurons/followup/direction_steering.csv",
+  "how": "28M: plain-level direction cells matching the calibrated criterion"
+ },
+ "nnA_cells_123M": {
+  "value": 0.0,
+  "text": "0",
+  "src": "results/neurons/followup/direction_steering.csv",
+  "how": "123M: plain-level direction cells (of 18) matching the pre-registered criterion"
+ },
+ "nnA_gain_123M": {
+  "value": 0.022325,
+  "text": "0.022",
+  "src": "results/neurons/followup/direction_steering.csv",
+  "how": "123M: largest gain (forecast effect / readout move) over the plain-level direction cells"
+ },
+ "nnA_cal_123M": {
+  "value": 8.0,
+  "text": "8",
+  "src": "results/neurons/followup/direction_steering.csv",
+  "how": "123M: plain-level direction cells matching the calibrated criterion"
+ },
+ "nnA_cells_209M": {
+  "value": 0.0,
+  "text": "0",
+  "src": "results/neurons/followup/direction_steering.csv",
+  "how": "209M: plain-level direction cells (of 18) matching the pre-registered criterion"
+ },
+ "nnA_gain_209M": {
+  "value": 0.016859,
+  "text": "0.017",
+  "src": "results/neurons/followup/direction_steering.csv",
+  "how": "209M: largest gain (forecast effect / readout move) over the plain-level direction cells"
+ },
+ "nnA_cal_209M": {
+  "value": 7.0,
+  "text": "7",
+  "src": "results/neurons/followup/direction_steering.csv",
+  "how": "209M: plain-level direction cells matching the calibrated criterion"
+ },
+ "nnA_ncells": {
+  "value": 18.0,
+  "text": "18",
+  "src": "results/neurons/followup/direction_steering.csv",
+  "how": "plain-level direction cells per size"
+ },
+ "nnG_orig_max": {
+  "value": 20.0,
+  "text": "20",
+  "src": "results/neurons/followup/group_summary.csv",
+  "how": "largest share of labeled groups matching the pre-registered criterion over sizes and k"
+ },
+ "nnG_cal_min": {
+  "value": 0.14815,
+  "text": "0.15",
+  "src": "results/neurons/followup/group_summary.csv",
+  "how": "min over size-k cells with at least 10 labeled groups of the calibrated match share of labeled (label_top) groups"
+ },
+ "nnG_cal_max": {
+  "value": 0.51724,
+  "text": "0.52",
+  "src": "results/neurons/followup/group_summary.csv",
+  "how": "max of the same"
+ },
+ "nnG_rcal_min": {
+  "value": 0.015203,
+  "text": "0.015",
+  "src": "results/neurons/followup/group_summary.csv",
+  "how": "min over the same cells of the calibrated match share of random groups"
+ },
+ "nnG_rcal_max": {
+  "value": 0.034722,
+  "text": "0.035",
+  "src": "results/neurons/followup/group_summary.csv",
+  "how": "max of the same"
+ },
+ "nnG_small_cells": {
+  "value": 2.0,
+  "text": "2",
+  "src": "results/neurons/followup/group_summary.csv",
+  "how": "size-k cells with fewer than 10 labeled groups"
+ },
+ "nnC_coh_full_min": {
+  "value": 0.10746,
+  "text": "0.11",
+  "src": "results/neurons/followup/motif_clusters.csv",
+  "how": "motif-cohesive share, full main corpus: min over sizes"
+ },
+ "nnC_coh_full_max": {
+  "value": 0.1424,
+  "text": "0.14",
+  "src": "results/neurons/followup/motif_clusters.csv",
+  "how": "max of the same"
+ },
+ "nnC_coh_48_min": {
+  "value": 0.057888333333333326,
+  "text": "0.06",
+  "src": "results/neurons/followup/motif_clusters.csv",
+  "how": "motif-cohesive share at 48 series (mean over seeds): min over sizes"
+ },
+ "nnC_coh_48_max": {
+  "value": 0.06764833333333332,
+  "text": "0.07",
+  "src": "results/neurons/followup/motif_clusters.csv",
+  "how": "max of the same"
+ },
+ "nnC_oj_full_min": {
+  "value": 0.026092,
+  "text": "0.026",
+  "src": "results/neurons/followup/motif_clusters.csv",
+  "how": "one-job share, full main corpus: min over sizes"
+ },
+ "nnC_oj_full_max": {
+  "value": 0.048119,
+  "text": "0.048",
+  "src": "results/neurons/followup/motif_clusters.csv",
+  "how": "max of the same"
+ },
+ "nnC_oj_48_min": {
+  "value": 0.23779999999999998,
+  "text": "0.24",
+  "src": "results/neurons/followup/motif_clusters.csv",
+  "how": "one-job share at 48 series (mean over seeds): min over sizes"
+ },
+ "nnC_oj_48_max": {
+  "value": 0.32630333333333333,
+  "text": "0.33",
+  "src": "results/neurons/followup/motif_clusters.csv",
+  "how": "max of the same"
+ },
+ "nnC_osc_clusters": {
+  "value": 12.0,
+  "text": "12",
+  "src": "results/neurons/followup/motif_cluster_names.csv",
+  "how": "shape clusters that the fixed naming rule calls oscillation"
+ },
+ "nnC_clusters": {
+  "value": 16.0,
+  "text": "16",
+  "src": "results/neurons/followup/motif_cluster_names.csv",
+  "how": "shape clusters"
+ },
  "nn_steer_matches": {
   "value": 0.0,
   "text": "0",
@@ -1506,6 +1680,18 @@
  "table:nn_series_control": {
   "src": "results/neurons/followup/corpus_library_control.csv",
   "how": "theta 0.7, floor 0.1; main corpus subsampled at random to fewer series (3 seeds at 5M), and each corpus scored with the variable library common to all corpora"
+ },
+ "table:nn_direction": {
+  "src": "results/neurons/followup/direction_steering.csv",
+  "how": "positive control: residual-stream steering along ridge readout directions (mixed test series); gain = effect on the forecast level / move of the readout, both in context standard deviations"
+ },
+ "table:nn_groups": {
+  "src": "results/neurons/followup/group_summary.csv",
+  "how": "group steering: share of groups (top-k poles of one label, jointly scaled) matching their prediction, against random groups of the same size"
+ },
+ "table:nn_motif": {
+  "src": "results/neurons/followup/motif_clusters.csv",
+  "how": "main corpus, all series and random subsamples (mean over seeds): known-variable one-job share and the share of poles whose top exemplars mostly share one of 16 shape clusters"
  },
  "table:nn_steering": {
   "src": "results/neurons/steering_summary.csv",

@@ -496,12 +496,49 @@ committed, before any steering run (`results/neurons/steering_preregistration.md
 
 {{table:nn_steering}}
 
-No labeled pole matched its prediction. This does not show that the labels are not causal: scaling a single
-pole (up to four times, or to zero) moved the forecast by at most {{num:nn_steer_max_effect}} context standard deviations
-over all {{num:nn_steer_n_labeled}} steered labeled poles, below every pre-registered size threshold, so the test had no
-power to detect a match. A test with power needs a positive control (steering a direction the model is known
-to use, scaled until the measured effect is clear) and group steering; that follow-up is described in
-`results/neurons/README.md` when it has run.
+No labeled pole matched its prediction, and scaling a single pole (up to four times, or to zero) moved the
+forecast by at most {{num:nn_steer_max_effect}} context standard deviations over all {{num:nn_steer_n_labeled}} steered labeled
+poles. Whether that null result says anything depends on whether the test can detect a real effect, so a
+follow-up (pre-registered in `results/neurons/steering_preregistration_followup.md`, results in
+`results/neurons/followup/`) added a positive control. A ridge readout direction for the local level was fitted
+on the residual stream at an early, a middle and a late block, and the stream was pushed along it by a known
+amount; the effect on the forecast was judged with the same quantities and the same criterion as the pole
+steering:
+
+{{table:nn_direction}}
+
+At 5M and 28M the positive control is detected ({{num:nnA_cells_5M}} and {{num:nnA_cells_28M}} of {{num:nnA_ncells}} level cells match;
+largest gains {{num:nnA_gain_5M}} and {{num:nnA_gain_28M}}), so at those sizes the single-pole null result is informative: a
+pole effect of the size the criterion asks for would have been seen. At 123M and 209M no level cell matches
+(largest gains {{num:nnA_gain_123M}} and {{num:nnA_gain_209M}}): pushing the level readout moves the forecast very little,
+and under the pre-registered rule the test is insensitive there, so the single-pole null result at those sizes
+says nothing either way. (The noise direction at the late block does reach the spread threshold at every size,
+by a small margin.) A calibrated criterion, which counts an effect as large when it beats 95% of matched random
+controls, matches {{num:nnA_cal_209M}}–{{num:nnA_cal_28M}} level cells per size, but at 123M and 209M it fires on effects well below the
+original thresholds; it is only meaningful next to the minimum detectable effects in `followup/mde.csv`.
+
+Steering whole groups (the top 8, 32 or 128 poles of one label, scaled together) moves the forecast more:
+
+{{table:nn_groups}}
+
+At most {{num:nnG_orig_max}}% of labeled groups match the pre-registered criterion at any size and group size. Under the calibrated
+criterion, labeled groups match in {{num:nnG_cal_min}}–{{num:nnG_cal_max}} of cases against {{num:nnG_rcal_min}}–{{num:nnG_rcal_max}} for random
+groups of the same size (cells with at least 10 labeled groups; {{num:nnG_small_cells}} cells at 5M and 28M with k = 128 rest on
+1 to 5 groups). Groups of same-label poles push the forecast in the labelled direction more often than random
+groups do, mostly by amounts below the original thresholds.
+
+**Motif labels.** As an essay-style comparison without a fixed variable list, each pole's top exemplar
+patches were assigned to {{num:nnC_clusters}} shape clusters fitted on all exemplars; a pole is motif-cohesive when most of
+its top exemplars share one cluster. The fixed naming rule calls {{num:nnC_osc_clusters}} of the {{num:nnC_clusters}} clusters "oscillation", so
+clusters are reported by number. The follow-up pre-registered that the higher one-job share on small corpora
+would come with tighter motifs; the data contradict it:
+
+{{table:nn_motif}}
+
+On the full main corpus {{num:nnC_coh_full_min}}–{{num:nnC_coh_full_max}} of poles are motif-cohesive and {{num:nnC_oj_full_min}}–{{num:nnC_oj_full_max}} are one-job; with 48
+series motif cohesion falls to {{num:nnC_coh_48_min}}–{{num:nnC_coh_48_max}} while the one-job share rises to {{num:nnC_oj_48_min}}–{{num:nnC_oj_48_max}}. The higher
+one-job share of small corpora is therefore not a sign of more specialised neurons; it is another indication that
+the share is an upper bound set by how the corpus was built.
 
 **Link to the failure map.** Which poles are active on the Mackey-Glass, Rössler and Kuramoto contexts where
 Timestral falls behind the oracle, whether seasonal or periodic-pattern poles are among them, and whether

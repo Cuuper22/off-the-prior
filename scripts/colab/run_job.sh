@@ -30,6 +30,7 @@ date -u +%FT%TZ > "$OUT/started_utc.txt"
 cleanup() {
   colab stop -s "$S" >/dev/null 2>&1 || true
   date -u +%FT%TZ > "$OUT/ended_utc.txt"
+  date -u +%FT%TZ > "$OUT/stopped"   # marker: the driver asked Colab to stop this runtime
   B1=$(bal || true)
   echo "{\"job\": \"$JOB\", \"gpu\": \"$GPU\", \"start\": \"$(cat "$OUT/started_utc.txt")\", \"end\": \"$(cat "$OUT/ended_utc.txt")\", \"balance_before\": \"$B0\", \"balance_after\": \"$B1\"}" >> "$SPEND_DIR/colab_spend.jsonl"
 }

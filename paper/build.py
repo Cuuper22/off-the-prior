@@ -538,6 +538,61 @@ def neuron_results():
         lib = b[(b.role == "library_size") & (b["size"] == "5M")]
         num("nnb_lib_min", 100 * lib.one_job.min(), f, "5M, main corpus, random libraries of 10, 25 or 50 variables: min one-job percent over 9 runs", "{:.1f}")
         num("nnb_lib_max", 100 * lib.one_job.max(), f, "max of the same", "{:.1f}")
+    fu = f"{d}/followup"
+    f = f"{fu}/direction_steering.csv"
+    if os.path.exists(p(f)):
+        ds = pd.read_csv(p(f))
+        q = ds[(ds.variable == "level") & (ds.test_set == "mixed")]
+        nz = ds[(ds.variable == "noise") & (ds.test_set == "mixed") & (ds.block_name == "late") & (ds.site == "F") & (ds.kind == "pooled")]
+        rows = []
+        for sz in ("5M", "28M", "123M", "209M"):
+            g = q[q["size"] == sz]
+            n_ = nz[nz["size"] == sz]
+            rows.append({"size": sz, "level cells": len(g), "pre-registered match": int(g.orig_match.sum()), "calibrated match": int(g.cal_match.sum()),
+                         "largest gain": float(g.gain.max()), "noise direction, late block: effect": float(n_.effect_size.iloc[0]) if len(n_) else float("nan"),
+                         "matches": bool(n_.orig_match.iloc[0]) if len(n_) else False})
+            num(f"nnA_cells_{sz}", int(g.orig_match.sum()), f, f"{sz}: plain-level direction cells (of {len(g)}) matching the pre-registered criterion", "{:d}")
+            num(f"nnA_gain_{sz}", float(g.gain.max()), f, f"{sz}: largest gain (forecast effect / readout move) over the plain-level direction cells", "{:.3f}")
+            num(f"nnA_cal_{sz}", int(g.cal_match.sum()), f, f"{sz}: plain-level direction cells matching the calibrated criterion", "{:d}")
+        num("nnA_ncells", len(q[q["size"] == "5M"]), f, "plain-level direction cells per size", "{:d}")
+        table("nn_direction", pd.DataFrame(rows), f, "positive control: residual-stream steering along ridge readout directions (mixed test series); gain = effect on the forecast level / move of the readout, both in context standard deviations", "{:.3f}")
+    f = f"{fu}/group_summary.csv"
+    if os.path.exists(p(f)):
+        gs = pd.read_csv(p(f))
+        lt = gs[gs.pool == "label_top"].sort_values(["size", "k"])
+        rows = [{"size": r.size, "k": int(r.k), "groups": int(r.n_groups), "labeled, pre-registered": r.labeled_orig_match,
+                 "random, pre-registered": r.random_orig_match, "labeled, calibrated": r.labeled_cal_match, "random, calibrated": r.random_cal_match}
+                for r in lt.itertuples()]
+        table("nn_groups", pd.DataFrame(rows), f, "group steering: share of groups (top-k poles of one label, jointly scaled) matching their prediction, against random groups of the same size", "{:.3f}")
+        num("nnG_orig_max", 100 * float(lt.labeled_orig_match.max()), f, "largest share of labeled groups matching the pre-registered criterion over sizes and k", "{:.0f}")
+        big = lt[lt.n_groups >= 10]
+        num("nnG_cal_min", float(big.labeled_cal_match.min()), f, "min over size-k cells with at least 10 labeled groups of the calibrated match share of labeled (label_top) groups", "{:.2f}")
+        num("nnG_cal_max", float(big.labeled_cal_match.max()), f, "max of the same", "{:.2f}")
+        num("nnG_rcal_min", float(big.random_cal_match.min()), f, "min over the same cells of the calibrated match share of random groups", "{:.3f}")
+        num("nnG_rcal_max", float(big.random_cal_match.max()), f, "max of the same", "{:.3f}")
+        num("nnG_small_cells", int((lt.n_groups < 10).sum()), f, "size-k cells with fewer than 10 labeled groups", "{:d}")
+    f = f"{fu}/motif_clusters.csv"
+    if os.path.exists(p(f)):
+        mc = pd.read_csv(p(f))
+        mm = mc[mc.role.isin(["full_main", "subsample"])]
+        g = mm.groupby(["size", "n_series"]).agg(seeds=("tag", "count"), one_job=("one_job_0.7", "mean"), cohesive=("cohesive_top6", "mean")).reset_index()
+        g["order"] = g["size"].map({"5M": 0, "28M": 1, "123M": 2, "209M": 3})
+        g = g.sort_values(["order", "n_series"], ascending=[True, False])
+        rows = [{"size": r.size, "series": int(r.n_series), "seeds": int(r.seeds), "one job (theta 0.7)": r.one_job, "motif-cohesive": r.cohesive} for r in g.itertuples()]
+        table("nn_motif", pd.DataFrame(rows), f, "main corpus, all series and random subsamples (mean over seeds): known-variable one-job share and the share of poles whose top exemplars mostly share one of 16 shape clusters", "{:.3f}")
+        full = mm[mm.n_series == 3100]
+        small = mm[mm.n_series == 48]
+        num("nnC_coh_full_min", float(full.cohesive_top6.min()), f, "motif-cohesive share, full main corpus: min over sizes", "{:.2f}")
+        num("nnC_coh_full_max", float(full.cohesive_top6.max()), f, "max of the same", "{:.2f}")
+        num("nnC_coh_48_min", float(small.groupby("size").cohesive_top6.mean().min()), f, "motif-cohesive share at 48 series (mean over seeds): min over sizes", "{:.2f}")
+        num("nnC_coh_48_max", float(small.groupby("size").cohesive_top6.mean().max()), f, "max of the same", "{:.2f}")
+        num("nnC_oj_full_min", float(full["one_job_0.7"].min()), f, "one-job share, full main corpus: min over sizes", "{:.3f}")
+        num("nnC_oj_full_max", float(full["one_job_0.7"].max()), f, "max of the same", "{:.3f}")
+        num("nnC_oj_48_min", float(small.groupby("size")["one_job_0.7"].mean().min()), f, "one-job share at 48 series (mean over seeds): min over sizes", "{:.2f}")
+        num("nnC_oj_48_max", float(small.groupby("size")["one_job_0.7"].mean().max()), f, "max of the same", "{:.2f}")
+        nm = pd.read_csv(p(f"{fu}/motif_cluster_names.csv"))
+        num("nnC_osc_clusters", int((nm.name == "oscillation").sum()), f"{fu}/motif_cluster_names.csv", "shape clusters that the fixed naming rule calls oscillation", "{:d}")
+        num("nnC_clusters", len(nm), f"{fu}/motif_cluster_names.csv", "shape clusters", "{:d}")
     f = f"{d}/steering_summary.csv"
     if os.path.exists(p(f)):
         s2 = pd.read_csv(p(f))

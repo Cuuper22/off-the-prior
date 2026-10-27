@@ -76,8 +76,25 @@ whose best label equals the reference run's (same size).
 ## All runs (theta 0.7, floor 0.1)
 
 {md(q)}
+
+## Reproduce
+
+```
+python3 scripts/neurons_run.py --size <S> --corpus results/neurons/corpus/<corpus>.npz --out results/colab_out/fb/<tag> \\
+    --layers-per-chunk 4 --batch <32|16|4> --resume [--keep-vars results/neurons/followup/libraries/<file>] \\
+    [--subsample <n> --subsample-seed <seed>]          # one line per row of plan.csv
+cp results/neurons/followup/plan.csv results/colab_out/fb/runs.csv
+python3 scripts/neurons_followup_b.py --runs results/colab_out/fb --out results/neurons/followup
+```
 """
-    open(os.path.join(out_dir, "README.md"), "w").write(text)
+    path = os.path.join(out_dir, "README.md")
+    tail = ""
+    if os.path.exists(path):  # keep the sections written by the other follow-up scripts (A and C)
+        cur = open(path).read()
+        k = cur.find("<!-- follow-up A and C -->")
+        if k >= 0:
+            tail = "\n" + cur[k:]
+    open(path, "w").write(text + tail)
 
 
 def main():
