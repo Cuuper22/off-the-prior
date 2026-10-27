@@ -80,7 +80,7 @@ def main():
         f = os.path.join(a.poles, size, "poles.npz")
         if not os.path.exists(f):
             continue
-        t = Sc.read_table(f)
+        t = Sc.read_poles(os.path.join(a.poles, size))
         t["cls"] = Sc.klass(t, 0.7, 0.1)
         stm = {}
         if st is not None:

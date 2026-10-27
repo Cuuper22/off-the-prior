@@ -166,3 +166,12 @@ def test_table_archive_roundtrip(tmp_path):
     r = Sc.read_table(str(tmp_path / "t.npz"))
     assert list(r.columns) == list(t.columns) and r["a"].tolist() == [1, 2] and np.isnan(r["b"][1]) and r["c"].tolist() == ["x y", ""]
     assert r["d"].tolist() == [True, False]
+
+
+def test_poles_split_roundtrip(tmp_path):
+    t = pd.DataFrame({"size": "5M", "layer": [0, 0], "neuron": [1, 2], "sign": ["pos", "neg"], "r2_cv": [0.1, 0.2], "top_tok": ["1 2", "3 4"],
+                      "top_act": ["0.5 0.4", "0.3 0.2"]})
+    Sc.write_poles(t, str(tmp_path))
+    r = Sc.read_poles(str(tmp_path))
+    assert list(r.columns) == ["size", "layer", "neuron", "sign", "r2_cv", "top_tok", "top_act"] and r["top_tok"].tolist() == ["1 2", "3 4"]
+    assert "top_tok" not in Sc.read_table(str(tmp_path / "poles.npz")).columns

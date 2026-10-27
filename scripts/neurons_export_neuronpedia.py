@@ -137,7 +137,7 @@ def main():
     a = ap.parse_args()
     set_threads()
     dev = a.device or default_device()
-    t = Sc.read_table(a.poles) if a.poles.endswith(".npz") else pd.read_csv(a.poles)
+    t = Sc.read_poles(os.path.dirname(a.poles) or ".") if a.poles.endswith(".npz") else pd.read_csv(a.poles)
     t = t[t["size"] == a.size]
     if "E" not in t.columns:
         t = Sc.add_derived(t)

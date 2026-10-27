@@ -89,7 +89,7 @@ def main():
     os.makedirs(a.out, exist_ok=True)
     for s in sizes:
         os.makedirs(os.path.join(a.out, s), exist_ok=True)
-        save_table(tabs[(s, "main")], os.path.join(a.out, s, "poles.npz"))
+        Sc.write_poles(tabs[(s, "main")], os.path.join(a.out, s))
         tabs[(s, "main")][[c_ for c_ in Sc.CORE_COLUMNS if c_ in tabs[(s, "main")].columns]].to_csv(os.path.join(a.out, s, "poles.csv"), index=False, float_format="%.5g")
     for (s, ctx), t in tabs.items():
         if ctx != "main":

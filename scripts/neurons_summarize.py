@@ -36,7 +36,7 @@ def main():
     a = ap.parse_args()
     o = lambda f: os.path.join(a.out, f)          # noqa: E731
     fk = dict(index=False, float_format="%.5g")
-    poles = {s: Sc.read_table(o(f"{s}/poles.npz")) for s in SIZES if os.path.exists(o(f"{s}/poles.npz"))}
+    poles = {s: Sc.read_poles(o(s)) for s in SIZES if os.path.exists(o(f"{s}/poles.npz"))}
     allp = pd.concat(poles.values(), ignore_index=True)
     done = []
     res = cat(os.path.join(a.runs, "nn_steer", "steering_results_*.csv"))
@@ -84,7 +84,7 @@ def main():
         for s, t in poles.items():
             u = up[up["size"] == s].drop(columns=["label", "group", "r2_cv"])
             t = t.drop(columns=[c for c in t.columns if c.startswith("up")]).merge(u, on=["size", "layer", "sign", "neuron"], how="left")
-            Sc.write_table(t, o(f"{s}/poles.npz"))
+            Sc.write_poles(t, o(s))
         done.append("upstream columns")
     write_json(o("provenance_summarize.json"), provenance("scripts/neurons_summarize.py", produced=done))
     print("done:", done)

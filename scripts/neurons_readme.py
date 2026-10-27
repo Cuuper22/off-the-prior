@@ -61,7 +61,7 @@ def main():
     o = lambda f: os.path.join(a.out, f)          # noqa: E731
     rd = lambda f: pd.read_csv(o(f))              # noqa: E731
     runs = collect(a.runs, a.out)
-    pol = {s: Sc.read_table(o(f"{s}/poles.npz")) for s in SIZES}
+    pol = {s: Sc.read_poles(o(s)) for s in SIZES}
     allp = pd.concat(pol.values(), ignore_index=True)
     allp["cls"] = Sc.klass(allp, 0.7, 0.1)
     corp = {v: json.load(open(o(f"corpus/{v}_manifest.json"))) for v in ("main", "mv", "short", "long", "xlong")}
@@ -314,11 +314,11 @@ def main():
       "- Per-context tables (`poles_short/long/xlong.npz`) keep the id, label, score and class columns only; exemplar columns exist in `poles.npz`.\n"
       "- The xlong corpus has 48 series (32768 steps); its per-pole numbers rest on 38 label series.\n"
       "- Reference contexts of the failure link: 35 seasonal series (the long corpus has 35 held-out seasonal series with period 8 to 64).\n"
-      "- Pole tables are numpy archives (`otp.neurons.score.read_table`) with float32 numbers, plus a CSV of the core columns per size (`<size>/poles.csv`); parquet files are not committed because the project word checker reads compressed bytes as text and finds list words by chance.\n")
+      "- Pole tables are numpy archives (`otp.neurons.score.read_poles`) with float32 numbers, plus a CSV of the core columns per size (`<size>/poles.csv`); parquet files are not committed because the project word checker reads compressed bytes as text and finds list words by chance.\n")
 
     w("## Files\n")
     fl_ = sorted(f for f in os.listdir(a.out) if os.path.isfile(o(f)))
-    w(", ".join(f"`{f}`" for f in fl_) + "; folders `<size>/` (`poles.npz`, `poles.csv`, `poles_short|long|xlong.npz`), `corpus/`, `real/`, `browser/`, `neuronpedia/`, `squeeze/`.\n")
+    w(", ".join(f"`{f}`" for f in fl_) + "; folders `<size>/` (`poles.npz`, `poles_exemplars.npz`, `poles.csv`, `poles_short|long|xlong.npz`), `corpus/`, `real/`, `browser/`, `neuronpedia/`, `squeeze/`.\n")
     with open(o("README.md"), "w") as f:
         f.write("\n".join(L))
     write_json(o("provenance_readme.json"), provenance("scripts/neurons_readme.py", runs=a.runs))

@@ -17,6 +17,8 @@ Definitions used here (also written in `results/neurons/README.md`):
 
 from __future__ import annotations
 
+import os
+
 import numpy as np
 import pandas as pd
 
@@ -332,3 +334,25 @@ def write_table(t: pd.DataFrame, path: str) -> None:
 def read_table(path: str) -> pd.DataFrame:
     with np.load(path, allow_pickle=False) as z:
         return pd.DataFrame({c: z[c] for c in z["__columns__"]})
+
+
+EXEMPLAR_COLUMNS = ("top_tok", "top_act", "mid_tok", "mid_act", "real_top_tok", "real_top_act", "real_mid_tok", "real_mid_act")
+
+
+def write_poles(t: pd.DataFrame, folder: str) -> None:
+    """`<folder>/poles.npz` (all columns but the exemplar lists) and `<folder>/poles_exemplars.npz` (id columns and exemplar lists):
+    the split keeps each file below 50 MB for the largest model."""
+    ex = [c for c in EXEMPLAR_COLUMNS if c in t.columns]
+    write_table(t.drop(columns=ex), os.path.join(folder, "poles.npz"))
+    if ex:
+        write_table(t[["size", "layer", "neuron", "sign"] + ex], os.path.join(folder, "poles_exemplars.npz"))
+
+
+def read_poles(folder: str) -> pd.DataFrame:
+    t = read_table(os.path.join(folder, "poles.npz"))
+    f = os.path.join(folder, "poles_exemplars.npz")
+    if os.path.exists(f):
+        e = read_table(f)
+        assert (e[["layer", "neuron", "sign"]].to_numpy() == t[["layer", "neuron", "sign"]].to_numpy()).all()
+        t = pd.concat([t, e.drop(columns=["size", "layer", "neuron", "sign"])], axis=1)
+    return t
