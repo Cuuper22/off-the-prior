@@ -125,3 +125,36 @@ def test_steering_scale_one_is_the_unsteered_pass():
     q = steer.run_conditions("5M", ctx, [[], [(2, 5, +1, 1.0)], [(2, 5, +1, 0.0)]], device="cpu")
     assert np.allclose(q[0], q[1], atol=1e-5)
     assert np.abs(q[0] - q[2]).max() > 0                     # ablating a pole changes the forecast
+
+
+def test_wilson_interval():
+    from otp.neurons import summary as Sm
+    lo, hi = Sm.wilson(0, 10)
+    assert lo == 0 and 0.2 < hi < 0.4
+    lo, hi = Sm.wilson(5, 10)
+    assert lo < 0.5 < hi
+
+
+def test_squeeze_and_scale_match_tables():
+    from otp.neurons import summary as Sm
+    n = 40
+    rng = np.random.default_rng(0)
+    t = pd.DataFrame({"size": "5M", "layer": 0, "neuron": np.arange(n), "sign": "pos", "dead": False, "label": "lat_level",
+                      "group": "level", "r2_cv": rng.uniform(0.05, 0.4, n), "E": 0.4, "ratio": rng.uniform(0.3, 1.0, n),
+                      "r2_pair": 0.4})
+    sq = Sm.squeeze({"w4": t, "w32": t})
+    assert list(sq["model"]) == ["w4", "w32"] and sq["n_poles"].iloc[0] == n
+    m = pd.DataFrame({"small": "5M", "large": "28M", "layer": 0, "sign": "pos", "neuron": np.arange(n), "label": "lat_level",
+                      "group": "level", "r2_cv": 0.2, "best_corr": rng.uniform(0.3, 1, n), "second_corr": 0.2, "n_ge50": 2, "n_ge70": 1,
+                      "match_layer": 0, "match_sign": "pos", "match_neuron": 0, "match_label": "lat_level", "match_group": "level",
+                      "match_r2_cv": 0.3})
+    sm = Sm.scale_match(m, t)
+    assert len(sm) == 1 and sm["n_one_job_small"].iloc[0] > 0
+
+
+def test_onehot_moves_codes_to_the_requested_device():
+    codes = torch.tensor([[0, 3], [1, 2]], dtype=torch.int16)          # CPU codes
+    o = Lb.onehot(codes, 4, torch.device("meta"))                        # shape-only device: fails if codes are not moved
+    assert o.shape == (2, 8) and o.device.type == "meta"
+    o = Lb.onehot(codes, 4, "cpu")
+    assert o.sum().item() == 4 and o[0, 0] == 1 and o[0, 4 + 3] == 1

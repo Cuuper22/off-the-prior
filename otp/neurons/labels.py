@@ -137,7 +137,7 @@ def onehot(codes: torch.Tensor, ncol: int, device) -> torch.Tensor:
     S, nv = codes.shape
     off = (torch.arange(nv, device=device) * ncol)[None]
     O = torch.zeros(S, nv * ncol, dtype=torch.float32, device=device)
-    O.scatter_(1, (codes.long() + off), 1.0)
+    O.scatter_(1, (codes.long().to(device) + off), 1.0)
     return O
 
 
