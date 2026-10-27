@@ -39,6 +39,17 @@ it just doesn't make it out.
 **Wild outliers and long memory stay close.** Heavy-tailed noise, fractional Brownian motion, bursty
 counts and multifractal cascades all land at {{num:tails_min}}–{{num:tails_max}}× the referee's error.
 
+**Helper series get used only when the link is immediate.** When a driver series sets the main series after
+a lag and its future is handed over, Timestral-28M's gain from it falls from {{num:cov_known_lag0_28M}} at lag 0 to
+{{num:cov_known_lag512_28M}} at lag 512, while a forecaster using the driver perfectly would gain
+{{num:cov_known_ogain_min}}–{{num:cov_known_ogain_max}}. Feeding the helper in two-way instead of one-way changes the
+error by less than 5% in {{num:cov_jp_share_within}}% of cases.
+
+**On real data the pattern against old-school methods carries over in part.** Real series that stand in for the
+failure families (sunspots, lynx, grid frequency, river floods, economic breaks) show a smaller lead over
+old-school methods than the synthetic families do; there is no referee for real data, so the gap to the best
+possible forecast can't be measured there.
+
 **It's not the usual suspects.** Turning off its mirror-averaging trick changes errors by
 {{num:symavg_min}}–{{num:symavg_max}}×, and cutting old history after a change helps only sometimes.
 
