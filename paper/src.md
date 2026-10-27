@@ -323,7 +323,48 @@ continuation of the context more than the oracle's forecast does
 
 # 8. Benchmarks
 
-RESULTS-PENDING.
+The failure map is released as two benchmark sets built from the same simulators (code and data in
+`bench/`). Each series comes with the oracle's 21 quantiles, so a model is scored against the best
+achievable forecast as well as against seasonal naive, the GIFT-Eval convention.
+
+**OffPrior-Diag** has {{num:bench_n_diag}} series: {{num:bench_nconf_diag}} configs with 12 seeds each, at
+context 2,048 and horizon 128. Every config was picked to cover one failure type from Sections 4 and 7,
+or to serve as a control (inside the prior, an old switch, a switch inside the horizon that nobody can
+see coming, a map nobody can forecast); each series carries its failure type and a one-line reason.
+**OffPrior-LB** has {{num:bench_n_lb}} series: every config of the chaos, regime, tails and in-prior
+grids, 40 fixed random mixture genomes and four more in-prior periods ({{num:bench_nconf_lb}} configs), 16 seeds per config spread
+over contexts 512 / 2,048 / 8,192 and horizons 16 / 128 / 1,024, split into public and held-out halves by
+seed parity. The seeds and code are public, so the held-out half is a convenience, not a secret test set.
+`bench/eval.py` scores one model in one command; the summary is the geometric mean over series of MASE
+and sCRPS divided by seasonal naive's, and of MASE divided by the oracle's.
+
+{{table:bench_diag}}
+
+{{table:bench_lb}}
+
+On OffPrior-Diag, Timestral's MASE is {{num:bench_diag_209M_oracle}}× the oracle's at 209M and
+{{num:bench_diag_5M_oracle}}× at 5M, against {{num:bench_diag_ets_oracle}}× for ETS,
+{{num:bench_diag_arima_oracle}}× for ARIMA and {{num:bench_diag_seasonal_naive_oracle}}× for seasonal naive.
+On OffPrior-LB the same ratios are {{num:bench_lb_209M_oracle}}× and {{num:bench_lb_5M_oracle}}× for Timestral,
+and {{num:bench_lb_ets_oracle}}×, {{num:bench_lb_arima_oracle}}× and
+{{num:bench_lb_seasonal_naive_oracle}}× for the classical models. By family on OffPrior-LB, 209M is at
+{{num:bench_lb_fam_chaos}}× the oracle on chaos, {{num:bench_lb_fam_mixture}}× on the mixture genomes and
+{{num:bench_lb_fam_tails}}× on tails.
+
+{{table:bench_diag_ft}}
+
+By failure type, the diagnostic set reproduces the map at 209M: coupled oscillators
+({{num:bench_ft_coupled_oscillators}}×), delay oscillators ({{num:bench_ft_delay_oscillator}}×), chaos within the
+first Lyapunov times ({{num:bench_ft_chaos_short_reach}}×), smooth chaos ({{num:bench_ft_smooth_chaos}}×) and
+recent switches ({{num:bench_ft_recent_switch}}×), while the controls and the heavy-tailed, bursty and
+multifractal types stay at {{num:bench_ft_ctrl_min}}–{{num:bench_ft_ctrl_max}}×.
+
+The published files were built on a Windows laptop. A rebuild on Linux with newer NumPy matched them
+array-for-array for {{num:bench_xp_same}} of {{num:bench_xp_n}} diagnostic configs; in the others
+(Mackey-Glass, Kuramoto near synchronization, and one fractional Brownian motion setting) platform
+floating-point differences change the simulated paths, and the chaotic ones diverge. Scores should
+therefore be reported on the published files (`bench/data/cross_platform_diag.json` has the per-config
+comparison).
 
 # 9. Fixing it
 

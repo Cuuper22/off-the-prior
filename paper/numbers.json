@@ -725,6 +725,222 @@
   "src": "results/map/regime/adoption.csv",
   "how": "level adoption at H<=16, all deltas pooled, 209M, switch 256 steps back, T=2048"
  },
+ "bench_ft_coupled_oscillators": {
+  "value": 7.941711476813754,
+  "text": "7.94",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "Timestral-209M, OffPrior-Diag, failure type coupled_oscillators: geometric mean of MASE / oracle MASE"
+ },
+ "bench_ft_delay_oscillator": {
+  "value": 6.515203499357727,
+  "text": "6.52",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "Timestral-209M, OffPrior-Diag, failure type delay_oscillator: geometric mean of MASE / oracle MASE"
+ },
+ "bench_ft_chaos_short_reach": {
+  "value": 4.45535301276235,
+  "text": "4.46",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "Timestral-209M, OffPrior-Diag, failure type chaos_short_reach: geometric mean of MASE / oracle MASE"
+ },
+ "bench_ft_smooth_chaos": {
+  "value": 2.8746010470867764,
+  "text": "2.87",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "Timestral-209M, OffPrior-Diag, failure type smooth_chaos: geometric mean of MASE / oracle MASE"
+ },
+ "bench_ft_recent_switch": {
+  "value": 1.807937788123844,
+  "text": "1.81",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "Timestral-209M, OffPrior-Diag, failure type recent_switch: geometric mean of MASE / oracle MASE"
+ },
+ "bench_ft_ctrl_min": {
+  "value": 0.977597899929544,
+  "text": "0.98",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "min over control types and heavy-tail/bursty/multifractal types of 209M MASE / oracle"
+ },
+ "bench_ft_ctrl_max": {
+  "value": 1.0334802490558577,
+  "text": "1.03",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "max of the same"
+ },
+ "bench_diag_5M_oracle": {
+  "value": 2.4174695983720045,
+  "text": "2.42",
+  "src": "bench/leaderboard/timestral-5M_diag_all/summary.json",
+  "how": "timestral-5M on diag: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_diag_5M_snaive": {
+  "value": 0.6555967730509432,
+  "text": "0.66",
+  "src": "bench/leaderboard/timestral-5M_diag_all/summary.json",
+  "how": "timestral-5M on diag: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_diag_209M_oracle": {
+  "value": 2.0019779607655273,
+  "text": "2.00",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "timestral-209M on diag: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_diag_209M_snaive": {
+  "value": 0.5434192431862245,
+  "text": "0.54",
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "timestral-209M on diag: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_diag_ets_oracle": {
+  "value": 4.468012495598316,
+  "text": "4.47",
+  "src": "bench/leaderboard/ets_diag_all/summary.json",
+  "how": "ets on diag: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_diag_ets_snaive": {
+  "value": 1.2130693482529074,
+  "text": "1.21",
+  "src": "bench/leaderboard/ets_diag_all/summary.json",
+  "how": "ets on diag: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_diag_arima_oracle": {
+  "value": 4.149753444593514,
+  "text": "4.15",
+  "src": "bench/leaderboard/arima_diag_all/summary.json",
+  "how": "arima on diag: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_diag_arima_snaive": {
+  "value": 1.123371685561535,
+  "text": "1.12",
+  "src": "bench/leaderboard/arima_diag_all/summary.json",
+  "how": "arima on diag: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_diag_seasonal_naive_oracle": {
+  "value": 3.6790050343046206,
+  "text": "3.68",
+  "src": "bench/leaderboard/seasonal_naive_diag_all/summary.json",
+  "how": "seasonal_naive on diag: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_diag_seasonal_naive_snaive": {
+  "value": 1.0,
+  "text": "1.00",
+  "src": "bench/leaderboard/seasonal_naive_diag_all/summary.json",
+  "how": "seasonal_naive on diag: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_lb_5M_oracle": {
+  "value": 1.4457013048027731,
+  "text": "1.45",
+  "src": "bench/leaderboard/timestral-5M_lb_all/summary.json",
+  "how": "timestral-5M on lb: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_lb_5M_snaive": {
+  "value": 0.6693590656575588,
+  "text": "0.67",
+  "src": "bench/leaderboard/timestral-5M_lb_all/summary.json",
+  "how": "timestral-5M on lb: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_lb_209M_oracle": {
+  "value": 1.3139198857310517,
+  "text": "1.31",
+  "src": "bench/leaderboard/timestral-209M_lb_all/summary.json",
+  "how": "timestral-209M on lb: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_lb_209M_snaive": {
+  "value": 0.6083655573366707,
+  "text": "0.61",
+  "src": "bench/leaderboard/timestral-209M_lb_all/summary.json",
+  "how": "timestral-209M on lb: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_lb_ets_oracle": {
+  "value": 2.1721692835968245,
+  "text": "2.17",
+  "src": "bench/leaderboard/ets_lb_all/summary.json",
+  "how": "ets on lb: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_lb_ets_snaive": {
+  "value": 1.0061951263036426,
+  "text": "1.01",
+  "src": "bench/leaderboard/ets_lb_all/summary.json",
+  "how": "ets on lb: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_lb_arima_oracle": {
+  "value": 2.244635359304841,
+  "text": "2.24",
+  "src": "bench/leaderboard/arima_lb_all/summary.json",
+  "how": "arima on lb: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_lb_arima_snaive": {
+  "value": 1.0392851752028824,
+  "text": "1.04",
+  "src": "bench/leaderboard/arima_lb_all/summary.json",
+  "how": "arima on lb: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_lb_seasonal_naive_oracle": {
+  "value": 2.159433246391676,
+  "text": "2.16",
+  "src": "bench/leaderboard/seasonal_naive_lb_all/summary.json",
+  "how": "seasonal_naive on lb: geometric mean over series of MASE / oracle MASE"
+ },
+ "bench_lb_seasonal_naive_snaive": {
+  "value": 1.0,
+  "text": "1.00",
+  "src": "bench/leaderboard/seasonal_naive_lb_all/summary.json",
+  "how": "seasonal_naive on lb: geometric mean over series of MASE / seasonal-naive MASE"
+ },
+ "bench_lb_fam_chaos": {
+  "value": 2.162344085297346,
+  "text": "2.16",
+  "src": "bench/leaderboard/timestral-209M_lb_all/summary.json",
+  "how": "Timestral-209M, OffPrior-LB, family chaos: geometric mean of MASE / oracle MASE"
+ },
+ "bench_lb_fam_mixture": {
+  "value": 1.4709004505824543,
+  "text": "1.47",
+  "src": "bench/leaderboard/timestral-209M_lb_all/summary.json",
+  "how": "Timestral-209M, OffPrior-LB, family mixture: geometric mean of MASE / oracle MASE"
+ },
+ "bench_lb_fam_tails": {
+  "value": 1.0112562976650776,
+  "text": "1.01",
+  "src": "bench/leaderboard/timestral-209M_lb_all/summary.json",
+  "how": "Timestral-209M, OffPrior-LB, family tails: geometric mean of MASE / oracle MASE"
+ },
+ "bench_xp_same": {
+  "value": 25.0,
+  "text": "25",
+  "src": "bench/data/cross_platform_diag.json",
+  "how": "diagnostic configs whose arrays match between the Windows and Linux builds"
+ },
+ "bench_xp_n": {
+  "value": 31.0,
+  "text": "31",
+  "src": "bench/data/cross_platform_diag.json",
+  "how": "diagnostic configs"
+ },
+ "bench_n_diag": {
+  "value": 372.0,
+  "text": "372",
+  "src": "bench/data/diag_manifest.csv",
+  "how": "number of series"
+ },
+ "bench_nconf_diag": {
+  "value": 31.0,
+  "text": "31",
+  "src": "bench/data/diag_manifest.csv",
+  "how": "number of configs"
+ },
+ "bench_n_lb": {
+  "value": 3776.0,
+  "text": "3,776",
+  "src": "bench/data/lb_manifest.csv",
+  "how": "number of series"
+ },
+ "bench_nconf_lb": {
+  "value": 236.0,
+  "text": "236",
+  "src": "bench/data/lb_manifest.csv",
+  "how": "number of configs"
+ },
  "table:inprior": {
   "src": "results/map/in_prior/summary.csv",
   "how": "geometric mean over the 4 in-prior configs of the per-config geometric-mean MASE ratio to oracle, context 2048"
@@ -764,5 +980,17 @@
  "table:regime": {
   "src": "results/map/regime/summary_all_sizes.csv",
   "how": "geometric mean over 8 seeds of MASE ratio to oracle, context 2048, horizon 128"
+ },
+ "table:bench_diag": {
+  "src": "bench/leaderboard/oracle_diag_all/summary.json, bench/leaderboard/timestral-209M_diag_all/summary.json, bench/leaderboard/timestral-123M_diag_all/summary.json, bench/leaderboard/timestral-28M_diag_all/summary.json, bench/leaderboard/timestral-5M_diag_all/summary.json, bench/leaderboard/ets_diag_all/summary.json, bench/leaderboard/arima_diag_all/summary.json, bench/leaderboard/seasonal_naive_diag_all/summary.json",
+  "how": "bench/eval.py summaries (geometric means over series)"
+ },
+ "table:bench_lb": {
+  "src": "bench/leaderboard/oracle_lb_all/summary.json, bench/leaderboard/timestral-209M_lb_all/summary.json, bench/leaderboard/timestral-123M_lb_all/summary.json, bench/leaderboard/timestral-28M_lb_all/summary.json, bench/leaderboard/timestral-5M_lb_all/summary.json, bench/leaderboard/ets_lb_all/summary.json, bench/leaderboard/arima_lb_all/summary.json, bench/leaderboard/seasonal_naive_lb_all/summary.json",
+  "how": "bench/eval.py summaries (geometric means over series)"
+ },
+ "table:bench_diag_ft": {
+  "src": "bench/leaderboard/timestral-209M_diag_all/summary.json",
+  "how": "Timestral-209M on OffPrior-Diag by failure type"
  }
 }

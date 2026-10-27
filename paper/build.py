@@ -328,10 +328,35 @@ def bench():
         rows = [{"failure type": k, "series": int(v["n"]), "209M MASE / oracle": v["mase_rel_oracle"],
                  "209M MASE / seasonal naive": v["mase_rel_snaive"]} for k, v in sorted(ft.items())]
         table("bench_diag_ft", pd.DataFrame(rows), f, "Timestral-209M on OffPrior-Diag by failure type", "{:.3f}")
+        for k in ("coupled_oscillators", "delay_oscillator", "chaos_short_reach", "smooth_chaos", "recent_switch"):
+            num(f"bench_ft_{k}", ft[k]["mase_rel_oracle"], f, f"Timestral-209M, OffPrior-Diag, failure type {k}: geometric mean of MASE / oracle MASE", "{:.2f}")
+        ctrl = [v["mase_rel_oracle"] for k, v in ft.items() if k.startswith("control_") or k in ("heavy_tail_walk", "bursty", "multifractal")]
+        num("bench_ft_ctrl_min", min(ctrl), f, "min over control types and heavy-tail/bursty/multifractal types of 209M MASE / oracle", "{:.2f}")
+        num("bench_ft_ctrl_max", max(ctrl), f, "max of the same", "{:.2f}")
+    for set_name in ("diag", "lb"):
+        for m in ("timestral-5M", "timestral-209M", "ets", "arima", "seasonal_naive"):
+            f = f"bench/leaderboard/{m}_{set_name}_all/summary.json"
+            if os.path.exists(p(f)):
+                o = _json.load(open(p(f)))["overall"]
+                tag = m.replace("timestral-", "")
+                num(f"bench_{set_name}_{tag}_oracle", o["mase_rel_oracle"], f, f"{m} on {set_name}: geometric mean over series of MASE / oracle MASE", "{:.2f}")
+                num(f"bench_{set_name}_{tag}_snaive", o["mase_rel_snaive"], f, f"{m} on {set_name}: geometric mean over series of MASE / seasonal-naive MASE", "{:.2f}")
+    f = "bench/leaderboard/timestral-209M_lb_all/summary.json"
+    if os.path.exists(p(f)):
+        fam = _json.load(open(p(f)))["by_family"]
+        for k in ("chaos", "mixture", "tails"):
+            num(f"bench_lb_fam_{k}", fam[k]["mase_rel_oracle"], f, f"Timestral-209M, OffPrior-LB, family {k}: geometric mean of MASE / oracle MASE", "{:.2f}")
+    xf = "bench/data/cross_platform_diag.json"
+    if os.path.exists(p(xf)):
+        xp = _json.load(open(p(xf)))
+        num("bench_xp_same", xp["identical_configs"], xf, "diagnostic configs whose arrays match between the Windows and Linux builds", "{:d}")
+        num("bench_xp_n", xp["n_configs"], xf, "diagnostic configs", "{:d}")
     for set_name in ("diag", "lb"):
         mf = f"bench/data/{set_name}_manifest.csv"
         if os.path.exists(p(mf)):
-            num(f"bench_n_{set_name}", len(pd.read_csv(p(mf))), mf, "number of series", "{:d}")
+            m = pd.read_csv(p(mf))
+            num(f"bench_n_{set_name}", len(m), mf, "number of series", "{:,d}")
+            num(f"bench_nconf_{set_name}", m.config_id.nunique(), mf, "number of configs", "{:d}")
 
 
 def main():

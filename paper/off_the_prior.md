@@ -431,7 +431,82 @@ continuation of the context more than the oracle's forecast does
 
 # 8. Benchmarks
 
-RESULTS-PENDING.
+The failure map is released as two benchmark sets built from the same simulators (code and data in
+`bench/`). Each series comes with the oracle's 21 quantiles, so a model is scored against the best
+achievable forecast as well as against seasonal naive, the GIFT-Eval convention.
+
+**OffPrior-Diag** has 372 series: 31 configs with 12 seeds each, at
+context 2,048 and horizon 128. Every config was picked to cover one failure type from Sections 4 and 7,
+or to serve as a control (inside the prior, an old switch, a switch inside the horizon that nobody can
+see coming, a map nobody can forecast); each series carries its failure type and a one-line reason.
+**OffPrior-LB** has 3,776 series: every config of the chaos, regime, tails and in-prior
+grids, 40 fixed random mixture genomes and four more in-prior periods (236 configs), 16 seeds per config spread
+over contexts 512 / 2,048 / 8,192 and horizons 16 / 128 / 1,024, split into public and held-out halves by
+seed parity. The seeds and code are public, so the held-out half is a convenience, not a secret test set.
+`bench/eval.py` scores one model in one command; the summary is the geometric mean over series of MASE
+and sCRPS divided by seasonal naive's, and of MASE divided by the oracle's.
+
+| model | series | MASE / seasonal naive | sCRPS / seasonal naive | MASE / oracle | 80% coverage |
+|---|---|---|---|---|---|
+| oracle | 372 | 0.272 | 0.209 | 1.000 | 0.789 |
+| timestral-209M | 372 | 0.543 | 0.427 | 2.002 | 0.781 |
+| timestral-123M | 372 | 0.550 | 0.435 | 2.028 | 0.771 |
+| timestral-28M | 372 | 0.607 | 0.478 | 2.239 | 0.751 |
+| timestral-5M | 372 | 0.656 | 0.515 | 2.417 | 0.705 |
+| ets | 372 | 1.213 | 1.190 | 4.468 | 0.875 |
+| arima | 372 | 1.123 | 0.872 | 4.150 | 0.738 |
+| seasonal_naive | 372 | 1.000 | 1.000 | 3.679 | 0.814 |
+
+| model | series | MASE / seasonal naive | sCRPS / seasonal naive | MASE / oracle | 80% coverage |
+|---|---|---|---|---|---|
+| oracle | 3776 | 0.463 | 0.286 | 1.000 | 0.798 |
+| timestral-209M | 3776 | 0.608 | 0.385 | 1.314 | 0.793 |
+| timestral-123M | 3776 | 0.615 | 0.389 | 1.329 | 0.791 |
+| timestral-28M | 3776 | 0.637 | 0.402 | 1.375 | 0.783 |
+| timestral-5M | 3776 | 0.669 | 0.425 | 1.446 | 0.779 |
+| ets | 3776 | 1.006 | 0.926 | 2.172 | 0.889 |
+| arima | 3776 | 1.039 | 0.663 | 2.245 | 0.770 |
+| seasonal_naive | 3776 | 1.000 | 1.000 | 2.159 | 0.882 |
+
+On OffPrior-Diag, Timestral's MASE is 2.00× the oracle's at 209M and
+2.42× at 5M, against 4.47× for ETS,
+4.15× for ARIMA and 3.68× for seasonal naive.
+On OffPrior-LB the same ratios are 1.31× and 1.45× for Timestral,
+and 2.17×, 2.24× and
+2.16× for the classical models. By family on OffPrior-LB, 209M is at
+2.16× the oracle on chaos, 1.47× on the mixture genomes and
+1.01× on tails.
+
+| failure type | series | 209M MASE / oracle | 209M MASE / seasonal naive |
+|---|---|---|---|
+| bursty | 12 | 0.991 | 0.938 |
+| chaos_short_reach | 24 | 4.455 | 0.699 |
+| control_in_prior | 60 | 1.007 | 0.699 |
+| control_old_switch | 12 | 1.016 | 0.745 |
+| control_unknowable | 12 | 0.978 | 0.804 |
+| control_unpredictable | 12 | 1.033 | 0.764 |
+| coupled_oscillators | 36 | 7.942 | 0.177 |
+| delay_oscillator | 36 | 6.515 | 0.223 |
+| heavy_tail_walk | 12 | 1.006 | 1.011 |
+| long_memory | 12 | 1.123 | 0.643 |
+| multifractal | 12 | 1.033 | 1.037 |
+| periodic_map | 12 | 1.187 | 0.046 |
+| recent_switch | 84 | 1.808 | 1.074 |
+| smooth_chaos | 24 | 2.875 | 0.273 |
+| switching | 12 | 1.090 | 0.753 |
+
+By failure type, the diagnostic set reproduces the map at 209M: coupled oscillators
+(7.94×), delay oscillators (6.52×), chaos within the
+first Lyapunov times (4.46×), smooth chaos (2.87×) and
+recent switches (1.81×), while the controls and the heavy-tailed, bursty and
+multifractal types stay at 0.98–1.03×.
+
+The published files were built on a Windows laptop. A rebuild on Linux with newer NumPy matched them
+array-for-array for 25 of 31 diagnostic configs; in the others
+(Mackey-Glass, Kuramoto near synchronization, and one fractional Brownian motion setting) platform
+floating-point differences change the simulated paths, and the chaotic ones diverge. Scores should
+therefore be reported on the published files (`bench/data/cross_platform_diag.json` has the per-config
+comparison).
 
 # 9. Fixing it
 
