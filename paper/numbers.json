@@ -725,6 +725,144 @@
   "src": "results/map/regime/adoption.csv",
   "how": "level adoption at H<=16, all deltas pooled, 209M, switch 256 steps back, T=2048"
  },
+ "cov_lag32_209M_gain": {
+  "value": 2.411226667790437,
+  "text": "2.41",
+  "src": "results/covariates/summary.csv",
+  "how": "LaggedDriver lag 32, 209M, H=16, past_cov covariate gain"
+ },
+ "cov_lag32_209M_ogain": {
+  "value": 7.952175906818415,
+  "text": "7.95",
+  "src": "results/covariates/summary.csv",
+  "how": "LaggedDriver lag 32, 209M, H=16, matched-oracle gain"
+ },
+ "cov_known_lag0_28M": {
+  "value": 4.394994273171992,
+  "text": "4.39",
+  "src": "results/covariates/summary.csv",
+  "how": "LaggedDriver lag 0, 28M, H=16, known_cov covariate gain"
+ },
+ "cov_known_lag512_28M": {
+  "value": 0.9522846908739164,
+  "text": "0.95",
+  "src": "results/covariates/summary.csv",
+  "how": "LaggedDriver lag 512, 28M, H=16, known_cov covariate gain"
+ },
+ "cov_known_ogain_min": {
+  "value": 5.615963684642914,
+  "text": "5.62",
+  "src": "results/covariates/summary.csv",
+  "how": "min over lags of the matched-oracle gain, LaggedDriver known_cov, 28M, H=16"
+ },
+ "cov_known_ogain_max": {
+  "value": 7.907167800528803,
+  "text": "7.91",
+  "src": "results/covariates/summary.csv",
+  "how": "max of the same"
+ },
+ "cov_jp_FeedbackLinear_min": {
+  "value": 0.9821866909893602,
+  "text": "0.98",
+  "src": "results/covariates/summary.csv",
+  "how": "FeedbackLinear: smallest joint/past_cov (geometric mean) over knobs, sizes, H at T=2048"
+ },
+ "cov_jp_FeedbackLinear_min_lo": {
+  "value": 0.9734614286087168,
+  "text": "0.97",
+  "src": "results/covariates/summary.csv",
+  "how": "its 95% bootstrap lower bound"
+ },
+ "cov_jp_FeedbackLinear_min_hi": {
+  "value": 0.990990159040381,
+  "text": "0.99",
+  "src": "results/covariates/summary.csv",
+  "how": "its 95% bootstrap upper bound"
+ },
+ "cov_jp_FeedbackLinear_max": {
+  "value": 1.0057384443545276,
+  "text": "1.01",
+  "src": "results/covariates/summary.csv",
+  "how": "FeedbackLinear: largest joint/past_cov over knobs, sizes, H at T=2048"
+ },
+ "cov_jp_FeedbackPredPrey_min": {
+  "value": 0.811893218424671,
+  "text": "0.81",
+  "src": "results/covariates/summary.csv",
+  "how": "FeedbackPredPrey: smallest joint/past_cov (geometric mean) over knobs, sizes, H at T=2048"
+ },
+ "cov_jp_FeedbackPredPrey_min_lo": {
+  "value": 0.6872578944533096,
+  "text": "0.69",
+  "src": "results/covariates/summary.csv",
+  "how": "its 95% bootstrap lower bound"
+ },
+ "cov_jp_FeedbackPredPrey_min_hi": {
+  "value": 0.9591313587577168,
+  "text": "0.96",
+  "src": "results/covariates/summary.csv",
+  "how": "its 95% bootstrap upper bound"
+ },
+ "cov_jp_FeedbackPredPrey_max": {
+  "value": 1.0351936629714942,
+  "text": "1.04",
+  "src": "results/covariates/summary.csv",
+  "how": "FeedbackPredPrey: largest joint/past_cov over knobs, sizes, H at T=2048"
+ },
+ "cov_jp_LaggedDriver_min": {
+  "value": 0.8320386043175797,
+  "text": "0.83",
+  "src": "results/covariates/summary.csv",
+  "how": "LaggedDriver: smallest joint/past_cov (geometric mean) over knobs, sizes, H at T=2048"
+ },
+ "cov_jp_LaggedDriver_min_lo": {
+  "value": 0.7166725735792805,
+  "text": "0.72",
+  "src": "results/covariates/summary.csv",
+  "how": "its 95% bootstrap lower bound"
+ },
+ "cov_jp_LaggedDriver_min_hi": {
+  "value": 0.9212055735199612,
+  "text": "0.92",
+  "src": "results/covariates/summary.csv",
+  "how": "its 95% bootstrap upper bound"
+ },
+ "cov_jp_LaggedDriver_max": {
+  "value": 1.012905213033627,
+  "text": "1.01",
+  "src": "results/covariates/summary.csv",
+  "how": "LaggedDriver: largest joint/past_cov over knobs, sizes, H at T=2048"
+ },
+ "cov_jp_share_within": {
+  "value": 94.84126984126983,
+  "text": "95",
+  "src": "results/covariates/summary.csv",
+  "how": "percent of joint rows (all systems, knobs, sizes, H, T=2048) with joint/past_cov in (0.95, 1.05)"
+ },
+ "cov_jp_n": {
+  "value": 252.0,
+  "text": "252",
+  "src": "results/covariates/summary.csv",
+  "how": "number of such rows"
+ },
+ "cov_leaky_5M_16": {
+  "value": 8.469409099460108,
+  "text": "8.47",
+  "src": "results/covariates/summary.csv",
+  "how": "LeakyKnown 0.05, 5M, H=16, ratio to matched oracle"
+ },
+ "cov_leaky_209M_16": {
+  "value": 3.2518604478967195,
+  "text": "3.25",
+  "src": "results/covariates/summary.csv",
+  "how": "LeakyKnown 0.05, 209M, H=16, ratio to matched oracle"
+ },
+ "cov_leaky_5M_1024": {
+  "value": 42.708689265754835,
+  "text": "42.71",
+  "src": "results/covariates/summary.csv",
+  "how": "LeakyKnown 0.05, 5M, H=1024, ratio to matched oracle"
+ },
  "bench_ft_coupled_oscillators": {
   "value": 7.941711476813754,
   "text": "7.94",
@@ -980,6 +1118,18 @@
  "table:regime": {
   "src": "results/map/regime/summary_all_sizes.csv",
   "how": "geometric mean over 8 seeds of MASE ratio to oracle, context 2048, horizon 128"
+ },
+ "table:cov_past": {
+  "src": "results/covariates/summary.csv",
+  "how": "past_cov rows at T=2048, H=16: covariate gain (MASE(uni)/MASE(past_cov)) / oracle gain (MASE(uni)/MASE(matched oracle)), geometric means over samples"
+ },
+ "table:cov_known_lag": {
+  "src": "results/covariates/summary.csv",
+  "how": "LaggedDriver known_cov, T=2048, H=16: covariate gain and matched-oracle gain (geometric means)"
+ },
+ "table:cov_leaky": {
+  "src": "results/covariates/summary.csv",
+  "how": "LeakyKnown noise ratio 0.05, known_cov, T=2048: MASE / matched-oracle MASE = oracle gain / covariate gain (geometric means over the same samples)"
  },
  "table:bench_diag": {
   "src": "bench/leaderboard/oracle_diag_all/summary.json, bench/leaderboard/timestral-209M_diag_all/summary.json, bench/leaderboard/timestral-123M_diag_all/summary.json, bench/leaderboard/timestral-28M_diag_all/summary.json, bench/leaderboard/timestral-5M_diag_all/summary.json, bench/leaderboard/ets_diag_all/summary.json, bench/leaderboard/arima_diag_all/summary.json, bench/leaderboard/seasonal_naive_diag_all/summary.json",

@@ -338,7 +338,64 @@ ratios are excluded.
 
 # 5. Covariates and one-way attention
 
-RESULTS-PENDING.
+Timestral reads covariates as conditioning rows: the main series reads them, they never read the
+main series. Several main rows given together read each other both ways. We built six coupled
+systems with known equations (`otp/generators/coupled.py`): an exogenous driver whose past sets the
+main series after a lag (LaggedDriver), the same through a nonlinearity (NonlinearDriver), linear and
+predator-prey feedback loops, a hidden driver seen through a noisy proxy (HiddenDriver), and a
+known-future covariate that is a noisy copy of the main series shifted by one step (LeakyKnown). The
+main series is forecast four ways: alone, with the other channel as a past-only covariate, as a
+known-future covariate where that makes sense, and as a second main row ("joint"). The oracle is
+matched to the information each condition gives. Sizes 5M and 28M ran on the full grid (5 knob values,
+8 seeds, horizons 16 / 128 / 1,024); 123M and 209M on a reduced grid (3 knob values, 4 seeds, horizons
+16 / 128), so the oracle gains below differ slightly between the two pairs of sizes. Details and all
+tables: `results/covariates/README.md`.
+
+**Past covariates are used partly, and more with size.** When the driver's past determines the main
+series over the whole horizon, a forecaster that used it fully would cut the error several-fold. Each
+cell below gives Timestral's covariate gain (MASE alone / MASE with the past covariate) and the matched
+oracle's gain, at context 2,048 and horizon 16:
+
+| system | knob | 5M | 28M | 123M | 209M |
+|---|---|---|---|---|---|
+| LaggedDriver | lag 32 | 1.07 / 8.26 | 1.66 / 7.86 | 2.10 / 7.92 | 2.41 / 7.95 |
+| NonlinearDriver | nonlinearity 0.5 | 1.09 / 6.73 | 1.62 / 6.48 | 1.81 / 5.23 | 2.04 / 4.92 |
+| HiddenDriver | x noise 0.05 | 1.03 / 5.53 | 1.20 / 5.31 | 1.78 / 4.35 | 1.77 / 4.35 |
+
+At lag 32, 209M reaches a gain of 2.41 out of 7.95 available.
+
+**Known-future covariates help only when the relation is immediate.** With the driver's future given,
+the 28M gain on LaggedDriver falls from 4.39 at lag 0 to 0.95 at lag 512, while the
+matched oracle's gain stays at 5.62–7.91 (horizon 16):
+
+| lag | 5M gain | 5M oracle gain | 28M gain | 28M oracle gain |
+|---|---|---|---|---|
+| 0 | 2.55 | 5.50 | 4.39 | 5.62 |
+| 8 | 1.59 | 5.97 | 2.59 | 5.98 |
+| 32 | 1.15 | 8.31 | 1.55 | 7.91 |
+| 128 | 0.96 | 7.19 | 1.01 | 7.75 |
+| 512 | 1.00 | 6.32 | 0.95 | 6.13 |
+
+When the known covariate is the main series itself, one step late with small noise (LeakyKnown at
+noise ratio 0.05), Timestral's error is several times the oracle's that reads it (MASE over matched-oracle
+MASE):
+
+| size | H=16 | H=128 | H=1024 |
+|---|---|---|---|
+| 5M | 8.47 | 20.92 | 42.71 |
+| 28M | 3.81 | 9.94 | 38.41 |
+| 123M | 3.04 | 3.70 | – |
+| 209M | 3.25 | 2.89 | – |
+
+**One-way routing is not the bottleneck.** Giving the same channel as a second main row (two-way
+attention) instead of a past covariate (one-way) changes the error little: joint/past-covariate MASE is
+within 0.95–1.05 in 95% of the 252 system × knob × size × horizon cells.
+Among the cells whose 95% interval lies below 1, two-way routing gains most on NonlinearDriver
+with the nonlinearity off (123M; `results/covariates/summary.csv`), the predator-prey loop
+(0.81, 95% interval 0.69–0.96) and
+LaggedDriver (0.83, 0.72–0.92); on the linear feedback loop
+the ratio stays within 0.98–1.01. The gap to the oracle comes from how much
+of the covariate's information is used at all, not from which way it is routed.
 
 # 6. Searching for failures
 
