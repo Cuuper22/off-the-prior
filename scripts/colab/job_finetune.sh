@@ -16,7 +16,7 @@ python3 scripts/finetune_job.py --out results/colab_out/ft --ckpt-root /content/
   --steps 5M=500 28M=500 123M=300 209M=300 --batch 5M=32 28M=32 123M=16 209M=16 \
   --lr-full 5M=5e-5 28M=3e-5 123M=2e-5 209M=1e-5 --lr-lora 5M=1e-3 28M=1e-3 123M=5e-4 209M=5e-4 \
   --rank 8 --alpha 16 --pool-batches 500 --pool-workers 11 --contexts 256 512 1024 2048 --horizons 32 128 512 \
-  --n-eval 32 --n-regression 300 --n-paths 500 --threads 4 --checkpoint-every 1 $RESUME \
+  --n-eval 32 --n-paths 500 --real-npz bench/regression/real.npz --in-prior-npz bench/regression/in_prior.npz --threads 4 --checkpoint-every 1 $RESUME \
   --note "Colab run on one A100 through scripts/colab/run_job.sh (job script scripts/colab/job_finetune.sh). Budgets per size are in job.json." \
-  --note "Checkpoints were deleted after scoring (--keep-checkpoints not given); only the score tables, costs and loss curves came back." \
-  --note "Real-data regression check: bench/regression/real.npz was not in the repo for this run; the in-prior regression set is 300 fresh series (seeds 100000 to 100299)."
+  --note "Regression sets: bench/regression/in_prior.npz (500 series with oracle) and bench/regression/real.npz (the windows committed in that file; real windows have no oracle)." \
+  --note "Checkpoints were deleted after scoring (--keep-checkpoints not given); only the score tables, costs and loss curves came back."

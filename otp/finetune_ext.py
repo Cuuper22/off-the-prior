@@ -293,10 +293,12 @@ def write_readme(out: str, summary, costs, scores, notes: list[str] | None = Non
           "- `runs/<run_id>/run.json`, `runs/<run_id>/loss.csv`: per-run configuration, cost record and loss curve.", ""]
     ev = prov.get("sets", {})
     L += [f"Evaluation: {prov['n_eval']} held-out samples per set (500 oracle paths each, context {prov['splits']['eval']['T']}, "
-          f"horizon {prov['splits']['eval']['H']}); regression set: {ev.get('regression/in_prior')} fresh in-prior series "
-          f"(seeds {prov['splits']['seeds']['regression_start']} and up). Real-data regression: "
-          + ("`" + str(prov.get("real_npz")) + "` (" + str(ev.get("regression/real")) + " windows)." if prov.get("real_npz")
-             else "pending (`bench/regression/real.npz` was not on master when this ran; rerun with `--real-npz`).") + "",
+          f"horizon {prov['splits']['eval']['H']}); regression set: {ev.get('regression/in_prior')} in-prior series "
+          + (f"(`{prov['in_prior_npz']}`, with the oracle)" if prov.get("in_prior_npz")
+             else f"(fresh, seeds {prov['splits']['seeds']['regression_start']} and up)")
+          + ". Real-data regression: "
+          + ("`" + str(prov.get("real_npz")) + "` (" + str(ev.get("regression/real")) + " windows; no oracle, only the paired change versus the pretrained model is reported)." if prov.get("real_npz")
+             else "pending (`bench/regression/real.npz` was not passed with `--real-npz`).") + "",
           f"Evaluation wall time {prov['wall_sec']} s; training wall time summed over trained models "
           f"{prov['train_wall_sec_total']} s (both from `provenance.json`).", ""]
 

@@ -102,6 +102,8 @@ def main(argv=None):
     ap.add_argument("--n-eval", type=int, default=S.N_EVAL_DEFAULT)
     ap.add_argument("--n-regression", type=int, default=S.N_REGRESSION_DEFAULT)
     ap.add_argument("--n-paths", type=int, default=500, help="oracle Monte Carlo paths per sample")
+    ap.add_argument("--in-prior-npz", default=None,
+                    help="in-prior regression series with oracle (bench/regression/in_prior.npz); default: --n-regression fresh series")
     ap.add_argument("--real-npz", default=None, help="real-data regression windows (bench/regression/real.npz)")
     ap.add_argument("--sizes", nargs="+", default=None)
     ap.add_argument("--run-ids", nargs="+", default=None, help="score only these runs")
@@ -136,9 +138,12 @@ def main(argv=None):
         sets[f"{protocol}/{holdout}"] = get_set(
             cache, f"eval__{protocol}-{holdout}__n{a.n_eval}_p{a.n_paths}",
             lambda protocol=protocol, holdout=holdout: S.make_eval_samples(protocol, holdout, a.n_eval, a.n_paths))
-    sets["regression/in_prior"] = get_set(
-        cache, f"regression__in_prior__n{a.n_regression}_p{a.n_paths}",
-        lambda: S.make_regression_samples(a.n_regression, a.n_paths))
+    if a.in_prior_npz:
+        sets["regression/in_prior"] = load_samples(a.in_prior_npz)
+    else:
+        sets["regression/in_prior"] = get_set(
+            cache, f"regression__in_prior__n{a.n_regression}_p{a.n_paths}",
+            lambda: S.make_regression_samples(a.n_regression, a.n_paths))
     if a.real_npz:
         from otp.realdata import load_real
         sets["regression/real"] = load_real(a.real_npz)
@@ -204,7 +209,7 @@ def main(argv=None):
     write_json(os.path.join(a.out, "provenance.json"), provenance(
         "scripts/eval_finetuned.py", argv=sys.argv[1:] if argv is None else list(argv), wall_sec=round(time.time() - t0, 1),
         sizes=sizes, n_runs=len(runs), n_eval=a.n_eval, n_regression=a.n_regression, n_paths=a.n_paths,
-        sets={k: len(v) for k, v in sets.items()}, real_npz=a.real_npz,
+        sets={k: len(v) for k, v in sets.items()}, real_npz=a.real_npz, in_prior_npz=a.in_prior_npz,
         gpu=torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
         train_wall_sec_total=round(float(costs[costs.trained_as.isna()].wall_sec.sum()), 1), splits=S.split_summary()))
     if not a.no_readme:

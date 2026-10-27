@@ -175,6 +175,8 @@ def eval_args(a) -> list[str]:
            "--n-eval", str(a.n_eval), "--n-regression", str(a.n_regression), "--n-paths", str(a.n_paths)]
     if a.real_npz and os.path.exists(a.real_npz):
         cmd += ["--real-npz", a.real_npz]
+    if a.in_prior_npz and os.path.exists(a.in_prior_npz):
+        cmd += ["--in-prior-npz", a.in_prior_npz]
     if a.threads:
         cmd += ["--threads", str(a.threads)]
     return cmd
@@ -207,6 +209,7 @@ def main(argv=None):
     ap.add_argument("--n-regression", type=int, default=S.N_REGRESSION_DEFAULT)
     ap.add_argument("--n-paths", type=int, default=500)
     ap.add_argument("--real-npz", default="bench/regression/real.npz")
+    ap.add_argument("--in-prior-npz", default="bench/regression/in_prior.npz")
     ap.add_argument("--threads", type=int, default=None)
     ap.add_argument("--log-every", type=int, default=25)
     ap.add_argument("--checkpoint-every", type=int, default=1, help="write scores_partial.csv every this many finished runs")
