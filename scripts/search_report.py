@@ -133,7 +133,11 @@ def main(argv=None):
         def rd(n):
             fp = os.path.join(jd, n)
             return open(fp).read().strip() if os.path.exists(fp) else None
-        j = {"job": os.path.basename(jd), "bundle_commit": rd("commit.txt"), "started_utc": rd("started_utc.txt"),
+        import subprocess
+        bc = rd("commit.txt")
+        subj = subprocess.run(["git", "log", "-1", "--format=%s", bc], capture_output=True, text=True).stdout.strip() if bc else ""
+        parent = subj.split("Slim bundle of ")[1].split()[0] if subj.startswith("Slim bundle of ") else bc
+        j = {"job": os.path.basename(jd), "bundle_commit": bc, "code_commit": parent, "started_utc": rd("started_utc.txt"),
              "ended_utc": rd("ended_utc.txt"), "exit_code": rd("job.exit")}
         try:
             fmt = "%Y-%m-%dT%H:%M:%SZ"
@@ -193,6 +197,27 @@ def main(argv=None):
         cols = ["method", "seed", "evaluations", "calls", "best_fitness", "median_top20", "calls_to_1.5", "calls_to_2.0", "calls_to_3.0",
                 "cells_filled", "cells_ge_1.5", "cells_ge_2.0", "cells_ge_3.0"]
         L.append(md(comp[comp.seed.astype(str) != "mean"][cols]) + "\n")
+    rf = []
+    for p in sorted(glob.glob(os.path.join(d, "runs", "*", "run.json"))):
+        r = read_json(p)
+        h = pd.read_csv(os.path.join(os.path.dirname(p), "history.csv"))
+        hf = h[h.feasible.astype(str) == "True"]
+        imp = h[h.best_so_far.diff().fillna(h.best_so_far) > 0]
+        rf.append({"method": r["method"], "seed": r["seed"], "budget": r["budget"], "calls": r["calls"], "evaluations": r["evaluations"],
+                   "replayed_from_checkpoint": r["replayed_from_checkpoint"], "wall_seconds_this_process": r["wall_seconds"],
+                   "calls_at_last_improvement": float(imp.calls.iloc[-1]) if len(imp) else float("nan"),
+                   "best_fitness": r["best_fitness"]})
+    if rf:
+        L.append("## Run facts (run.json, history.csv)\n")
+        L.append(md(pd.DataFrame(rf)) + "\n")
+        L.append("`wall_seconds_this_process` counts the process that wrote the run; a run resumed from a checkpoint does not include "
+                 "the time spent before the checkpoint. `calls_at_last_improvement` is the cumulative call count at the last evaluation "
+                 "that raised the best-so-far fitness.\n")
+    tm = sorted(glob.glob("results/colab/srch-timing/results/colab_out/timing_*_seed0/run.json"))
+    if tm:
+        L.append("Budget choice: the timing job (`results/colab/srch-timing/`) ran each method with 360 calls on the same A100 runtime; "
+                 + "; ".join(f"{read_json(p)['method']}: {read_json(p)['calls']} calls in {read_json(p)['wall_seconds']:.0f} s" for p in tm)
+                 + ". The equal budget of every run is 3000 Timestral calls on 5M.\n")
     # MAP-Elites archives
     arch = sorted(glob.glob(os.path.join(d, "runs", "map_elites_seed*", "elites.json")))
     if arch:
@@ -246,11 +271,17 @@ def main(argv=None):
     if prov["jobs"]:
         L.append("Jobs (from the pulled job folders, also in `provenance.json`):\n")
         L.append(md(pd.DataFrame(prov["jobs"])) + "\n")
-    L.append("```")
-    for inv in prov["invocations"]:
-        L.append(f"{inv.get('script')} {' '.join(inv.get('argv', []))}   # git {inv.get('git')}, host {inv.get('host')}, "
-                 f"wall {inv.get('wall_seconds', float('nan')):.0f}s")
-    L.append("```\n")
+    if prov["invocations"]:
+        L.append("```")
+        for inv in prov["invocations"]:
+            L.append(f"{inv.get('script')} {' '.join(inv.get('argv', []))}   # git {inv.get('git')}, host {inv.get('host')}, "
+                     f"wall {inv.get('wall_seconds', float('nan')):.0f}s")
+        L.append("```\n")
+    L.append("`bundle_commit` is the commit of the code archive the job ran; the driver was launched from a slim worktree (result folders, "
+             "bench, paper, notebooks and tests removed, code unchanged) because uploads of the full 97 MB archive to fresh Colab runtimes failed with HTTP 500 and 400 errors on repeated attempts, and `code_commit` is the task-branch commit that slim commit was made from. The per-process invocation records "
+             "written on Colab (`*provenance.json` next to the run folders) are not among the files the driver pulls, so "
+             "`provenance.json` holds the jobs table, per-run `run.json` and `transfer.json`. The first CMA-ES seed 0 run was cut "
+             "when its job (`srch-a`) was ended by the driver; the checkpoint pulled before that held 767 evaluations, and the run was resumed in `srch-a2` from it.\n")
     with open(os.path.join(d, "README.md"), "w") as f:
         f.write("\n".join(L) + "\n")
 

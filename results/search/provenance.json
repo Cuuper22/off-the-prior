@@ -1,0 +1,403 @@
+{
+  "invocations": [],
+  "runs": [
+    {
+      "method": "cmaes",
+      "seed": 0,
+      "size": "5M",
+      "budget": 3000,
+      "calls": 3000,
+      "evaluations": 1000,
+      "replayed_from_checkpoint": 767,
+      "sample_generations_this_process": 699,
+      "timestral_calls_made_by_objective": 699,
+      "best_fitness": 243.0827204845203,
+      "wall_seconds": 592.7359476089478,
+      "info": {
+        "restarts": 1,
+        "generations": 77
+      }
+    },
+    {
+      "method": "cmaes",
+      "seed": 1,
+      "size": "5M",
+      "budget": 3000,
+      "calls": 3000,
+      "evaluations": 1000,
+      "replayed_from_checkpoint": 0,
+      "sample_generations_this_process": 3000,
+      "timestral_calls_made_by_objective": 3000,
+      "best_fitness": 68.88721936497711,
+      "wall_seconds": 2399.876778125763,
+      "info": {
+        "restarts": 1,
+        "generations": 77
+      }
+    },
+    {
+      "method": "cmaes",
+      "seed": 2,
+      "size": "5M",
+      "budget": 3000,
+      "calls": 3000,
+      "evaluations": 1000,
+      "replayed_from_checkpoint": 0,
+      "sample_generations_this_process": 3000,
+      "timestral_calls_made_by_objective": 2997,
+      "best_fitness": 57.11662344426355,
+      "wall_seconds": 2465.561856985092,
+      "info": {
+        "restarts": 1,
+        "generations": 77
+      }
+    },
+    {
+      "method": "gradient_r12",
+      "algorithm": "gradient",
+      "grad_restarts": 12,
+      "grad_draws": 2,
+      "seed": 0,
+      "size": "5M",
+      "budget": 3000,
+      "calls": 2964,
+      "evaluations": 60,
+      "replayed_from_checkpoint": 0,
+      "sample_generations_this_process": 180,
+      "timestral_calls_made_by_objective": 180,
+      "best_fitness": 33.37368110079491,
+      "wall_seconds": 31.30726432800293,
+      "info": {
+        "n_steps": 58,
+        "screened": 12,
+        "starts": 12,
+        "rejected_steps": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "method": "gradient_r12",
+      "algorithm": "gradient",
+      "grad_restarts": 12,
+      "grad_draws": 2,
+      "seed": 1,
+      "size": "5M",
+      "budget": 3000,
+      "calls": 2964,
+      "evaluations": 60,
+      "replayed_from_checkpoint": 0,
+      "sample_generations_this_process": 180,
+      "timestral_calls_made_by_objective": 180,
+      "best_fitness": 8.868419626939922,
+      "wall_seconds": 25.55196714401245,
+      "info": {
+        "n_steps": 58,
+        "screened": 12,
+        "starts": 12,
+        "rejected_steps": [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "method": "gradient_r12",
+      "algorithm": "gradient",
+      "grad_restarts": 12,
+      "grad_draws": 2,
+      "seed": 2,
+      "size": "5M",
+      "budget": 3000,
+      "calls": 2964,
+      "evaluations": 60,
+      "replayed_from_checkpoint": 0,
+      "sample_generations_this_process": 180,
+      "timestral_calls_made_by_objective": 180,
+      "best_fitness": 1373.3014645553794,
+      "wall_seconds": 25.722576379776,
+      "info": {
+        "n_steps": 58,
+        "screened": 13,
+        "starts": 12,
+        "rejected_steps": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          12,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "method": "gradient",
+      "seed": 0,
+      "size": "5M",
+      "budget": 3000,
+      "calls": 2997,
+      "evaluations": 15,
+      "replayed_from_checkpoint": 0,
+      "sample_generations_this_process": 45,
+      "timestral_calls_made_by_objective": 45,
+      "best_fitness": 7.516007713375925,
+      "wall_seconds": 44.163450956344604,
+      "info": {
+        "n_steps": 246,
+        "screened": 3,
+        "starts": 3,
+        "rejected_steps": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "method": "gradient",
+      "seed": 1,
+      "size": "5M",
+      "budget": 3000,
+      "calls": 2997,
+      "evaluations": 15,
+      "replayed_from_checkpoint": 0,
+      "sample_generations_this_process": 45,
+      "timestral_calls_made_by_objective": 45,
+      "best_fitness": 47.125826534273045,
+      "wall_seconds": 40.04733943939209,
+      "info": {
+        "n_steps": 246,
+        "screened": 3,
+        "starts": 3,
+        "rejected_steps": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "method": "gradient",
+      "seed": 2,
+      "size": "5M",
+      "budget": 3000,
+      "calls": 2997,
+      "evaluations": 15,
+      "replayed_from_checkpoint": 0,
+      "sample_generations_this_process": 45,
+      "timestral_calls_made_by_objective": 45,
+      "best_fitness": 8.87575565801155,
+      "wall_seconds": 41.94184851646423,
+      "info": {
+        "n_steps": 246,
+        "screened": 3,
+        "starts": 3,
+        "rejected_steps": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "method": "map_elites",
+      "algorithm": "map_elites",
+      "grad_restarts": 3,
+      "grad_draws": 2,
+      "seed": 0,
+      "size": "5M",
+      "budget": 3000,
+      "calls": 3000,
+      "evaluations": 1000,
+      "replayed_from_checkpoint": 0,
+      "sample_generations_this_process": 3000,
+      "timestral_calls_made_by_objective": 3000,
+      "best_fitness": 101.31773320231544,
+      "wall_seconds": 2541.3578383922577,
+      "info": {
+        "batches": 84,
+        "cells": 37,
+        "grid": [
+          4,
+          10
+        ]
+      }
+    },
+    {
+      "method": "map_elites",
+      "algorithm": "map_elites",
+      "grad_restarts": 3,
+      "grad_draws": 2,
+      "seed": 1,
+      "size": "5M",
+      "budget": 3000,
+      "calls": 3000,
+      "evaluations": 1000,
+      "replayed_from_checkpoint": 0,
+      "sample_generations_this_process": 3000,
+      "timestral_calls_made_by_objective": 3000,
+      "best_fitness": 200.27494812867255,
+      "wall_seconds": 1936.3682477474213,
+      "info": {
+        "batches": 84,
+        "cells": 35,
+        "grid": [
+          4,
+          10
+        ]
+      }
+    },
+    {
+      "method": "map_elites",
+      "algorithm": "map_elites",
+      "grad_restarts": 3,
+      "grad_draws": 2,
+      "seed": 2,
+      "size": "5M",
+      "budget": 3000,
+      "calls": 3000,
+      "evaluations": 1000,
+      "replayed_from_checkpoint": 0,
+      "sample_generations_this_process": 3000,
+      "timestral_calls_made_by_objective": 3000,
+      "best_fitness": 351.74168320961735,
+      "wall_seconds": 1845.4709477424622,
+      "info": {
+        "batches": 84,
+        "cells": 35,
+        "grid": [
+          4,
+          10
+        ]
+      }
+    }
+  ],
+  "jobs": [
+    {
+      "job": "srch-a",
+      "bundle_commit": "fa5f369",
+      "code_commit": "fa5f369",
+      "started_utc": "2026-10-27T01:06:44Z",
+      "ended_utc": "2026-10-27T01:45:36Z",
+      "exit_code": null,
+      "wall_seconds": 2332.0
+    },
+    {
+      "job": "srch-a2",
+      "bundle_commit": "9fb9396",
+      "code_commit": "b5d7bce",
+      "started_utc": "2026-10-27T02:05:09Z",
+      "ended_utc": "2026-10-27T03:41:07Z",
+      "exit_code": "0",
+      "wall_seconds": 5758.0
+    },
+    {
+      "job": "srch-b",
+      "bundle_commit": "0e09977",
+      "code_commit": "2bd3089",
+      "started_utc": "2026-10-27T03:46:34Z",
+      "ended_utc": "2026-10-27T05:39:31Z",
+      "exit_code": "0",
+      "wall_seconds": 6777.0
+    },
+    {
+      "job": "srch-smoke",
+      "bundle_commit": "e334b2f",
+      "code_commit": "e334b2f",
+      "started_utc": "2026-10-27T00:13:00Z",
+      "ended_utc": "2026-10-27T00:25:16Z",
+      "exit_code": "0",
+      "wall_seconds": 736.0
+    },
+    {
+      "job": "srch-timing",
+      "bundle_commit": "683c36b",
+      "code_commit": "683c36b",
+      "started_utc": "2026-10-27T00:45:41Z",
+      "ended_utc": "2026-10-27T00:57:47Z",
+      "exit_code": "0",
+      "wall_seconds": 726.0
+    },
+    {
+      "job": "srch-transfer",
+      "bundle_commit": "22c6fb7",
+      "code_commit": "b16990e",
+      "started_utc": "2026-10-27T05:46:05Z",
+      "ended_utc": "2026-10-27T05:50:13Z",
+      "exit_code": "0",
+      "wall_seconds": 248.0
+    }
+  ],
+  "transfer": {
+    "timings": {
+      "generate_samples_s": 78.52157783508301,
+      "n_samples": 240,
+      "score_209M_s": 10.923391103744507,
+      "score_123M_s": 5.102301836013794,
+      "score_28M_s": 2.1509387493133545,
+      "score_5M_s": 1.2443132400512695,
+      "wall_seconds": 101.71201276779175
+    },
+    "sizes": [
+      "209M",
+      "123M",
+      "28M",
+      "5M"
+    ],
+    "fresh_seeds": [
+      21001,
+      21002,
+      21003
+    ],
+    "n_genomes": 80,
+    "n_samples": 240,
+    "provenance": {
+      "script": "scripts/search_transfer.py",
+      "git": "22c6fb7",
+      "time_utc": "2026-10-27T05:49:40Z",
+      "host": "e6af4f6fd922",
+      "torch": "2.11.0+cu130",
+      "threads": 4,
+      "cuda": true,
+      "argv": [
+        "--runs",
+        "results/search/runs",
+        "--top",
+        "20",
+        "--workers",
+        "11",
+        "--out",
+        "results/colab_out/srcht_transfer"
+      ],
+      "wall_seconds": 101.71201276779175,
+      "workers": 11
+    }
+  }
+}
