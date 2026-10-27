@@ -316,6 +316,9 @@ def main():
       "- Reference contexts of the failure link: 35 seasonal series (the long corpus has 35 held-out seasonal series with period 8 to 64).\n"
       "- Pole tables are numpy archives (`otp.neurons.score.read_poles`) with float32 numbers, plus a CSV of the core columns per size (`<size>/poles.csv`); parquet files are not committed because the project word checker reads compressed bytes as text and finds list words by chance.\n")
 
+    w("## 10. Follow-up (`followup/`)\n")
+    w("- `followup/README.md` holds the follow-up tables: corpus, series-count and library controls for the one-job share (B); steering power, with a positive control by residual-stream directions, group steering and minimum detectable effects (A, pre-registered in `steering_preregistration_followup.md`); and motif labels from patch-shape clusters (C).\n- Single-pole steering results in section 3 are re-judged against matched controls in `followup/single_pole_calibrated.csv`.\n")
+
     w("## Files\n")
     fl_ = sorted(f for f in os.listdir(a.out) if os.path.isfile(o(f)))
     w(", ".join(f"`{f}`" for f in fl_) + "; folders `<size>/` (`poles.npz`, `poles_exemplars.npz`, `poles.csv`, `poles_short|long|xlong.npz`), `corpus/`, `real/`, `browser/`, `neuronpedia/`, `squeeze/`.\n")

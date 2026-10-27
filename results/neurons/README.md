@@ -674,6 +674,11 @@ What does not fit the schema:
 - Reference contexts of the failure link: 35 seasonal series (the long corpus has 35 held-out seasonal series with period 8 to 64).
 - Pole tables are numpy archives (`otp.neurons.score.read_poles`) with float32 numbers, plus a CSV of the core columns per size (`<size>/poles.csv`); parquet files are not committed because the project word checker reads compressed bytes as text and finds list words by chance.
 
+## 10. Follow-up (`followup/`)
+
+- `followup/README.md` holds the follow-up tables: corpus, series-count and library controls for the one-job share (B); steering power, with a positive control by residual-stream directions, group steering and minimum detectable effects (A, pre-registered in `steering_preregistration_followup.md`); and motif labels from patch-shape clusters (C).
+- Single-pole steering results in section 3 are re-judged against matched controls in `followup/single_pole_calibrated.csv`.
+
 ## Files
 
 `README.md`, `context_comparison.csv`, `failure_configs.csv`, `failure_link.csv`, `failure_samples.csv`, `heads_summary.csv`, `heads_time.csv`, `heads_variate.csv`, `heldout_check.csv`, `kinds.csv`, `label_groups.csv`, `motif_cohesion.csv`, `one_job_curves.csv`, `pole_pairs.csv`, `provenance_readme.json`, `provenance_runs.json`, `provenance_score.json`, `provenance_summarize.json`, `scale_match.csv`, `scaling.csv`, `sign_regimes.csv`, `squeeze_summary.csv`, `steering_checks.csv`, `steering_effects.csv`, `steering_preregistration.md`, `steering_results.csv`, `steering_summary.csv`, `transfer.csv`, `transfer_by_group.csv`; folders `<size>/` (`poles.npz`, `poles_exemplars.npz`, `poles.csv`, `poles_short|long|xlong.npz`), `corpus/`, `real/`, `browser/`, `neuronpedia/`, `squeeze/`.

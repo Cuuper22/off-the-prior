@@ -1,0 +1,26 @@
+{
+  "script": "scripts/neurons_followup_c.py",
+  "git": "0e0abb5",
+  "time_utc": "2026-10-27T05:41:27Z",
+  "host": "vm",
+  "torch": "2.14.1+cpu",
+  "threads": 2,
+  "cuda": false,
+  "argv": [
+    "scripts/neurons_followup_c.py",
+    "--atlas",
+    "/home/claude/otp-wt/t10_neurons/results/colab_out",
+    "--fb",
+    "/home/claude/otp-wt/t10_followup_B/results/colab_out/fb",
+    "--flat",
+    "results/colab_out",
+    "--corpus-dir",
+    "results/neurons/corpus",
+    "--out",
+    "results/neurons/followup"
+  ],
+  "wall_s": 411.3,
+  "n_runs": 56,
+  "vocab_patches": 440504,
+  "K_main": 16
+}

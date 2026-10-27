@@ -1,0 +1,320 @@
+NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 2 files:  50%|█████     | 1/2 [00:00<00:00,  2.99it/s]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  2.13s/it]Fetching 2 files: 100%|██████████| 2/2 [00:03<00:00,  1.86s/it]
+  readout statistics 128/3100 series
+  readout statistics 1408/3100 series
+  readout statistics 2688/3100 series
+readouts fitted in 19s
+123M: 201 tasks to run (blocks {'early': 3, 'mid': 10, 'late': 19})
+[26s] task 1/201 dir/real/level/early/F/pooled
+[29s] task 11/201 dir/real/level/mid/C4/pooled
+[32s] task 21/201 dir/real/noise/early/C1/pooled
+[35s] task 31/201 dir/real/noise/late/F/pooled
+[37s] task 41/201 dir/real/postjump/early/C4/pooled
+[37s] task 51/201 dir/real/postjump/late/C1/pooled
+[77s] task 61/201 dir/random/level/mid/F/pooled
+[133s] task 71/201 dir/random/level/late/C4/pooled
+[189s] task 81/201 dir/random/noise/mid/C1/pooled
+[241s] task 91/201 dir/random/postjump/early/F/pooled
+[257s] task 101/201 dir/random/postjump/mid/C4/pooled
+[281s] task 111/201 group/one_job/m_dlevel_prev/p/k8
+[322s] task 121/201 group/label_top/lat_noise_sd/p/k8
+[364s] task 131/201 group/label_top/m_logsd/p/k8
+[406s] task 141/201 group/label_top/prev_slope/p/k8
+[445s] task 151/201 group/label_top/x_tail/n/k8
+[490s] task 161/201 group/label_top/m_dlevel_prev/p/k32
+[536s] task 171/201 group/label_top/m_slope/p/k32
+[580s] task 181/201 group/label_top/x_trend/n/k32
+[630s] task 191/201 group/label_top/m_roughness/n/k128
+[679s] task 201/201 group/label_top/x_trend/p/k128
+done 678.9
+python3 scripts/neurons_run.py --size 123M --corpus results/neurons/corpus/main.npz --out results/colab_out/nn2c_123M_ref_main_full --layers-per-chunk 8 --batch 256 --resume
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1652.60it/s]
+[1s] capture layers (0, 1, 2, 3, 4, 5, 6, 7)
+  captured 256/3100 rows
+[4s] layer 0 labeled (3424 poles)
+[5s] layer 1 labeled (3424 poles)
+[5s] layer 2 labeled (3424 poles)
+[6s] layer 3 labeled (3424 poles)
+[7s] layer 4 labeled (3424 poles)
+[8s] layer 5 labeled (3424 poles)
+[9s] layer 6 labeled (3424 poles)
+[10s] layer 7 labeled (3424 poles)
+[10s] capture layers (8, 9, 10, 11, 12, 13, 14, 15)
+  captured 256/3100 rows
+[12s] layer 8 labeled (3424 poles)
+[13s] layer 9 labeled (3424 poles)
+[14s] layer 10 labeled (3424 poles)
+[15s] layer 11 labeled (3424 poles)
+[15s] layer 12 labeled (3424 poles)
+[16s] layer 13 labeled (3424 poles)
+[17s] layer 14 labeled (3424 poles)
+[18s] layer 15 labeled (3424 poles)
+[18s] capture layers (16, 17, 18, 19)
+  captured 256/3100 rows
+[20s] layer 16 labeled (3424 poles)
+[21s] layer 17 labeled (3424 poles)
+[22s] layer 18 labeled (3424 poles)
+[23s] layer 19 labeled (3424 poles)
+done 22.8 s
+python3 scripts/neurons_run.py --size 123M --corpus results/neurons/corpus/main.npz --out results/colab_out/nn2c_123M_main_sub1034_s0 --layers-per-chunk 8 --batch 256 --resume --subsample 1034 --subsample-seed 0
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1872.04it/s]
+[1s] capture layers (0, 1, 2, 3, 4, 5, 6, 7)
+  captured 256/1034 rows
+[2s] layer 0 labeled (3424 poles)
+[2s] layer 1 labeled (3424 poles)
+[3s] layer 2 labeled (3424 poles)
+[3s] layer 3 labeled (3424 poles)
+[4s] layer 4 labeled (3424 poles)
+[4s] layer 5 labeled (3424 poles)
+[5s] layer 6 labeled (3424 poles)
+[5s] layer 7 labeled (3424 poles)
+[5s] capture layers (8, 9, 10, 11, 12, 13, 14, 15)
+  captured 256/1034 rows
+[6s] layer 8 labeled (3424 poles)
+[6s] layer 9 labeled (3424 poles)
+[7s] layer 10 labeled (3424 poles)
+[7s] layer 11 labeled (3424 poles)
+[8s] layer 12 labeled (3424 poles)
+[8s] layer 13 labeled (3424 poles)
+[8s] layer 14 labeled (3424 poles)
+[9s] layer 15 labeled (3424 poles)
+[9s] capture layers (16, 17, 18, 19)
+  captured 256/1034 rows
+[10s] layer 16 labeled (3424 poles)
+[10s] layer 17 labeled (3424 poles)
+[11s] layer 18 labeled (3424 poles)
+[11s] layer 19 labeled (3424 poles)
+done 11.2 s
+python3 scripts/neurons_run.py --size 123M --corpus results/neurons/corpus/main.npz --out results/colab_out/nn2c_123M_main_sub1034_s1 --layers-per-chunk 8 --batch 256 --resume --subsample 1034 --subsample-seed 1
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1562.71it/s]
+[1s] capture layers (0, 1, 2, 3, 4, 5, 6, 7)
+  captured 256/1034 rows
+[2s] layer 0 labeled (3424 poles)
+[2s] layer 1 labeled (3424 poles)
+[3s] layer 2 labeled (3424 poles)
+[3s] layer 3 labeled (3424 poles)
+[4s] layer 4 labeled (3424 poles)
+[4s] layer 5 labeled (3424 poles)
+[5s] layer 6 labeled (3424 poles)
+[5s] layer 7 labeled (3424 poles)
+[5s] capture layers (8, 9, 10, 11, 12, 13, 14, 15)
+  captured 256/1034 rows
+[6s] layer 8 labeled (3424 poles)
+[6s] layer 9 labeled (3424 poles)
+[7s] layer 10 labeled (3424 poles)
+[7s] layer 11 labeled (3424 poles)
+[8s] layer 12 labeled (3424 poles)
+[8s] layer 13 labeled (3424 poles)
+[8s] layer 14 labeled (3424 poles)
+[9s] layer 15 labeled (3424 poles)
+[9s] capture layers (16, 17, 18, 19)
+  captured 256/1034 rows
+[10s] layer 16 labeled (3424 poles)
+[10s] layer 17 labeled (3424 poles)
+[11s] layer 18 labeled (3424 poles)
+[11s] layer 19 labeled (3424 poles)
+done 11.2 s
+python3 scripts/neurons_run.py --size 123M --corpus results/neurons/corpus/main.npz --out results/colab_out/nn2c_123M_main_sub1034_s2 --layers-per-chunk 8 --batch 256 --resume --subsample 1034 --subsample-seed 2
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1731.04it/s]
+[1s] capture layers (0, 1, 2, 3, 4, 5, 6, 7)
+  captured 256/1034 rows
+[2s] layer 0 labeled (3424 poles)
+[2s] layer 1 labeled (3424 poles)
+[3s] layer 2 labeled (3424 poles)
+[3s] layer 3 labeled (3424 poles)
+[4s] layer 4 labeled (3424 poles)
+[4s] layer 5 labeled (3424 poles)
+[5s] layer 6 labeled (3424 poles)
+[5s] layer 7 labeled (3424 poles)
+[5s] capture layers (8, 9, 10, 11, 12, 13, 14, 15)
+  captured 256/1034 rows
+[6s] layer 8 labeled (3424 poles)
+[6s] layer 9 labeled (3424 poles)
+[7s] layer 10 labeled (3424 poles)
+[7s] layer 11 labeled (3424 poles)
+[8s] layer 12 labeled (3424 poles)
+[8s] layer 13 labeled (3424 poles)
+[8s] layer 14 labeled (3424 poles)
+[9s] layer 15 labeled (3424 poles)
+[9s] capture layers (16, 17, 18, 19)
+  captured 256/1034 rows
+[10s] layer 16 labeled (3424 poles)
+[10s] layer 17 labeled (3424 poles)
+[11s] layer 18 labeled (3424 poles)
+[11s] layer 19 labeled (3424 poles)
+done 11.2 s
+python3 scripts/neurons_run.py --size 123M --corpus results/neurons/corpus/main.npz --out results/colab_out/nn2c_123M_main_sub620_s0 --layers-per-chunk 8 --batch 256 --resume --subsample 620 --subsample-seed 0
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1727.12it/s]
+[1s] capture layers (0, 1, 2, 3, 4, 5, 6, 7)
+  captured 256/620 rows
+[2s] layer 0 labeled (3424 poles)
+[2s] layer 1 labeled (3424 poles)
+[2s] layer 2 labeled (3424 poles)
+[3s] layer 3 labeled (3424 poles)
+[3s] layer 4 labeled (3424 poles)
+[3s] layer 5 labeled (3424 poles)
+[4s] layer 6 labeled (3424 poles)
+[4s] layer 7 labeled (3424 poles)
+[4s] capture layers (8, 9, 10, 11, 12, 13, 14, 15)
+  captured 256/620 rows
+[5s] layer 8 labeled (3424 poles)
+[5s] layer 9 labeled (3424 poles)
+[5s] layer 10 labeled (3424 poles)
+[6s] layer 11 labeled (3424 poles)
+[6s] layer 12 labeled (3424 poles)
+[6s] layer 13 labeled (3424 poles)
+[7s] layer 14 labeled (3424 poles)
+[7s] layer 15 labeled (3424 poles)
+[7s] capture layers (16, 17, 18, 19)
+  captured 256/620 rows
+[8s] layer 16 labeled (3424 poles)
+[8s] layer 17 labeled (3424 poles)
+[8s] layer 18 labeled (3424 poles)
+[9s] layer 19 labeled (3424 poles)
+done 8.8 s
+python3 scripts/neurons_run.py --size 123M --corpus results/neurons/corpus/main.npz --out results/colab_out/nn2c_123M_main_sub620_s1 --layers-per-chunk 8 --batch 256 --resume --subsample 620 --subsample-seed 1
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1691.93it/s]
+[1s] capture layers (0, 1, 2, 3, 4, 5, 6, 7)
+  captured 256/620 rows
+[2s] layer 0 labeled (3424 poles)
+[2s] layer 1 labeled (3424 poles)
+[2s] layer 2 labeled (3424 poles)
+[3s] layer 3 labeled (3424 poles)
+[3s] layer 4 labeled (3424 poles)
+[3s] layer 5 labeled (3424 poles)
+[4s] layer 6 labeled (3424 poles)
+[4s] layer 7 labeled (3424 poles)
+[4s] capture layers (8, 9, 10, 11, 12, 13, 14, 15)
+  captured 256/620 rows
+[5s] layer 8 labeled (3424 poles)
+[5s] layer 9 labeled (3424 poles)
+[5s] layer 10 labeled (3424 poles)
+[6s] layer 11 labeled (3424 poles)
+[6s] layer 12 labeled (3424 poles)
+[6s] layer 13 labeled (3424 poles)
+[7s] layer 14 labeled (3424 poles)
+[7s] layer 15 labeled (3424 poles)
+[7s] capture layers (16, 17, 18, 19)
+  captured 256/620 rows
+[8s] layer 16 labeled (3424 poles)
+[8s] layer 17 labeled (3424 poles)
+[8s] layer 18 labeled (3424 poles)
+[9s] layer 19 labeled (3424 poles)
+done 8.9 s
+python3 scripts/neurons_run.py --size 123M --corpus results/neurons/corpus/main.npz --out results/colab_out/nn2c_123M_main_sub620_s2 --layers-per-chunk 8 --batch 256 --resume --subsample 620 --subsample-seed 2
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1887.20it/s]
+[1s] capture layers (0, 1, 2, 3, 4, 5, 6, 7)
+  captured 256/620 rows
+[2s] layer 0 labeled (3424 poles)
+[2s] layer 1 labeled (3424 poles)
+[2s] layer 2 labeled (3424 poles)
+[3s] layer 3 labeled (3424 poles)
+[3s] layer 4 labeled (3424 poles)
+[3s] layer 5 labeled (3424 poles)
+[4s] layer 6 labeled (3424 poles)
+[4s] layer 7 labeled (3424 poles)
+[4s] capture layers (8, 9, 10, 11, 12, 13, 14, 15)
+  captured 256/620 rows
+[5s] layer 8 labeled (3424 poles)
+[5s] layer 9 labeled (3424 poles)
+[5s] layer 10 labeled (3424 poles)
+[6s] layer 11 labeled (3424 poles)
+[6s] layer 12 labeled (3424 poles)
+[6s] layer 13 labeled (3424 poles)
+[7s] layer 14 labeled (3424 poles)
+[7s] layer 15 labeled (3424 poles)
+[7s] capture layers (16, 17, 18, 19)
+  captured 256/620 rows
+[8s] layer 16 labeled (3424 poles)
+[8s] layer 17 labeled (3424 poles)
+[8s] layer 18 labeled (3424 poles)
+[9s] layer 19 labeled (3424 poles)
+done 8.8 s
+python3 scripts/neurons_run.py --size 123M --corpus results/neurons/corpus/main.npz --out results/colab_out/nn2c_123M_main_sub48_s0 --layers-per-chunk 8 --batch 256 --resume --subsample 48 --subsample-seed 0
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1611.64it/s]
+[1s] capture layers (0, 1, 2, 3, 4, 5, 6, 7)
+  captured 48/48 rows
+[1s] layer 0 labeled (3424 poles)
+[2s] layer 1 labeled (3424 poles)
+[2s] layer 2 labeled (3424 poles)
+[2s] layer 3 labeled (3424 poles)
+[2s] layer 4 labeled (3424 poles)
+[2s] layer 5 labeled (3424 poles)
+[3s] layer 6 labeled (3424 poles)
+[3s] layer 7 labeled (3424 poles)
+[3s] capture layers (8, 9, 10, 11, 12, 13, 14, 15)
+  captured 48/48 rows
+[3s] layer 8 labeled (3424 poles)
+[3s] layer 9 labeled (3424 poles)
+[4s] layer 10 labeled (3424 poles)
+[4s] layer 11 labeled (3424 poles)
+[4s] layer 12 labeled (3424 poles)
+[4s] layer 13 labeled (3424 poles)
+[5s] layer 14 labeled (3424 poles)
+[5s] layer 15 labeled (3424 poles)
+[5s] capture layers (16, 17, 18, 19)
+  captured 48/48 rows
+[5s] layer 16 labeled (3424 poles)
+[5s] layer 17 labeled (3424 poles)
+[6s] layer 18 labeled (3424 poles)
+[6s] layer 19 labeled (3424 poles)
+done 5.9 s
+python3 scripts/neurons_run.py --size 123M --corpus results/neurons/corpus/main.npz --out results/colab_out/nn2c_123M_main_sub48_s1 --layers-per-chunk 8 --batch 256 --resume --subsample 48 --subsample-seed 1
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1673.70it/s]
+[1s] capture layers (0, 1, 2, 3, 4, 5, 6, 7)
+  captured 48/48 rows
+[1s] layer 0 labeled (3424 poles)
+[2s] layer 1 labeled (3424 poles)
+[2s] layer 2 labeled (3424 poles)
+[2s] layer 3 labeled (3424 poles)
+[2s] layer 4 labeled (3424 poles)
+[2s] layer 5 labeled (3424 poles)
+[3s] layer 6 labeled (3424 poles)
+[3s] layer 7 labeled (3424 poles)
+[3s] capture layers (8, 9, 10, 11, 12, 13, 14, 15)
+  captured 48/48 rows
+[3s] layer 8 labeled (3424 poles)
+[3s] layer 9 labeled (3424 poles)
+[4s] layer 10 labeled (3424 poles)
+[4s] layer 11 labeled (3424 poles)
+[4s] layer 12 labeled (3424 poles)
+[4s] layer 13 labeled (3424 poles)
+[5s] layer 14 labeled (3424 poles)
+[5s] layer 15 labeled (3424 poles)
+[5s] capture layers (16, 17, 18, 19)
+  captured 48/48 rows
+[5s] layer 16 labeled (3424 poles)
+[5s] layer 17 labeled (3424 poles)
+[6s] layer 18 labeled (3424 poles)
+[6s] layer 19 labeled (3424 poles)
+done 5.9 s
+python3 scripts/neurons_run.py --size 123M --corpus results/neurons/corpus/main.npz --out results/colab_out/nn2c_123M_main_sub48_s2 --layers-per-chunk 8 --batch 256 --resume --subsample 48 --subsample-seed 2
+Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00, 1602.71it/s]
+[1s] capture layers (0, 1, 2, 3, 4, 5, 6, 7)
+  captured 48/48 rows
+[1s] layer 0 labeled (3424 poles)
+[2s] layer 1 labeled (3424 poles)
+[2s] layer 2 labeled (3424 poles)
+[2s] layer 3 labeled (3424 poles)
+[2s] layer 4 labeled (3424 poles)
+[2s] layer 5 labeled (3424 poles)
+[3s] layer 6 labeled (3424 poles)
+[3s] layer 7 labeled (3424 poles)
+[3s] capture layers (8, 9, 10, 11, 12, 13, 14, 15)
+  captured 48/48 rows
+[3s] layer 8 labeled (3424 poles)
+[3s] layer 9 labeled (3424 poles)
+[4s] layer 10 labeled (3424 poles)
+[4s] layer 11 labeled (3424 poles)
+[4s] layer 12 labeled (3424 poles)
+[4s] layer 13 labeled (3424 poles)
+[5s] layer 14 labeled (3424 poles)
+[5s] layer 15 labeled (3424 poles)
+[5s] capture layers (16, 17, 18, 19)
+  captured 48/48 rows
+[5s] layer 16 labeled (3424 poles)
+[5s] layer 17 labeled (3424 poles)
+[6s] layer 18 labeled (3424 poles)
+[6s] layer 19 labeled (3424 poles)
+done 5.9 s

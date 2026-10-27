@@ -1,0 +1,132 @@
+{
+  "script": "scripts/neurons_followup_report.py",
+  "git": "0e0abb5",
+  "time_utc": "2026-10-27T05:46:43Z",
+  "host": "vm",
+  "torch": "2.14.1+cpu",
+  "threads": 2,
+  "cuda": false,
+  "argv": [
+    "scripts/neurons_followup_report.py",
+    "--a-runs",
+    "results/colab_out",
+    "--steering",
+    "results/neurons/steering_results.csv",
+    "--out",
+    "results/neurons/followup"
+  ],
+  "a_meta": {
+    "5M": {
+      "script": "scripts/neurons_followup_a.py",
+      "git": "5337a6a",
+      "time_utc": "2026-10-27T05:08:44Z",
+      "host": "e462837293f7",
+      "torch": "2.11.0+cu130",
+      "threads": 4,
+      "cuda": true,
+      "size": "5M",
+      "device": "cuda",
+      "wall_s": 52.8,
+      "blocks": {
+        "early": 1,
+        "mid": 4,
+        "late": 7
+      },
+      "n_blocks": 8,
+      "d_hidden": 512,
+      "n_series": {
+        "mixed": 96,
+        "seasonal": 64,
+        "jump": 30
+      },
+      "n_random_dir": 32,
+      "n_random_group": 16,
+      "n_tasks_run": 148,
+      "only": "all"
+    },
+    "28M": {
+      "script": "scripts/neurons_followup_a.py",
+      "git": "5337a6a",
+      "time_utc": "2026-10-27T05:11:46Z",
+      "host": "e462837293f7",
+      "torch": "2.11.0+cu130",
+      "threads": 4,
+      "cuda": true,
+      "size": "28M",
+      "device": "cuda",
+      "wall_s": 179.2,
+      "blocks": {
+        "early": 2,
+        "mid": 6,
+        "late": 11
+      },
+      "n_blocks": 12,
+      "d_hidden": 1024,
+      "n_series": {
+        "mixed": 96,
+        "seasonal": 64,
+        "jump": 30
+      },
+      "n_random_dir": 32,
+      "n_random_group": 16,
+      "n_tasks_run": 168,
+      "only": "all"
+    },
+    "123M": {
+      "script": "scripts/neurons_followup_a.py",
+      "git": "5337a6a",
+      "time_utc": "2026-10-27T05:19:10Z",
+      "host": "eefca1289c32",
+      "torch": "2.11.0+cu130",
+      "threads": 4,
+      "cuda": true,
+      "size": "123M",
+      "device": "cuda",
+      "wall_s": 678.9,
+      "blocks": {
+        "early": 3,
+        "mid": 10,
+        "late": 19
+      },
+      "n_blocks": 20,
+      "d_hidden": 1712,
+      "n_series": {
+        "mixed": 96,
+        "seasonal": 64,
+        "jump": 30
+      },
+      "n_random_dir": 32,
+      "n_random_group": 16,
+      "n_tasks_run": 201,
+      "only": "all"
+    },
+    "209M": {
+      "script": "scripts/neurons_followup_a.py",
+      "git": "5337a6a",
+      "time_utc": "2026-10-27T05:25:13Z",
+      "host": "9ceb09a9c8b8",
+      "torch": "2.11.0+cu130",
+      "threads": 4,
+      "cuda": true,
+      "size": "209M",
+      "device": "cuda",
+      "wall_s": 1065.4,
+      "blocks": {
+        "early": 4,
+        "mid": 12,
+        "late": 23
+      },
+      "n_blocks": 24,
+      "d_hidden": 2048,
+      "n_series": {
+        "mixed": 96,
+        "seasonal": 64,
+        "jump": 30
+      },
+      "n_random_dir": 32,
+      "n_random_group": 16,
+      "n_tasks_run": 208,
+      "only": "all"
+    }
+  }
+}

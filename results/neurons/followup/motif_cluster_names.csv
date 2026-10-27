@@ -1,0 +1,17 @@
+cluster,name,purity,n,share_flat with noise,share_oscillation,share_peak,centroid_name,share_step up,share_falling,share_step down,share_trough,share_rising
+0,flat with noise,0.5304,33832,0.5304,0.4693,0.00025,oscillation,,,,,
+1,oscillation,0.6005,21789,0.2998,0.6005,0.09375,flat with noise,0.006,,,,
+2,oscillation,0.4232,41242,0.1037,0.4232,,falling,,0.1351,0.2994,0.0385,
+3,oscillation,0.4385,26575,0.1618,0.4385,0.3981,peak,0.00155,,,,
+4,oscillation,0.7003,20303,0.2997,0.7003,,oscillation,,,,,
+5,oscillation,0.5453,22052,0.4096,0.5453,,flat with noise,0.00505,,,0.04015,
+6,oscillation,0.4445,35137,0.1247,0.4445,,step up,0.2379,,,0.1568,0.0362
+7,oscillation,0.3905,42148,0.1091,0.3905,0.05085,step up,0.3477,,,,0.1018
+8,flat with noise,0.6068,53650,0.6068,0.3932,,oscillation,,,,,
+9,oscillation,0.5158,22791,0.3005,0.5158,,flat with noise,,0.008,0.08265,0.093,
+10,flat with noise,1,10894,1,,,flat with noise,,,,,
+11,flat with noise,1,8444,1,,,flat with noise,,,,,
+12,oscillation,0.6309,20600,0.3691,0.6309,,oscillation,,,,,
+13,oscillation,0.5989,22696,0.4011,0.5989,,oscillation,,,,,
+14,oscillation,0.4105,31105,0.09695,0.4105,0.1858,step down,,0.03685,0.2699,,
+15,oscillation,0.4159,27246,0.1641,0.4159,,trough,0.0034,,0.0042,0.4123,

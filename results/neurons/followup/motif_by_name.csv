@@ -1,0 +1,113 @@
+tag,size,role,n_series,name,n_poles,share_of_cohesive,share_of_live
+5M_atlas_main,5M,atlas_main,3580,oscillation,824,0.73375,0.10064
+5M_atlas_main,5M,atlas_main,3580,flat with noise,299,0.26625,0.036517
+5M_atlas_short,5M,context,1034,oscillation,594,0.75765,0.072554
+5M_atlas_short,5M,context,1034,flat with noise,190,0.24235,0.023208
+5M_atlas_long,5M,context,620,oscillation,760,0.71766,0.092819
+5M_atlas_long,5M,context,620,flat with noise,299,0.28234,0.036517
+5M_atlas_xlong,5M,context,48,oscillation,765,0.68182,0.093464
+5M_atlas_xlong,5M,context,48,flat with noise,357,0.31818,0.043616
+28M_atlas_main,28M,atlas_main,3580,oscillation,2141,0.69355,0.087153
+28M_atlas_main,28M,atlas_main,3580,flat with noise,946,0.30645,0.038509
+28M_atlas_short,28M,context,1034,oscillation,1234,0.63347,0.05031
+28M_atlas_short,28M,context,1034,flat with noise,714,0.36653,0.02911
+28M_atlas_long,28M,context,620,oscillation,1968,0.66734,0.080124
+28M_atlas_long,28M,context,620,flat with noise,981,0.33266,0.03994
+28M_atlas_xlong,28M,context,48,oscillation,2056,0.62002,0.083734
+28M_atlas_xlong,28M,context,48,flat with noise,1260,0.37998,0.051315
+123M_atlas_main,123M,atlas_main,3580,oscillation,4450,0.63183,0.064999
+123M_atlas_main,123M,atlas_main,3580,flat with noise,2593,0.36817,0.037874
+123M_atlas_short,123M,context,1034,oscillation,2580,0.6062,0.037741
+123M_atlas_short,123M,context,1034,flat with noise,1676,0.3938,0.024517
+123M_atlas_long,123M,context,620,oscillation,4563,0.65065,0.066651
+123M_atlas_long,123M,context,620,flat with noise,2450,0.34935,0.035787
+123M_atlas_xlong,123M,context,48,flat with noise,5590,0.50662,0.081699
+123M_atlas_xlong,123M,context,48,oscillation,5444,0.49338,0.079565
+209M_atlas_main,209M,atlas_main,3580,oscillation,6630,0.65352,0.067465
+209M_atlas_main,209M,atlas_main,3580,flat with noise,3515,0.34648,0.035768
+209M_atlas_short,209M,context,1034,oscillation,3498,0.603,0.035642
+209M_atlas_short,209M,context,1034,flat with noise,2303,0.397,0.023466
+209M_atlas_long,209M,context,620,oscillation,6419,0.64344,0.065329
+209M_atlas_long,209M,context,620,flat with noise,3557,0.35656,0.036201
+209M_atlas_xlong,209M,context,48,flat with noise,8899,0.53693,0.090642
+209M_atlas_xlong,209M,context,48,oscillation,7675,0.46307,0.078175
+5M_ref_main_full,5M,full_main,3100,oscillation,857,0.73499,0.10467
+5M_ref_main_full,5M,full_main,3100,flat with noise,309,0.26501,0.037738
+5M_main_sub1034_s0,5M,subsample,1034,oscillation,689,0.72147,0.084148
+5M_main_sub1034_s0,5M,subsample,1034,flat with noise,266,0.27853,0.032487
+5M_main_sub1034_s1,5M,subsample,1034,oscillation,710,0.74346,0.086712
+5M_main_sub1034_s1,5M,subsample,1034,flat with noise,245,0.25654,0.029922
+5M_main_sub1034_s2,5M,subsample,1034,oscillation,698,0.72557,0.085247
+5M_main_sub1034_s2,5M,subsample,1034,flat with noise,264,0.27443,0.032242
+5M_main_sub620_s0,5M,subsample,620,oscillation,635,0.71995,0.077553
+5M_main_sub620_s0,5M,subsample,620,flat with noise,247,0.28005,0.030166
+5M_main_sub620_s1,5M,subsample,620,oscillation,658,0.75459,0.080362
+5M_main_sub620_s1,5M,subsample,620,flat with noise,214,0.24541,0.026136
+5M_main_sub620_s2,5M,subsample,620,oscillation,656,0.75143,0.080117
+5M_main_sub620_s2,5M,subsample,620,flat with noise,217,0.24857,0.026502
+5M_main_sub48_s0,5M,subsample,48,oscillation,397,0.64032,0.048539
+5M_main_sub48_s0,5M,subsample,48,flat with noise,223,0.35968,0.027265
+5M_main_sub48_s1,5M,subsample,48,oscillation,306,0.80952,0.037417
+5M_main_sub48_s1,5M,subsample,48,flat with noise,72,0.19048,0.0088041
+5M_main_sub48_s2,5M,subsample,48,oscillation,410,0.61934,0.050116
+5M_main_sub48_s2,5M,subsample,48,flat with noise,252,0.38066,0.030803
+28M_ref_main_full,28M,full_main,3100,oscillation,2195,0.69177,0.089355
+28M_ref_main_full,28M,full_main,3100,flat with noise,978,0.30823,0.039813
+28M_main_sub48_s0,28M,subsample,48,oscillation,963,0.56283,0.039322
+28M_main_sub48_s0,28M,subsample,48,flat with noise,748,0.43717,0.030543
+28M_main_sub1034_s0,28M,subsample,1034,oscillation,1714,0.64123,0.069791
+28M_main_sub1034_s0,28M,subsample,1034,flat with noise,959,0.35877,0.039049
+28M_main_sub1034_s1,28M,subsample,1034,oscillation,1780,0.67424,0.072479
+28M_main_sub1034_s1,28M,subsample,1034,flat with noise,860,0.32576,0.035018
+28M_main_sub1034_s2,28M,subsample,1034,oscillation,1689,0.65389,0.06877
+28M_main_sub1034_s2,28M,subsample,1034,flat with noise,894,0.34611,0.036401
+28M_main_sub620_s0,28M,subsample,620,oscillation,1508,0.63817,0.061421
+28M_main_sub620_s0,28M,subsample,620,flat with noise,855,0.36183,0.034824
+28M_main_sub620_s1,28M,subsample,620,oscillation,1691,0.6697,0.068866
+28M_main_sub620_s1,28M,subsample,620,flat with noise,834,0.3303,0.033965
+28M_main_sub620_s2,28M,subsample,620,oscillation,1678,0.68518,0.068348
+28M_main_sub620_s2,28M,subsample,620,flat with noise,771,0.31482,0.031404
+28M_main_sub48_s1,28M,subsample,48,oscillation,745,0.74649,0.030432
+28M_main_sub48_s1,28M,subsample,48,flat with noise,253,0.25351,0.010335
+28M_main_sub48_s2,28M,subsample,48,oscillation,1048,0.52165,0.042781
+28M_main_sub48_s2,28M,subsample,48,flat with noise,961,0.47835,0.039229
+123M_ref_main_full,123M,full_main,3100,oscillation,4653,0.62946,0.067966
+123M_ref_main_full,123M,full_main,3100,flat with noise,2739,0.37054,0.040008
+123M_main_sub1034_s0,123M,subsample,1034,oscillation,3565,0.57873,0.052081
+123M_main_sub1034_s0,123M,subsample,1034,flat with noise,2595,0.42127,0.03791
+123M_main_sub1034_s1,123M,subsample,1034,oscillation,3747,0.6173,0.054739
+123M_main_sub1034_s1,123M,subsample,1034,flat with noise,2323,0.3827,0.033936
+123M_main_sub1034_s2,123M,subsample,1034,oscillation,3485,0.59757,0.050911
+123M_main_sub1034_s2,123M,subsample,1034,flat with noise,2347,0.40243,0.034286
+123M_main_sub620_s0,123M,subsample,620,oscillation,3132,0.56039,0.045757
+123M_main_sub620_s0,123M,subsample,620,flat with noise,2457,0.43961,0.035896
+123M_main_sub620_s1,123M,subsample,620,oscillation,3567,0.62121,0.052115
+123M_main_sub620_s1,123M,subsample,620,flat with noise,2175,0.37879,0.031777
+123M_main_sub620_s2,123M,subsample,620,oscillation,3321,0.61037,0.048519
+123M_main_sub620_s2,123M,subsample,620,flat with noise,2120,0.38963,0.030973
+123M_main_sub48_s0,123M,subsample,48,oscillation,2167,0.52066,0.031748
+123M_main_sub48_s0,123M,subsample,48,flat with noise,1995,0.47934,0.029228
+123M_main_sub48_s1,123M,subsample,48,oscillation,1725,0.72632,0.025301
+123M_main_sub48_s1,123M,subsample,48,flat with noise,650,0.27368,0.0095336
+123M_main_sub48_s2,123M,subsample,48,flat with noise,2875,0.54102,0.042121
+123M_main_sub48_s2,123M,subsample,48,oscillation,2439,0.45898,0.035734
+209M_ref_main_full,209M,full_main,3100,oscillation,6843,0.64801,0.069636
+209M_ref_main_full,209M,full_main,3100,flat with noise,3717,0.35199,0.037825
+209M_main_sub1034_s0,209M,subsample,1034,oscillation,5190,0.57918,0.052831
+209M_main_sub1034_s0,209M,subsample,1034,flat with noise,3771,0.42082,0.038386
+209M_main_sub1034_s1,209M,subsample,1034,oscillation,5485,0.6322,0.055838
+209M_main_sub1034_s1,209M,subsample,1034,flat with noise,3191,0.3678,0.032485
+209M_main_sub1034_s2,209M,subsample,1034,oscillation,5215,0.61899,0.053086
+209M_main_sub1034_s2,209M,subsample,1034,flat with noise,3210,0.38101,0.032676
+209M_main_sub620_s0,209M,subsample,620,oscillation,4513,0.56547,0.045953
+209M_main_sub620_s0,209M,subsample,620,flat with noise,3468,0.43453,0.035312
+209M_main_sub620_s1,209M,subsample,620,oscillation,5201,0.62943,0.052961
+209M_main_sub620_s1,209M,subsample,620,flat with noise,3062,0.37057,0.03118
+209M_main_sub620_s2,209M,subsample,620,oscillation,4966,0.63921,0.05057
+209M_main_sub620_s2,209M,subsample,620,flat with noise,2803,0.36079,0.028543
+209M_main_sub48_s0,209M,subsample,48,flat with noise,3259,0.51234,0.033269
+209M_main_sub48_s0,209M,subsample,48,oscillation,3102,0.48766,0.031666
+209M_main_sub48_s1,209M,subsample,48,oscillation,2582,0.74474,0.026387
+209M_main_sub48_s1,209M,subsample,48,flat with noise,885,0.25526,0.0090443
+209M_main_sub48_s2,209M,subsample,48,flat with noise,4454,0.58017,0.045479
+209M_main_sub48_s2,209M,subsample,48,oscillation,3223,0.41983,0.032909

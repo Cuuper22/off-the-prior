@@ -23,6 +23,7 @@ from otp.neurons import steer as St  # noqa: E402
 
 SIZES = ("5M", "28M", "123M", "209M")
 MARK = "<!-- follow-up A and C -->"
+MDE_PATH = ""   # set in main()
 THRESH = St.THRESH
 
 
@@ -136,7 +137,7 @@ def mde_table(real: pd.DataFrame, glab: pd.DataFrame, d: pd.DataFrame, p95_pole:
     if len(glab):
         for (s, k, q), x in glab.groupby(["size", "k", "predicted"]):
             qq = q.split("|")[0]
-            rows.append({"size": s, "object": "group", "setting": f"k={k}", "quantity": q, "p95_control_abs_D": float(x.p95_random_pooled.iloc[0]),
+            rows.append({"size": s, "object": "group", "setting": f"k={int(k)}", "quantity": q, "p95_control_abs_D": float(x.p95_random_pooled.iloc[0]),
                          "threshold": THRESH[qq], "ratio_p95_to_threshold": float(x.p95_random_pooled.iloc[0]) / THRESH[qq]})
     for r in real.itertuples():
         if r.test_set in ("mixed", "jump"):
@@ -146,14 +147,71 @@ def mde_table(real: pd.DataFrame, glab: pd.DataFrame, d: pd.DataFrame, p95_pole:
 
 
 # ---------------------------------------------------------------------------------------------
+
+REPRODUCE_A = [
+    "Commands (each size writes one folder `results/colab_out/nn2_a_<S>`; the capture runs for part C write `results/colab_out/nn2c_<tag>`; both run through "
+    "`scripts/colab/job_nn2_common.sh`, which `scripts/colab/job_nn2_123M.sh` and `job_nn2_209M.sh` call, and which the 5M and 28M jobs also used):", "",
+    "```",
+    "python3 scripts/neurons_followup_a.py --size <S> --poles results/neurons/<S>/poles.csv --corpus results/neurons/corpus/main.npz \\",
+    "    --out results/colab_out/nn2_a_<S> --batch 128 --checkpoint-every 10 --resume",
+    "python3 scripts/neurons_run.py --size <S> --corpus results/neurons/corpus/main.npz --out results/colab_out/nn2c_<tag> \\",
+    "    --layers-per-chunk 8 --batch <batch> --resume [--subsample <n> --subsample-seed <seed>]      # rows of followup/plan_c.csv",
+    "python3 scripts/neurons_followup_c.py --atlas <atlas colab_out> --fb <follow-up B colab_out/fb> --flat results/colab_out \\",
+    "    --corpus-dir results/neurons/corpus --out results/neurons/followup",
+    "python3 scripts/neurons_followup_report.py --a-runs results/colab_out --steering results/neurons/steering_results.csv --out results/neurons/followup",
+    "```", "",
+    "The `nn2_a_<S>` folders (scores, readouts, meta) are committed under `results/colab_out/`; the `nn2c_<tag>` capture files (about 18 MB each) are not, and the cohesion tables "
+    "in section C are derived from them by `scripts/neurons_followup_c.py`. Job logs and environment files are in `results/colab/nn2-small/`, `nn2-123M/`, `nn2-209M/`.", "",
+]
+
+
+def summary_a(real, gsum, metas) -> list:
+    L = []
+    if len(metas):
+        rows = [{"size": s, "device": m.get("device"), "n_tasks_run": m.get("n_tasks_run"), "wall_s": m.get("wall_s"), "git": m.get("git"),
+                 "n_series_mixed": m.get("n_series", {}).get("mixed"), "n_series_seasonal": m.get("n_series", {}).get("seasonal"),
+                 "n_series_jump": m.get("n_series", {}).get("jump"), "n_random_dir": m.get("n_random_dir"), "n_random_group": m.get("n_random_group")}
+                for s, m in metas.items()]
+        L += ["Runs (from `meta.json` of each folder):", "", md(pd.DataFrame(rows)), ""]
+    if len(real):
+        r = real[real.test_set.isin(["mixed", "jump"])]
+        late = r[(r.block_name == "late") & (r.site == "F") & (r.kind == "pooled")]
+        rows = []
+        for (sz, var), x in late.groupby(["size", "variable"]):
+            x = x[x.test_set == ("jump" if var == "postjump" else "mixed")]
+            if len(x):
+                y = x.iloc[0]
+                rows.append({"size": sz, "variable": var, "block": "late", "site": "F", "gain": y.gain, "effect_size_D": y.effect_size, "p95_random": y.p95_random,
+                             "orig_match": bool(y.orig_match), "cal_match": bool(y.cal_match)})
+        if rows:
+            L += ["Late block, forecast-token site, pooled direction (`postjump` on the jump series, the others on the mixed series; `gain` = effect on the predicted quantity divided by the move in context standard deviations, so 1 would be a 1:1 response):", "",
+                  md(pd.DataFrame(rows).sort_values(["variable", "size"])), ""]
+            t = pd.DataFrame(rows).pivot_table(index="size", columns="variable", values="gain")
+            if {"level", "postjump"} <= set(t.columns):
+                t = t.reset_index()
+                t["postjump_gain_smaller"] = t.postjump < t.level
+                L += ["Pre-registered prediction (post-jump gain smaller than the level gain), late block, forecast-token site, pooled direction:", "",
+                      md(t[["size", "level", "postjump", "postjump_gain_smaller"]].rename(columns={"level": "level_gain", "postjump": "postjump_gain"})), ""]
+        lc = r[(r.block_name == "late") & r.site.isin(["C1", "C4"])]
+        L += ["Late-block context sites (`C1`, `C4`): the output of the last block at context tokens is not read by anything after it, and the measured effects there are "
+              f"at most {lc.effect_size.abs().max():.3g} in absolute value over all sizes, variables and kinds (rows `late`, `C1`/`C4` in the cell tables); these cells are not a test of the readout.", ""]
+    if len(real) and len(gsum):
+        L += ["Group steering is read together with the minimum detectable effect (`mde.csv`): `ratio_p95_to_threshold` = 95th percentile of the control effects divided by the "
+              "original threshold of the quantity.", ""]
+    return L
+
+
 def section_a(readouts, real, glab, gsum, single, metas) -> str:
     L = ["## A. Steering power (pre-registration: `../steering_preregistration_followup.md`)", ""]
     if real.empty and glab.empty:
         return "\n".join(L + ["No run files found."])
+    L += REPRODUCE_A
     L += ["Quantities, scales, test series and the matching criterion are those of the original steering. The calibrated criterion "
           "counts an effect as big when `|D|` (D = effect at the top scale minus effect at scale 0) exceeds the 95th percentile of `|D|` over the "
           "matched controls; it also requires the monotone and interval conditions. Files: `direction_readouts.csv`, `direction_steering.csv`, "
-          "`group_steering.csv`, `group_summary.csv`, `mde.csv`, `single_pole_calibrated.csv`.", ""]
+          "`group_steering.csv`, `group_summary.csv`, `mde.csv`, `single_pole_calibrated.csv`. `direction` in the group and pole tables is the predicted sign "
+          "of the effect.", ""]
+    L += summary_a(real, gsum, metas)
     if not readouts.empty:
         L += ["### A1. Readouts of known variables from the residual stream (`direction_readouts.csv`)", "",
               "Held-out R^2 of the ridge readout at the output of the early / middle / late block, by token set (`pooled`: context and forecast tokens).", "",
@@ -187,7 +245,48 @@ def section_a(readouts, real, glab, gsum, single, metas) -> str:
         L += ["### A3. Single poles, re-judged with the calibrated criterion (`single_pole_calibrated.csv`)", "",
               "From the original run (`../steering_results.csv`): 144 random control poles per size judged for level, slope and spread. Labeled poles of the amp and phase groups have no control "
               "distribution and are not in this table.", "", md(single), ""]
+    if os.path.exists(MDE_PATH):
+        m = pd.read_csv(MDE_PATH)
+        m1 = m[(m.object != "direction") & (m.quantity == "level")]
+        m1 = m1.assign(cell=m1.object + " " + m1.setting).pivot_table(index="size", columns="cell", values="p95_control_abs_D")
+        m2 = m[(m.object == "direction") & m.setting.isin(["level/pooled/late/F", "noise/pooled/late/F", "level/pooled/mid/F", "level/pooled/early/F"])]
+        m2 = m2.pivot_table(index="size", columns="setting", values="p95_control_abs_D")
+        L += ["### A4. Minimum detectable effect (`mde.csv`)", "",
+              "95th percentile of `|D|` over matched controls (single poles: 144 random poles; groups: random groups of the same size; directions: random directions of equal norm). "
+              "The original thresholds are in the `threshold` column of `mde.csv`. Single poles and groups, quantity `level`:", "", md(m1.reset_index()), "",
+              "Directions (selected cells; all cells are in `mde.csv`):", "", md(m2.reset_index()), ""]
     return "\n".join(L)
+
+
+def summary_c(motif: pd.DataFrame, names: pd.DataFrame, prov_path: str) -> list:
+    L = []
+    if os.path.exists(prov_path):
+        pv = json.load(open(prov_path))
+        L += [f"Vocabulary fitted on {pv.get('vocab_patches')} top-exemplar patches (K = {pv.get('K_main')}); {pv.get('n_runs')} capture runs; wall time of the clustering script {pv.get('wall_s')} s "
+              f"(`provenance_motifs.json`).", ""]
+    if len(names):
+        cnt = names.name.value_counts()
+        L += ["Names come from a fixed rule applied to the patches of each cluster (step, oscillation, rising or falling, peak or trough, flat with noise; first rule that fires, in that order). "
+              "Clusters named by name: " + ", ".join(f"{k} {v}" for k, v in cnt.items()) + ". `purity` is the share of the cluster's patches that the rule assigns to the cluster's name; "
+              "`centroid_name` is the rule applied to the cluster mean. The rule does not separate most clusters from each other, so the cluster id, not the name, is the label; the tables below use cluster ids only.", ""]
+    full = motif[motif.role == "full_main"][["size", "n_series", "n_live", "cohesive_top6", "null_top6_mean", "one_job_0.7", "both_known_and_motif", "motif_only", "known_only", "neither"]]
+    if len(full):
+        L += ["Share of poles with mostly one cluster (at least 6 of 8 top exemplars) next to the known-variable one-job share, full main corpus (3100 series):", "", md(full), ""]
+    sub = motif[motif.role.isin(["full_main", "subsample"])].groupby(["size", "n_series"]).agg(
+        cohesive_top6=("cohesive_top6", "mean"), one_job=("one_job_0.7", "mean"), runs=("tag", "count")).reset_index().sort_values(["size", "n_series"], ascending=[True, False])
+    if len(sub):
+        L += ["Same quantities on same-size subsamples of the main corpus (mean over seeds):", "", md(sub), ""]
+        pred = []
+        for sz, x in sub.groupby("size"):
+            a = x[x.n_series == 48]
+            b = x[x.n_series == 3100]
+            if len(a) and len(b):
+                pred.append({"size": sz, "cohesive_at_48": float(a.cohesive_top6.iloc[0]), "cohesive_at_3100": float(b.cohesive_top6.iloc[0]),
+                             "one_job_at_48": float(a.one_job.iloc[0]), "one_job_at_3100": float(b.one_job.iloc[0]),
+                             "cohesion_rises_at_48": bool(a.cohesive_top6.iloc[0] > b.cohesive_top6.iloc[0])})
+        if pred:
+            L += ["Pre-registered prediction (motif cohesion rises with fewer series, as the one-job share does):", "", md(pd.DataFrame(pred)), ""]
+    return L
 
 
 def section_c(motif: pd.DataFrame, names: pd.DataFrame, byname: pd.DataFrame) -> str:
@@ -200,6 +299,7 @@ def section_c(motif: pd.DataFrame, names: pd.DataFrame, byname: pd.DataFrame) ->
           "(theta 0.7, floor 0.1).", "", "Cluster names (`motif_cluster_names.csv`):", ""]
     if len(names):
         L += [md(names[[c for c in ["cluster", "name", "purity", "centroid_name", "n"] if c in names]]), ""]
+    L += summary_c(motif, names, os.path.join(os.path.dirname(MDE_PATH), "provenance_motifs.json"))
     cols = ["tag", "role", "n_series", "n_live", "cohesive_top6", "null_top6_mean", "cohesive_mid6", "one_job_0.7", "both_known_and_motif", "motif_only", "known_only", "neither"]
     for s in SIZES:
         x = motif[motif["size"] == s]
@@ -248,6 +348,8 @@ def main():
     motif = pd.read_csv(os.path.join(a.out, "motif_clusters.csv")) if os.path.exists(os.path.join(a.out, "motif_clusters.csv")) else pd.DataFrame()
     names = pd.read_csv(os.path.join(a.out, "motif_cluster_names.csv")) if os.path.exists(os.path.join(a.out, "motif_cluster_names.csv")) else pd.DataFrame()
     byname = pd.read_csv(os.path.join(a.out, "motif_by_name.csv")) if os.path.exists(os.path.join(a.out, "motif_by_name.csv")) else pd.DataFrame()
+    global MDE_PATH
+    MDE_PATH = os.path.join(a.out, "mde.csv")
     text = section_a(readouts, real, glab, gsum, single, metas) + "\n\n" + section_c(motif, names, byname)
     rp = os.path.join(a.out, "README.md")
     body = open(rp).read()
