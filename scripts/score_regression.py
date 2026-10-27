@@ -86,13 +86,15 @@ def subset_indices(samples, n: int | None, seed: int) -> list[int]:
     return sorted(keep)
 
 
-def run_scores(set_name: str, forecaster: str, samples, ids: list[int], out_dir: str, chunk: int = 40) -> float:
+def run_scores(set_name: str, forecaster: str, samples, ids: list[int], out_dir: str, chunk: int = 40,
+               worker: tuple[int, int] = (0, 1)) -> float:
     """Score one forecaster on the chosen windows in chunks; each chunk is cached under `out_dir/parts`
-    so an interrupted run resumes where it stopped. Returns the seconds spent in this call."""
+    so an interrupted run resumes where it stopped. `worker=(i, n)` runs only the chunks whose number is i modulo n,
+    so n processes can share one set without repeating work. Returns the seconds spent in this call."""
     t0 = time.time()
     for k in range(0, len(ids), chunk):
         part = os.path.join(out_dir, "parts", f"{set_name}__{forecaster}__{k // chunk:03d}.csv")
-        if os.path.exists(part):
+        if (k // chunk) % worker[1] != worker[0] or os.path.exists(part):
             continue
         cid = ids[k:k + chunk]
         sub = [samples[i] for i in cid]
@@ -284,11 +286,13 @@ def main():
     ap.add_argument("--subset", nargs="*", default=[], metavar="FORECASTER=N",
                     help="score this forecaster on a seeded stratified subset of about N windows per set")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--worker", default="0/1", metavar="I/N", help="run only chunks with number I modulo N (N processes share the work)")
     ap.add_argument("--summarize-only", action="store_true")
     ap.add_argument("--parts-only", action="store_true", help="run the forecasters and cache the chunks, skip assembling tables")
     a = ap.parse_args()
     set_threads(1)
     os.makedirs(a.out, exist_ok=True)
+    worker = tuple(int(x) for x in a.worker.split("/"))
     sub_n = {k: int(v) for k, v in (s.split("=") for s in a.subset)}
     t_start = time.time()
     if not a.summarize_only:
@@ -301,7 +305,7 @@ def main():
                     continue
                 ids = subset_indices(samples, sub_n.get(f), a.seed)
                 print(f"[{set_name}] {f}: {len(ids)}/{len(samples)} windows", flush=True)
-                dt = run_scores(set_name, f, samples, ids, a.out)
+                dt = run_scores(set_name, f, samples, ids, a.out, worker=worker)
                 print(f"    {f} done in {dt:.0f}s this call", flush=True)
     if a.parts_only:
         return
