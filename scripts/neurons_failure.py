@@ -6,8 +6,8 @@ Contexts: samples of the chaos family (same generator code, configs and seeds as
 of an 8192-step context, horizon 128, 8 seeds per config; the oracle uses 200 paths and the realized future is the first
 128 steps of a path simulated for 128 steps, so futures can differ from the map's). A config is a *failing* config for a size when Timestral's MASE is at least 1.5 times the
 oracle's and the method of analogues beats Timestral (geometric means over its seeds); a *reference* config is
-any other config of the same three generators whose Timestral MASE is within 1.5 times the oracle's, or a seasonal
-in-prior control. Generators: Mackey-Glass, Rossler, Kuramoto.
+any other config of the same three generators whose Timestral MASE is within 1.5 times the oracle's, or one of 64
+held-out in-prior seasonal series (period 8..64, first 2048 steps of the long audit corpus). Generators: Mackey-Glass, Rossler, Kuramoto.
 
 Analyses per size:
   activation   mean activation of period- and phase-labeled one-job poles on failing and on reference contexts
@@ -39,6 +39,8 @@ from otp.mechanism import dominant_period, template_forecast  # noqa: E402
 from otp.metrics import naive_scale  # noqa: E402
 from otp.model import MEDIAN_INDEX, default_device, set_threads  # noqa: E402
 from otp.neurons import capture as Cap  # noqa: E402
+from otp.neurons import corpus as C  # noqa: E402
+from otp.neurons import variables as V  # noqa: E402
 from otp.neurons import score as Sc  # noqa: E402
 from otp.neurons import steer as St  # noqa: E402
 
@@ -89,22 +91,31 @@ def main():
     ap.add_argument("--size", required=True)
     ap.add_argument("--runs", default="results/colab_out")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--ref-corpus", default="results/neurons/corpus/long.npz",
+                    help="held-out seasonal series (period 8..64) of this corpus, first 2048 steps, serve as in-prior reference contexts")
+    ap.add_argument("--n-ref", type=int, default=64)
     ap.add_argument("--device", default=None)
     a = ap.parse_args()
     set_threads()
     dev = a.device or default_device()
     os.makedirs(a.out, exist_ok=True)
     t0 = time.time()
-    S = build_samples()
-    ctx = np.stack([s.context[0, -T:] for s in S]).astype(np.float32)
-    fut = np.stack([s.future[0, :H] for s in S])
-    orc = np.stack([s.oracle_q[0, :H, MEDIAN_INDEX] for s in S])
+    cache = os.path.join(a.out, "failure_inputs.npz")           # contexts, futures and oracle medians do not depend on the size
+    if os.path.exists(cache):
+        z = np.load(cache, allow_pickle=False)
+        ctx, fut, orc, cfg, sids = z["ctx"], z["fut"], z["orc"], z["cfg"], z["sid"]
+    else:
+        S = build_samples()
+        ctx = np.stack([s.context[0, -T:] for s in S]).astype(np.float32)
+        fut = np.stack([s.future[0, :H] for s in S])
+        orc = np.stack([s.oracle_q[0, :H, MEDIAN_INDEX] for s in S])
+        cfg = np.array([s.meta["config_id"] for s in S])
+        sids = np.array([s.meta["sample_id"] for s in S])
+        np.savez_compressed(cache, ctx=ctx, fut=fut, orc=orc, cfg=cfg, sid=sids)
     scale = naive_scale(ctx.astype(float), 1)
     tmpl = np.stack([template_forecast(c.astype(float), H, dominant_period(c)) for c in ctx])
     ana = np.stack([analog_forecast(c.astype(float), H) for c in ctx])
-    cfg = np.array([s.meta["config_id"] for s in S])
-    gen = np.array([s.meta["generator"] for s in S])
-    print(f"{len(S)} samples built in {time.time() - t0:.0f}s", flush=True)
+    print(f"{len(ctx)} samples built in {time.time() - t0:.0f}s", flush=True)
 
     base = forecasts(a.size, ctx, [[]], dev)[0]
     m0 = per_sample_metrics(base, fut, orc, ana, tmpl, scale)
@@ -116,7 +127,19 @@ def main():
         i = cfg == c_
         ratio = gm(m0["mase"][i]) / gm(orc_m[i])
         status[c_] = "failing" if (ratio >= 1.5 and gm(ana_m[i]) < gm(m0["mase"][i])) else ("reference" if ratio < 1.5 else "other")
-    st = np.array([status[c_] for c_ in cfg])
+    st = np.array([status[c_] for c_ in cfg], dtype="U9")
+    # in-prior seasonal reference contexts (activations only; no realized future is scored)
+    ref_ctx = np.zeros((0, T), np.float32)
+    if a.ref_corpus and os.path.exists(a.ref_corpus):
+        cc, _ = C.load_corpus(a.ref_corpus)
+        sc_ = {n: i for i, n in enumerate(V.SERIES_COLS)}
+        per_ = 2.0 ** cc["sv"][:, sc_["s_log2_period"]]
+        held = np.where((cc["split"] == 1) & (cc["sv"][:, sc_["s_has_season"]] == 1) & (per_ >= 8) & (per_ <= 64))[0]
+        pick = np.sort(np.random.default_rng(St.SAMPLE_SEED).choice(held, min(a.n_ref, len(held)), replace=False))
+        ref_ctx = cc["values"][pick, :T].astype(np.float32)
+    n_seas = len(ref_ctx)
+    ctx_all = np.concatenate([ctx, ref_ctx]) if n_seas else ctx
+    st_all = np.concatenate([st, np.array(["reference"] * n_seas, dtype=st.dtype)]) if n_seas else st
     cfg_rows = [{"size": a.size, "config": c_, "status": status[c_], "n": int((cfg == c_).sum()),
                  "mase_timestral": gm(m0["mase"][cfg == c_]), "mase_oracle": gm(orc_m[cfg == c_]),
                  "mase_analog": gm(ana_m[cfg == c_])} for c_ in sorted(set(cfg))]
@@ -125,10 +148,10 @@ def main():
 
     # pole activations on these contexts: mean over the last TAIL context patches and the forecast tokens
     n_blocks, hidden = Cap.layer_dims(a.size, dev)
-    acc = {"pos": np.zeros((len(S), n_blocks, hidden), np.float32), "neg": np.zeros((len(S), n_blocks, hidden), np.float32)}
+    acc = {"pos": np.zeros((len(ctx_all), n_blocks, hidden), np.float32), "neg": np.zeros((len(ctx_all), n_blocks, hidden), np.float32)}
     import torch
-    for i in range(0, len(S), 32):
-        xb = torch.as_tensor(ctx[i:i + 32])
+    for i in range(0, len(ctx_all), 32):
+        xb = torch.as_tensor(ctx_all[i:i + 32])
         _, zs, _ = Cap.forward_with_mlp(a.size, xb, device=dev)
         for li in range(n_blocks):
             z = zs[li][:, -(TAIL + Cap.N_FC):, :].float()
@@ -136,7 +159,7 @@ def main():
             acc["neg"][i:i + 32, li] = torch.relu(-z).mean(1).cpu().numpy()
     t = Sc.add_derived(pd.read_csv(os.path.join(a.runs, f"nn_{a.size}_main", "scores_partial.csv")))
     t["cls"] = Sc.klass(t, 0.7, 0.1)
-    fail, ref = st == "failing", st == "reference"
+    fail, ref = st_all == "failing", st_all == "reference"
     rows = []
 
     def d_stat(x, y):
@@ -166,7 +189,7 @@ def main():
     # ablations on failing contexts
     sel_per = t[t["periodic"] & (t["d"] >= D_MIN)].sort_values("d", ascending=False)
     rng = np.random.default_rng(0)
-    fi = np.where(fail)[0]
+    fi = np.where(fail)[0]                      # indices below len(ctx): reference-only seasonal contexts are never failing
     n_set = len(sel_per)
     sets = {"periodic_elevated": [(int(r.layer), int(r.neuron), 1 if r.sign == "pos" else -1) for r in sel_per.itertuples()]}
     if n_set:
@@ -202,12 +225,12 @@ def main():
                          "dist_oracle_before": float(m_b["dist_oracle"].mean()), "dist_oracle_after": float(m1["dist_oracle"].mean()),
                          "dist_analog_before": float(m_b["dist_analog"].mean()), "dist_analog_after": float(m1["dist_analog"].mean())})
     pd.DataFrame(rows).to_csv(os.path.join(a.out, f"failure_link_{a.size}.csv"), index=False, float_format="%.5g")
-    per = pd.DataFrame({"size": a.size, "sample_id": [s.meta["sample_id"] for s in S], "config": cfg, "status": st,
+    per = pd.DataFrame({"size": a.size, "sample_id": sids, "config": cfg, "status": st,
                         **{f"{k}_timestral": v for k, v in m0.items()}, "mase_oracle": orc_m, "mase_analog": ana_m})
     per.to_csv(os.path.join(a.out, f"failure_samples_{a.size}.csv"), index=False, float_format="%.5g")
     write_json(os.path.join(a.out, f"meta_{a.size}.json"), provenance(
-        "scripts/neurons_failure.py", size=a.size, device=dev, wall_s=round(time.time() - t0, 1), n_samples=len(S), T=T, H=H,
-        n_paths=N_PATHS, seeds=SEEDS, d_min=D_MIN, tail_patches=TAIL, status_counts={k: int((st == k).sum()) for k in ("failing", "reference", "other")}))
+        "scripts/neurons_failure.py", size=a.size, device=dev, wall_s=round(time.time() - t0, 1), n_samples=len(ctx), n_seasonal_reference=n_seas, ref_corpus=a.ref_corpus, T=T, H=H,
+        n_paths=N_PATHS, seeds=SEEDS, d_min=D_MIN, tail_patches=TAIL, status_counts={k: int((st_all == k).sum()) for k in ("failing", "reference", "other")}))
     print("done", round(time.time() - t0, 1), flush=True)
 
 
