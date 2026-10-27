@@ -1,0 +1,23 @@
+{
+  "method": "gradient",
+  "seed": 2,
+  "size": "5M",
+  "budget": 3000,
+  "calls": 2997,
+  "evaluations": 15,
+  "replayed_from_checkpoint": 0,
+  "sample_generations_this_process": 45,
+  "timestral_calls_made_by_objective": 45,
+  "best_fitness": 8.87575565801155,
+  "wall_seconds": 41.94184851646423,
+  "info": {
+    "n_steps": 246,
+    "screened": 3,
+    "starts": 3,
+    "rejected_steps": [
+      0,
+      0,
+      0
+    ]
+  }
+}

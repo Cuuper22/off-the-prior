@@ -3,3 +3,6 @@ set -e
 export OTP_DEVICE=cuda OTP_THREADS=4 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
 nvidia-smi --query-gpu=name --format=csv,noheader
 python3 scripts/search.py --methods map_elites --seeds 0 1 2 --budget 3000 --size 5M --workers 11 --out results/colab_out --flat-prefix srch_ --resume
+# Gradient search (a) variant with 12 starts instead of 3 (same 3000-call budget): the 3-start runs in job_search_a.sh
+# stop improving after about 60 of their 246 steps.
+python3 scripts/search.py --methods gradient --grad-restarts 12 --label gradient_r12 --seeds 0 1 2 --budget 3000 --size 5M --workers 11 --out results/colab_out --flat-prefix srch_ --resume

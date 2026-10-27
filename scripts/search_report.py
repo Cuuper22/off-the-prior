@@ -21,8 +21,8 @@ from otp.io import read_json, write_json  # noqa: E402
 from otp.search.objective import FAMILIES, GRID_SHAPE, N_ENTROPY_BINS, cell_of  # noqa: E402
 
 THRESHOLDS = (1.5, 2.0, 3.0)
-METHODS = ("cmaes", "map_elites", "gradient")
-LABEL = {"cmaes": "CMA-ES", "map_elites": "MAP-Elites", "gradient": "gradient (a)"}
+METHODS = ("cmaes", "map_elites", "gradient", "gradient_r12")
+LABEL = {"cmaes": "CMA-ES", "map_elites": "MAP-Elites", "gradient": "gradient (a)", "gradient_r12": "gradient (a), 12 starts"}
 
 
 def md(df: pd.DataFrame, floatfmt: str = ".4g") -> str:
@@ -193,14 +193,14 @@ def main(argv=None):
                               "recipe (* = modulate, weight)": " ".join(parts), "noise_sd": rec["noise_sd"]})
             L.append(md(pd.DataFrame(rows_)) + "\n")
     # gradient
-    gt = sorted(glob.glob(os.path.join(d, "runs", "gradient_seed*", "run.json")))
+    gt = sorted(glob.glob(os.path.join(d, "runs", "gradient*_seed*", "run.json")))
     if gt:
         L.append("## Gradient search (a): run facts\n")
         rr = []
         for p in gt:
             r = read_json(p)
             tr = pd.read_csv(os.path.join(os.path.dirname(p), "grad_trace.csv"))
-            rr.append({"seed": r["seed"], "starts": r["info"]["starts"], "screened_draws": r["info"]["screened"], "steps": r["info"]["n_steps"],
+            rr.append({"method": r["method"], "seed": r["seed"], "starts": r["info"]["starts"], "screened_draws": r["info"]["screened"], "steps": r["info"]["n_steps"],
                        "rejected_steps_per_start": str(r["info"]["rejected_steps"]), "calls": r["calls"],
                        "scored_genomes": r["evaluations"], "best_fitness": r["best_fitness"]})
         L.append(md(pd.DataFrame(rr)) + "\n")

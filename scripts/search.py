@@ -36,7 +36,7 @@ TOP_N = 20
 
 
 def run_dir_for(args, method: str, seed: int) -> str:
-    name = f"{method}_seed{seed}"
+    name = f"{args.label or method}_seed{seed}"
     if args.flat_prefix:
         return os.path.join(args.out, args.flat_prefix + name)
     return os.path.join(args.out, "runs", name)
@@ -66,7 +66,8 @@ def do_search(args, method: str, seed: int, obj: Objective):
         print(f"{method} seed {seed}: already done, skipping", flush=True)
         return
     t0 = time.time()
-    ev = Evaluator(obj, args.budget, rd, method, seed, resume=args.resume)
+    label = args.label or method
+    ev = Evaluator(obj, args.budget, rd, label, seed, resume=args.resume)
     gen0, calls0 = obj.sample_generations, obj.calls
     archive = None
     if method == "cmaes":
@@ -78,7 +79,7 @@ def do_search(args, method: str, seed: int, obj: Objective):
     else:
         raise ValueError(method)
     ev.finish()
-    elites = {"method": method, "seed": seed, "size": args.size, "budget": args.budget, "calls": ev.calls,
+    elites = {"method": label, "seed": seed, "size": args.size, "budget": args.budget, "calls": ev.calls,
               "top": top_elites(ev.rows)}
     if archive is not None:
         elites["archive"] = [{"family_index": c[0], "entropy_bin": c[1], "fitness": v[0], "hash": v[2],
@@ -87,7 +88,7 @@ def do_search(args, method: str, seed: int, obj: Objective):
     write_json(os.path.join(rd, "elites.json"), elites)
     wall = time.time() - t0
     write_json(os.path.join(rd, "run.json"), {
-        "method": method, "seed": seed, "size": args.size, "budget": args.budget, "calls": ev.calls,
+        "method": label, "algorithm": method, "grad_restarts": args.grad_restarts, "grad_draws": args.grad_draws, "seed": seed, "size": args.size, "budget": args.budget, "calls": ev.calls,
         "evaluations": len(ev.rows), "replayed_from_checkpoint": ev.n_replayed,
         "sample_generations_this_process": obj.sample_generations - gen0,
         "timestral_calls_made_by_objective": obj.calls - calls0, "best_fitness": ev.best,
@@ -133,6 +134,8 @@ def main(argv=None):
     ap.add_argument("--sizes", nargs="+", default=["5M", "28M", "123M", "209M"], help="input_space only")
     ap.add_argument("--n-series", type=int, default=20, help="input_space only")
     ap.add_argument("--workers", type=int, default=1)
+    ap.add_argument("--label", default="", help="name for the run folders and the method column (default: the method name); "
+                    "use it to run a variant, e.g. --methods gradient --grad-restarts 12 --label gradient_r12")
     ap.add_argument("--grad-restarts", type=int, default=3)
     ap.add_argument("--grad-draws", type=int, default=2)
     ap.add_argument("--out", default="results/search")

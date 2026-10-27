@@ -1,0 +1,1 @@
+First attempt of `results/search/colab_jobs/job_search_a.sh` (session `otp-srch-a`). The driver ended it while the runtime was still alive (a failed session listing was read as "gone"), so it has no results; only the pulled checkpoint `partial/srch_cmaes_seed0/scores_partial.csv` exists. That file was uploaded into the rerun `srch-a2` (resume), which produced the results.
