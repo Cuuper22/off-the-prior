@@ -63,7 +63,8 @@ def cmd_run(a) -> None:
     t0 = time.time()
     n_pool = a.pool_batches or a.steps  # pools hold `n_pool` batches; a run uses the first `steps` of them
     sched = X.schedule(n_pool, a.seed, contexts, horizons)
-    rows_f = -(-a.batch_size // len(S.train_families(a.protocol, a.holdout)))  # ceil: rows one family can supply
+    pool_bs = max(a.batch_size, a.pool_batch_size or 0)  # a pool made for a larger batch also serves smaller ones
+    rows_f = -(-pool_bs // len(S.train_families(a.protocol, a.holdout)))  # ceil: rows one family can supply
     fam_pools, pool_files, pool_src = [], [], {}
     for fam in S.train_families(a.protocol, a.holdout):
         pool, src, path = X.get_pool(a.pool_dir, f"{a.protocol}-{fam}", S.family_train_factory(a.protocol, fam),
@@ -71,7 +72,7 @@ def cmd_run(a) -> None:
         fam_pools.append(pool)
         pool_files.append(os.path.basename(path))
         pool_src[fam] = src
-    rep_pool, src, path = X.get_pool(a.pool_dir, "replay", in_prior, sched, a.batch_size, a.seed, contexts, horizons,
+    rep_pool, src, path = X.get_pool(a.pool_dir, "replay", in_prior, sched, pool_bs, a.seed, contexts, horizons,
                                      workers=a.pool_workers, log=X.log_stderr)
     pool_files.append(os.path.basename(path))
     pool_src["replay"] = src
@@ -127,6 +128,7 @@ def cmd_suite(a) -> None:
                                "--rank", str(a.rank), "--alpha", str(a.alpha), "--seed", str(a.seed),
                                "--warmup", str(a.warmup), "--log-every", str(a.log_every),
                                "--pool-workers", str(a.pool_workers),
+                               *(["--pool-batch-size", str(a.pool_batch_size)] if a.pool_batch_size else []),
                                "--contexts", *map(str, a.contexts), "--horizons", *map(str, a.horizons)]
                         if a.pool_batches:
                             cmd += ["--pool-batches", str(a.pool_batches)]
@@ -159,6 +161,8 @@ def main(argv=None):
         p.add_argument("--log-every", type=int, default=10)
         p.add_argument("--threads", type=int, default=None)
         p.add_argument("--pool-batches", type=int, default=None, help="batches per cached pool (default: steps); a run uses the first `steps`")
+        p.add_argument("--pool-batch-size", type=int, default=None,
+                       help="batch size the cached pools are built for (default: --batch-size); sizes with smaller batches share the pools")
         p.add_argument("--pool-workers", type=int, default=1, help="processes for simulating training series")
         p.add_argument("--contexts", type=int, nargs="+", default=[256, 512, 1024, 2048])
         p.add_argument("--horizons", type=int, nargs="+", default=[32, 128, 512])

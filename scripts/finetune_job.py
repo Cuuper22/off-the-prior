@@ -262,6 +262,7 @@ def main(argv=None):
                  "--batch-size", str(batch[size]), "--lr", str(lr), "--rank", str(a.rank), "--alpha", str(a.alpha),
                  "--seed", str(a.seed), "--warmup", str(max(1, steps[size] // 20)), "--log-every", str(a.log_every),
                  "--pool-batches", str(a.pool_batches), "--pool-workers", str(a.pool_workers),
+                 "--pool-batch-size", str(max(batch.values())),
                  "--contexts", *map(str, a.contexts), "--horizons", *map(str, a.horizons),
                  "--runs-root", a.runs_root, "--ckpt-root", a.ckpt_root, "--pool-dir", a.pool_dir]
                 + (["--threads", str(a.threads)] if a.threads else []))

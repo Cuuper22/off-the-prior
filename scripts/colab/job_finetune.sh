@@ -15,7 +15,7 @@ python3 scripts/finetune_job.py --out results/colab_out/ft --ckpt-root /content/
   --methods full lora --replay-fracs 0 0.3 0.5 \
   --steps 5M=500 28M=500 123M=300 209M=300 --batch 5M=32 28M=32 123M=16 209M=16 \
   --lr-full 5M=5e-5 28M=3e-5 123M=2e-5 209M=1e-5 --lr-lora 5M=1e-3 28M=1e-3 123M=5e-4 209M=5e-4 \
-  --rank 8 --alpha 16 --pool-batches 500 --pool-workers 8 --contexts 256 512 1024 2048 --horizons 32 128 512 \
+  --rank 8 --alpha 16 --pool-batches 500 --pool-workers 11 --contexts 256 512 1024 2048 --horizons 32 128 512 \
   --n-eval 32 --n-regression 300 --n-paths 500 --threads 4 --checkpoint-every 1 $RESUME \
   --note "Colab run on one A100 through scripts/colab/run_job.sh (job script scripts/colab/job_finetune.sh). Budgets per size are in job.json." \
   --note "Checkpoints were deleted after scoring (--keep-checkpoints not given); only the score tables, costs and loss curves came back." \
