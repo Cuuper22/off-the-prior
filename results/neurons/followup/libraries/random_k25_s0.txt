@@ -1,0 +1,1 @@
+lat_level,lat_slope,lat_regime,lat_log2_period,prev_slope,prev_regime,m_level_ctx,m_jump,m_peak_pos,m_max_z,x_post_cp,x_since_cp,s_season_amp,s_trend,s_ar_rho,s_alpha,x_cp_strength,pos_from_end,tok_fc,fam_in_prior,fam_controlled,gen_variance_jump,gen_frequency_jump,gen_logistic_map,gen_msm_returns
