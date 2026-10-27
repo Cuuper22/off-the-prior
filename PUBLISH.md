@@ -14,6 +14,11 @@ rests on the `Salesforce/GiftEval` card's apache-2.0 tag (see `license_evidence`
 verified move to the gitignored restricted file (flag in `otp/realdata_sources.py`), and only the
 re-fetch script and hashes are published for them.
 
+Size: `results/neurons/` adds about 250 MB (per-size `poles*.npz` archives and the browser JSON). No file is
+over 50 MB, so GitHub accepts it, but consider moving `results/neurons/*/poles*.npz` and
+`results/neurons/browser/` to the Hugging Face dataset (step 2) and dropping them from history in the same
+cleanup, keeping `poles.csv` and the summary tables in git.
+
 ## 1. GitHub repository
 
 ```bash
