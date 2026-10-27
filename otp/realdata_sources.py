@@ -47,6 +47,37 @@ class License:
 
 
 PUBLIC_DOMAIN_US = "public domain (US Government work)"
+# Upstream licenses of the GIFT-Eval datasets used in the `real` set, checked on 2026-10-27 (UTC) at the original
+# publisher (the Salesforce/GiftEval card's apache-2.0 tag covers the collection, not each dataset's origin).
+# Only datasets whose origin grants redistribution are committed; see GE_REDISTRIBUTABLE in otp/realdata.py.
+_GE_CHECKED = "checked 2026-10-27 UTC"
+GE_UPSTREAM: dict[str, License] = {
+    "electricity/H": License("CC BY 4.0 (UCI ElectricityLoadDiagrams20112014)", "https://archive.ics.uci.edu/dataset/321/electricityloaddiagrams20112014", True,
+                             f"UCI dataset page states CC BY 4.0; {_GE_CHECKED}"),
+    "electricity/D": License("CC BY 4.0 (UCI ElectricityLoadDiagrams20112014)", "https://archive.ics.uci.edu/dataset/321/electricityloaddiagrams20112014", True,
+                             f"UCI dataset page states CC BY 4.0; daily totals of the same data; {_GE_CHECKED}"),
+    "solar/H": License("NREL data notice (Solar Power Data for Integration Studies)", "https://data.nrel.gov/node/1/license", False,
+                       "NREL terms allow use and copying if the entire NREL notice appears in all copies; the notice text is not yet "
+                       f"included in this repository, so windows stay restricted until it is; {_GE_CHECKED}"),
+    "solar/10T": License("NREL data notice (Solar Power Data for Integration Studies)", "https://data.nrel.gov/node/1/license", False,
+                         "NREL terms allow use and copying if the entire NREL notice appears in all copies; the notice text is not yet "
+                         f"included in this repository, so windows stay restricted until it is; {_GE_CHECKED}"),
+    "LOOP_SEATTLE/H": License("no license found (origin github.com/zhiyongc/Seattle-Loop-Data, via LibCity)", "https://github.com/zhiyongc/Seattle-Loop-Data", False,
+                              f"origin repository has no LICENSE file and its README states no terms; {_GE_CHECKED}"),
+    "M_DENSE/H": License("no license found (origin github.com/rdemedrano/crann_traffic, via LibCity)", "https://github.com/rdemedrano/crann_traffic", False,
+                         f"origin repository has no LICENSE file; {_GE_CHECKED}"),
+    "SZ_TAXI/15T": License("no license found (origin github.com/lehaifeng/T-GCN data folder, via LibCity)", "https://github.com/lehaifeng/T-GCN/tree/master/data", False,
+                           f"origin repository has no LICENSE file and its README states no terms; {_GE_CHECKED}"),
+    "bitbrains_fast_storage/H": License("terms not verified (Grid Workloads Archive GWA-T-12 Bitbrains)", "http://gwa.ewi.tudelft.nl/datasets/gwa-t-12-bitbrains", False,
+                                        f"archive page could not be reached to read its terms; {_GE_CHECKED}"),
+    "kdd_cup_2018_with_missing/H": License("CC BY 4.0 on the Monash/Zenodo copy; original KDD Cup 2018 competition terms not found", "https://zenodo.org/records/4656719", False,
+                                           f"Zenodo record 4656719 states CC BY 4.0, but the competition data's own terms (kdd.org/kdd2018/kdd-cup) could not be confirmed; {_GE_CHECKED}"),
+}
+for _k in ("m4_hourly", "m4_daily", "m4_weekly", "m4_monthly"):
+    GE_UPSTREAM[_k] = License("no license found (M4 competition data, github.com/Mcompetitions/M4-methods)", "https://github.com/Mcompetitions/M4-methods", False,
+                              "origin repository has no LICENSE file and its README states no terms (the Monash archive copy on Zenodo "
+                              f"is CC BY 4.0, but that does not establish the origin's grant); {_GE_CHECKED}")
+
 SOURCES: dict[str, dict] = {
     "gifteval": dict(name="GIFT-Eval (Salesforce/GiftEval on Hugging Face)", url="https://huggingface.co/datasets/Salesforce/GiftEval",
                      license=License("apache-2.0 (Hugging Face dataset card)", "https://huggingface.co/datasets/Salesforce/GiftEval", True,
@@ -722,12 +753,14 @@ def hub_file_rows(pairs, cache_dir: str) -> list[dict]:
         seen.add((sp.source, sp.path))
         if sp.source == "gifteval":
             fn, repo, rev = f"{sp.path}/data-00000-of-00001.arrow", R.GE_REPO, R.GE_REVISION
-            sid = "gifteval" if sp.redistributable else "gifteval_restricted"
+            sid = "gifteval" if (sp.redistributable or sp.path in GE_UPSTREAM) else "gifteval_restricted"
         else:
             fn, repo, rev = f"{sp.path}/train-00000-of-00001.parquet", R.FEV_REPO, R.FEV_REVISION
             sid = "fev"
         local = R._download(repo, rev, fn, cache_dir)
         lic = SOURCES[sid]["license"]
+        if sp.source == "gifteval" and sp.path in GE_UPSTREAM:
+            lic = GE_UPSTREAM[sp.path]
         rows.append({"source_id": sid, "name": SOURCES[sid]["name"] + f" / {sp.path}", "url": f"https://huggingface.co/datasets/{repo}/resolve/{rev}/{fn}",
                      "license": lic.name, "license_url": lic.url, "license_evidence": lic.evidence,
                      "redistributable_derived_windows": lic.redistributable, "file": fn, "bytes": os.path.getsize(local),

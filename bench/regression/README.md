@@ -29,7 +29,7 @@ per-dataset upstream terms were not separately verified, and `restaurant` (compe
 restricted. `autogluon/fev_datasets` states no license and says research use only, so all windows from it are
 restricted. SILSO monthly sunspots (CC BY-NC) and the R datasets (lynx, lh) are restricted. The Transnet BW part
 of the grid-frequency record has no open license and is not used. `sources.csv` has the license and the
-check behind every row. Restricted counts: real 156, real_extra 0, analogues 5.
+check behind every row. Restricted counts: real 372, real_extra 0, analogues 5.
 
 ## Window rule
 
@@ -61,34 +61,34 @@ reuse series of the short-term pairs with their own seeded order, so windows may
 |---|---|---|---|---|---|---|---|---|---|
 | electricity/H | short | energy | H | 16 | 2048 | 2048 | 48 | 24 | yes |
 | electricity/D | short | energy | D | 16 | 1431 | 1431 | 30 | 7 | yes |
-| solar/H | short | energy | H | 16 | 2048 | 2048 | 48 | 24 | yes |
-| solar/10T | short | energy | 10T | 16 | 2048 | 2048 | 48 | 144 | yes |
+| solar/H | short | energy | H | 16 | 2048 | 2048 | 48 | 24 | no |
+| solar/10T | short | energy | 10T | 16 | 2048 | 2048 | 48 | 144 | no |
 | entsoe/1H | short | energy | H | 6 | 2048 | 2048 | 48 | 24 | no |
 | ercot/1H | short | energy | H | 8 | 2048 | 2048 | 48 | 24 | no |
-| LOOP_SEATTLE/H | short | transport | H | 16 | 2048 | 2048 | 48 | 24 | yes |
-| M_DENSE/H | short | transport | H | 16 | 2048 | 2048 | 48 | 24 | yes |
-| SZ_TAXI/15T | short | transport | 15T | 16 | 2048 | 2048 | 48 | 96 | yes |
+| LOOP_SEATTLE/H | short | transport | H | 16 | 2048 | 2048 | 48 | 24 | no |
+| M_DENSE/H | short | transport | H | 16 | 2048 | 2048 | 48 | 24 | no |
+| SZ_TAXI/15T | short | transport | 15T | 16 | 2048 | 2048 | 48 | 96 | no |
 | restaurant | short | sales | D | 16 | 266 | 447 | 30 | 7 | no |
 | favorita_stores/1D | short | sales | D | 16 | 1658 | 1658 | 30 | 7 | no |
 | rossmann/1D | short | sales | D | 16 | 912 | 912 | 30 | 7 | no |
 | rohlik_sales/1D | short | sales | D | 16 | 338 | 1372 | 30 | 7 | no |
 | m5/1W | short | sales | W | 16 | 259 | 272 | 8 | 52 | no |
-| m4_hourly | short | econ_fin | H | 16 | 700 | 960 | 48 | 24 | yes |
-| m4_daily | short | econ_fin | D | 16 | 280 | 2048 | 14 | 7 | yes |
-| m4_weekly | short | econ_fin | W | 16 | 379 | 2048 | 13 | 52 | yes |
-| m4_monthly | short | econ_fin | M | 16 | 272 | 554 | 18 | 12 | yes |
+| m4_hourly | short | econ_fin | H | 16 | 700 | 960 | 48 | 24 | no |
+| m4_daily | short | econ_fin | D | 16 | 280 | 2048 | 14 | 7 | no |
+| m4_weekly | short | econ_fin | W | 16 | 379 | 2048 | 13 | 52 | no |
+| m4_monthly | short | econ_fin | M | 16 | 272 | 554 | 18 | 12 | no |
 | fred_md_2025 | short | econ_fin | M | 16 | 786 | 786 | 12 | 12 | no |
-| bitbrains_fast_storage/H | short | web_cloudops | H | 16 | 673 | 673 | 48 | 24 | yes |
+| bitbrains_fast_storage/H | short | web_cloudops | H | 16 | 673 | 673 | 48 | 24 | no |
 | redset/1H | short | web_cloudops | H | 16 | 1418 | 2048 | 48 | 24 | no |
-| kdd_cup_2018_with_missing/H | short | nature | H | 16 | 2048 | 2048 | 48 | 24 | yes |
+| kdd_cup_2018_with_missing/H | short | nature | H | 16 | 2048 | 2048 | 48 | 24 | no |
 | uk_covid_utla/1D | short | healthcare | D | 16 | 686 | 697 | 30 | 7 | no |
 | hospital_admissions/1D | short | healthcare | D | 8 | 1699 | 1701 | 30 | 7 | no |
 | electricity/H | medium | energy | H | 8 | 2048 | 2048 | 480 | 24 | yes |
-| solar/H | medium | energy | H | 8 | 2048 | 2048 | 480 | 24 | yes |
-| solar/10T | medium | energy | 10T | 8 | 2048 | 2048 | 480 | 144 | yes |
-| LOOP_SEATTLE/H | medium | transport | H | 8 | 2048 | 2048 | 480 | 24 | yes |
-| M_DENSE/H | medium | transport | H | 8 | 2048 | 2048 | 480 | 24 | yes |
-| SZ_TAXI/15T | medium | transport | 15T | 8 | 2048 | 2048 | 480 | 96 | yes |
+| solar/H | medium | energy | H | 8 | 2048 | 2048 | 480 | 24 | no |
+| solar/10T | medium | energy | 10T | 8 | 2048 | 2048 | 480 | 144 | no |
+| LOOP_SEATTLE/H | medium | transport | H | 8 | 2048 | 2048 | 480 | 24 | no |
+| M_DENSE/H | medium | transport | H | 8 | 2048 | 2048 | 480 | 24 | no |
+| SZ_TAXI/15T | medium | transport | 15T | 8 | 2048 | 2048 | 480 | 96 | no |
 | entsoe/1H | medium | energy | H | 6 | 2048 | 2048 | 480 | 24 | no |
 
 ## Extra real set (further open-license sources)

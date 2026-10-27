@@ -25,7 +25,7 @@ import hashlib
 import json
 import re
 import zlib
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 import numpy as np
 
@@ -384,6 +384,13 @@ PAIRS: list[Spec] = [
     Spec("gifteval", "SZ_TAXI/15T", "15T", "transport", n_series=8, term="medium"),
     _fev("fev", "entsoe/1H", "H", "energy", n_series=6, term="medium", value_col=VALUE_FIELD, name="entsoe/1H"),
 ]
+
+# GIFT-Eval files whose upstream license was checked and allows redistributing derived windows (record and
+# evidence per dataset: GE_UPSTREAM in otp/realdata_sources.py). Windows from every other GIFT-Eval dataset go to
+# real_restricted.npz, rebuilt locally from the fetch.
+GE_REDISTRIBUTABLE = frozenset({"electricity/H", "electricity/D"})
+PAIRS = [replace(sp, redistributable=sp.redistributable and (sp.source != "gifteval" or sp.path in GE_REDISTRIBUTABLE))
+         for sp in PAIRS]
 
 
 def build_real(pairs: list[Spec] | None = None, seed: int = SEED, cache_dir: str | None = None,
